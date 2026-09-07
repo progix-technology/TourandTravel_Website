@@ -24,9 +24,9 @@ export const TourDetails = () => {
   const { slug } = useParams()
   const navigate = useNavigate()
   const [tour, setTour] = useState(() => {
-    return tourService.getBySlug(slug)
+    return tourService.getMockBySlug(slug)
   })
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(!tour)
   const { isInWishlist, toggleWishlist } = useWishlist()
   const { startBooking } = useBooking()
   const { isAuthenticated } = useAuth()
@@ -50,11 +50,24 @@ export const TourDetails = () => {
   ]
 
   useEffect(() => {
+    let isMounted = true
     const fetchTour = async () => {
-      const data = await tourService.getBySlug(slug)
-      setTour(data)
+      if (!tour) setLoading(true)
+      try {
+        const data = await tourService.getBySlug(slug)
+        if (isMounted && data) {
+          setTour(data)
+        }
+      } catch (err) {
+        console.warn('Tour load error:', err)
+      } finally {
+        if (isMounted) setLoading(false)
+      }
     }
     fetchTour()
+    return () => {
+      isMounted = false
+    }
   }, [slug])
 
   if (loading && !tour) return <div className="pt-32"><Loader label="Loading Expedition Itinerary..." /></div>

@@ -70,15 +70,37 @@ export const getTours = async (req, res, next) => {
 // @access  Public
 export const getTourBySlug = async (req, res, next) => {
   try {
-    const { slug } = req.params
-    const tour = await Tour.findOne({
-      $or: [{ slug: slug }, { _id: slug.match(/^[0-9a-fA-F]{24}$/) ? slug : null }],
+    const rawSlug = req.params.slug || ''
+    const cleanSlug = decodeURIComponent(rawSlug).trim()
+    const hyphenSlug = cleanSlug.replace(/\s+/g, '-')
+
+    const isObjectId = cleanSlug.match(/^[0-9a-fA-F]{24}$/)
+
+    // 1. Direct Match by exact slug or ObjectId
+    let tour = await Tour.findOne({
+      $or: [
+        { slug: cleanSlug },
+        { slug: hyphenSlug },
+        { _id: isObjectId ? cleanSlug : null },
+      ],
     })
+
+    // 2. Fallback Match by destinationSlug or destination regex
+    if (!tour) {
+      tour = await Tour.findOne({
+        $or: [
+          { destinationSlug: { $regex: cleanSlug, $options: 'i' } },
+          { destinationSlug: { $regex: hyphenSlug, $options: 'i' } },
+          { destination: { $regex: cleanSlug, $options: 'i' } },
+          { title: { $regex: cleanSlug, $options: 'i' } },
+        ],
+      })
+    }
 
     if (!tour) {
       return res.status(404).json({
         success: false,
-        message: `Tour with slug/id '${slug}' not found`,
+        message: `Tour with slug/id '${cleanSlug}' not found`,
       })
     }
 

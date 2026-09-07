@@ -607,6 +607,58 @@ export const AdminBookings = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Departure Hub & Pickup Logistics Box */}
+              <div className="bg-[#13151A] border border-white/10 rounded-xl p-4">
+                <h5 className="text-xs font-bold uppercase tracking-wider text-[#6FCF45] mb-3 flex items-center gap-2">
+                  <MapPin className="w-4 h-4" />
+                  <span>Departure Origin &amp; Pickup Logistics</span>
+                </h5>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-[#A8B5AF]">Departure Origin (Kahan Se Jana Hai)</span>
+                    <p className="text-xs font-bold text-white mt-1">
+                      {selectedBooking.departureCity || selectedBooking.logistics?.departureCity || 'Lucknow, Uttar Pradesh'}
+                    </p>
+                  </div>
+
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-[#A8B5AF]">Exact Pickup Point / Address</span>
+                    <p className="text-xs font-bold text-[#6FCF45] mt-1">
+                      {selectedBooking.pickupLocation || selectedBooking.logistics?.pickupLocation || 'Main Terminal / Central Hub'}
+                    </p>
+                  </div>
+
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-[#A8B5AF]">Travel Mode Preference</span>
+                    <p className="text-xs font-bold text-[#6FCF45] mt-1">
+                      {selectedBooking.travelMode || selectedBooking.logistics?.travelMode || 'Flight (Airplane)'}
+                    </p>
+                  </div>
+
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-[#A8B5AF]">Transit / Ticket / Flight / PNR</span>
+                    <p className="text-xs font-medium text-white mt-1">
+                      {selectedBooking.transitDetails || selectedBooking.logistics?.transitDetails || selectedBooking.logistics?.flightNumber || 'Not Specified (Coordinated by Concierge)'}
+                    </p>
+                  </div>
+
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-[#A8B5AF]">Airport / Ground Chauffeur Transfer</span>
+                    <p className="text-xs font-medium text-slate-300 mt-1">
+                      {selectedBooking.logistics?.airportTransfer || 'Standard Luxury Transfer'}
+                    </p>
+                  </div>
+
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-[#A8B5AF]">Chalet / Suite Configuration</span>
+                    <p className="text-xs font-medium text-slate-300 mt-1">
+                      {selectedBooking.logistics?.roomPreference || '1 King Bed Suite (Luxury)'}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Modal Footer Actions */}

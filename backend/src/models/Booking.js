@@ -58,6 +58,22 @@ const BookingSchema = new mongoose.Schema(
       type: String,
       default: 'Credit Card (Stripe Encrypted)',
     },
+    departureCity: {
+      type: String,
+      default: 'Lucknow, Uttar Pradesh',
+    },
+    pickupLocation: {
+      type: String,
+      default: '',
+    },
+    travelMode: {
+      type: String,
+      default: 'Flight (Airplane)',
+    },
+    transitDetails: {
+      type: String,
+      default: '',
+    },
     isTatkaal: {
       type: Boolean,
       default: false,
@@ -72,6 +88,10 @@ const BookingSchema = new mongoose.Schema(
       ageGroup: String,
     },
     logistics: {
+      departureCity: String,
+      pickupLocation: String,
+      travelMode: String,
+      transitDetails: String,
       departureDate: String,
       isTatkaal: Boolean,
       tatkaalUrgency: String,

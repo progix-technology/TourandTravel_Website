@@ -109,7 +109,7 @@ export const DestinationShowcase = () => {
       tagline: 'Snow-crowned Himalayan peaks & Dal Lake houseboats',
       duration: '7 Days • 6 Nights',
       price: '₹24,999',
-      link: '/tours/kashmir-paradise-expedition',
+      link: '/tours/kashmir-escape',
     },
     {
       id: 'maldives',
@@ -120,7 +120,7 @@ export const DestinationShowcase = () => {
       tagline: 'Crystal turquoise lagoons & secluded overwater villas',
       duration: '6 Days • 5 Nights',
       price: '₹84,999',
-      link: '/tours/maldives-luxury-water-villas',
+      link: '/tours/maldives-retreat',
     },
     {
       id: 'dubai',
@@ -129,9 +129,9 @@ export const DestinationShowcase = () => {
       image: dubaiImg,
       Icon: DubaiIcon,
       tagline: 'Futuristic skylines, golden dunes & luxury lifestyle',
-      duration: '5 Days • 4 Nights',
+      duration: '6 Days • 5 Nights',
       price: '₹48,999',
-      link: '/tours/dubai-glamour-desert-safari',
+      link: '/tours/dubai-explorer',
     },
     {
       id: 'paris',
@@ -140,9 +140,9 @@ export const DestinationShowcase = () => {
       image: parisImg,
       Icon: ParisIcon,
       tagline: 'Iconic Eiffel sunsets, timeless art & haute couture',
-      duration: '7 Days • 6 Nights',
+      duration: '6 Days • 5 Nights',
       price: '₹1,24,999',
-      link: '/tours/paris-haute-couture-romance',
+      link: '/tours/paris',
     },
     {
       id: 'bali',
@@ -151,9 +151,9 @@ export const DestinationShowcase = () => {
       image: baliImg,
       Icon: BaliIcon,
       tagline: 'Sacred water temples, tropical jungles & sunset beaches',
-      duration: '8 Days • 7 Nights',
+      duration: '7 Days • 6 Nights',
       price: '₹38,999',
-      link: '/tours/bali-spiritual-sanctuary',
+      link: '/tours/bali',
     },
     {
       id: 'switzerland',
@@ -164,7 +164,7 @@ export const DestinationShowcase = () => {
       tagline: 'Matterhorn alpine peaks & scenic red mountain trains',
       duration: '8 Days • 7 Nights',
       price: '₹1,49,999',
-      link: '/destinations',
+      link: '/tours/switzerland',
     },
     {
       id: 'tokyo',
@@ -175,7 +175,7 @@ export const DestinationShowcase = () => {
       tagline: 'Illuminated Tokyo Tower, ancient shrines & cherry blossoms',
       duration: '9 Days • 8 Nights',
       price: '₹1,34,999',
-      link: '/destinations',
+      link: '/tours/tokyo',
     },
     {
       id: 'rajasthan',
@@ -184,9 +184,9 @@ export const DestinationShowcase = () => {
       image: rajasthanImg,
       Icon: RajasthanIcon,
       tagline: 'Royal golden forts, palatial heritage & desert safaris',
-      duration: '7 Days • 6 Nights',
+      duration: '8 Days • 7 Nights',
       price: '₹18,999',
-      link: '/tours/rajasthan-royal-heritage-palaces',
+      link: '/tours/rajasthan-heritage',
     },
   ]
 
