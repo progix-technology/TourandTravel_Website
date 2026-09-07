@@ -57,14 +57,17 @@ export const ToursPage = () => {
     }
   }, [])
 
-  const categories = [
-    { label: 'All Packages (15)', value: 'All', icon: Layers },
-    { label: 'India & Himalayas', value: 'india', icon: Compass },
-    { label: 'Global Luxury', value: 'global', icon: Globe },
-    { label: 'Tropical & Beach', value: 'beach', icon: Palmtree },
-    { label: 'Culture & Heritage', value: 'culture', icon: Landmark },
-    { label: 'Alpine & Nature', value: 'nature', icon: Mountain },
-  ]
+  const categories = useMemo(
+    () => [
+      { label: `All Packages (${toursList.length})`, value: 'All', icon: Layers },
+      { label: 'India & Himalayas', value: 'india', icon: Compass },
+      { label: 'Global Luxury', value: 'global', icon: Globe },
+      { label: 'Tropical & Beach', value: 'beach', icon: Palmtree },
+      { label: 'Culture & Heritage', value: 'culture', icon: Landmark },
+      { label: 'Alpine & Nature', value: 'nature', icon: Mountain },
+    ],
+    [toursList.length]
+  )
 
   const handleCategoryChange = (cat) => {
     setSelectedCategory(cat)
@@ -124,8 +127,8 @@ export const ToursPage = () => {
 
   return (
     <div className="bg-[#FAF8F2] text-[#13251F] min-h-screen select-none">
-      {/* 1. Full-Width Cinematic Hero Header (Standard Uniform Height & Left-Aligned) */}
-      <div className="relative w-full bg-[#071A16] text-white pt-28 sm:pt-36 pb-12 sm:pb-16 min-h-[560px] sm:min-h-[590px] lg:min-h-[610px] flex flex-col justify-center px-4 sm:px-6 lg:px-12 overflow-hidden shadow-2xl border-b border-white/10 mb-10 sm:mb-12">
+      {/* 1. Full-Width Cinematic Hero Header */}
+      <div className="relative w-full bg-[#071A16] text-white pt-24 sm:pt-36 pb-8 sm:pb-16 min-h-[400px] sm:min-h-[560px] lg:min-h-[610px] flex flex-col justify-center px-4 sm:px-6 lg:px-12 overflow-hidden shadow-2xl border-b border-white/10 mb-8 sm:mb-12">
         {/* Background Signature Packages Banner Image Asset (100% Edge-to-Edge) */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <img
@@ -146,31 +149,32 @@ export const ToursPage = () => {
         {/* Left-Aligned Constrained Content Container */}
         <div className="max-w-[1440px] w-full mx-auto relative z-10 text-left">
           <div className="max-w-3xl text-left">
-            <div className="inline-flex items-center gap-2.5 mb-3 text-xs uppercase tracking-[0.25em] font-bold text-[#6FCF45] font-heading drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
-              <span className="w-6 h-[2px] bg-[#6FCF45]" />
+            <div className="inline-flex items-center gap-2 mb-2 sm:mb-3 text-[10px] sm:text-xs uppercase tracking-[0.25em] font-bold text-[#6FCF45] font-heading drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+              <span className="w-4 sm:w-6 h-[2px] bg-[#6FCF45]" />
               <span>EXPEDITIONS CATALOG</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight font-heading leading-[1.1] text-left drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight font-heading leading-[1.1] text-left drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
               Signature Tour <br />
               <span className="text-[#6FCF45]">Packages.</span>
             </h1>
 
-            <p className="mt-3.5 text-xs sm:text-sm md:text-base text-white/90 max-w-2xl leading-relaxed font-normal text-left drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+            <p className="mt-2.5 sm:mt-3.5 text-xs sm:text-sm md:text-base text-white/90 max-w-2xl leading-relaxed font-normal text-left drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
               Immersive, slow-paced luxury journeys crafted with private curators, 5-star heritage chalets, and VIP access across extraordinary world lands.
             </p>
           </div>
 
           {/* Search Bar & Sort Dropdown */}
-          <div className="mt-8 pt-6 border-t border-white/15 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+          <div className="mt-4 sm:mt-8 pt-4 sm:pt-6 border-t border-white/15 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4">
+            {/* Search Input */}
             <div className="relative w-full md:max-w-md">
-              <Search className="w-4 h-4 text-[#A8B5AF] absolute left-4 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#A8B5AF] absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 placeholder="Search packages by title, country or itinerary..."
-                className="w-full bg-[#0B241E]/90 border border-white/20 rounded-[8px] pl-11 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder:text-[#A8B5AF]/70 focus:outline-none focus:border-[#6FCF45] shadow-inner"
+                className="w-full bg-[#0B241E]/90 border border-white/20 rounded-[8px] pl-9 sm:pl-11 pr-4 py-2 sm:py-2.5 text-xs sm:text-sm text-white placeholder:text-[#A8B5AF]/70 focus:outline-none focus:border-[#6FCF45] shadow-inner"
               />
               {searchQuery && (
                 <button
@@ -185,24 +189,24 @@ export const ToursPage = () => {
             {/* Sleek Integrated Sort Dropdown Pill */}
             <div className="relative self-start md:self-auto shrink-0 group">
               <div className="relative flex items-center">
-                <SlidersHorizontal className="w-3.5 h-3.5 text-[#6FCF45] absolute left-3.5 pointer-events-none z-10" />
+                <SlidersHorizontal className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#6FCF45] absolute left-3 sm:left-3.5 pointer-events-none z-10" />
                 <select
                   value={sortBy}
                   onChange={(e) => handleSortChange(e.target.value)}
-                  className="appearance-none bg-[#0B241E]/95 hover:bg-[#12382E] border border-white/20 hover:border-[#6FCF45]/60 rounded-full pl-9 pr-9 py-2.5 text-xs font-semibold text-white tracking-wide cursor-pointer focus:outline-none focus:border-[#6FCF45] focus:ring-1 focus:ring-[#6FCF45] transition-all duration-200 shadow-md backdrop-blur-md"
+                  className="appearance-none bg-[#0B241E]/95 hover:bg-[#12382E] border border-white/20 hover:border-[#6FCF45]/60 rounded-full pl-8 sm:pl-9 pr-8 sm:pr-9 py-1.5 sm:py-2.5 text-[11px] sm:text-xs font-semibold text-white tracking-wide cursor-pointer focus:outline-none focus:border-[#6FCF45] focus:ring-1 focus:ring-[#6FCF45] transition-all duration-200 shadow-md backdrop-blur-md"
                 >
                   <option value="popular" className="bg-[#071A16] text-white">Top Rated &amp; Featured</option>
                   <option value="price-low" className="bg-[#071A16] text-white">Price: Low to High</option>
                   <option value="price-high" className="bg-[#071A16] text-white">Price: High to Low</option>
                   <option value="duration" className="bg-[#071A16] text-white">Longest Duration</option>
                 </select>
-                <ChevronDown className="w-3.5 h-3.5 text-[#6FCF45] absolute right-3.5 pointer-events-none transition-transform group-hover:translate-y-0.5 duration-200" />
+                <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#6FCF45] absolute right-3 sm:right-3.5 pointer-events-none transition-transform group-hover:translate-y-0.5 duration-200" />
               </div>
             </div>
           </div>
 
-          {/* Category Filter Pills Inside Banner (Identical to DestinationsPage) */}
-          <div className="mt-5 flex flex-wrap items-center gap-2 pt-2">
+          {/* Category Filter Pills Inside Banner */}
+          <div className="mt-3 sm:mt-5 flex flex-wrap items-center gap-1.5 sm:gap-2 pt-1 sm:pt-2">
             {categories.map((cat) => {
               const Icon = cat.icon
               const isActive = selectedCategory === cat.value
@@ -211,13 +215,13 @@ export const ToursPage = () => {
                 <button
                   key={cat.value}
                   onClick={() => handleCategoryChange(cat.value)}
-                  className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 border ${
+                  className={`inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[9.5px] sm:text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 border cursor-pointer active:scale-95 ${
                     isActive
                       ? 'bg-[#6FCF45] text-[#071A16] border-[#6FCF45] shadow-md shadow-[#6FCF45]/20 font-bold'
                       : 'bg-[#0B241E]/80 text-[#A8B5AF] border-white/15 hover:border-white/40 hover:text-white'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#071A16]' : 'text-[#6FCF45]'}`} />
+                  <Icon className={`w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 ${isActive ? 'text-[#071A16]' : 'text-[#6FCF45]'}`} />
                   <span>{cat.label}</span>
                 </button>
               )

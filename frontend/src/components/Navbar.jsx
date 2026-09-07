@@ -37,6 +37,21 @@ const InstagramIcon = () => (
   </svg>
 )
 
+const WhatsAppOutlineIcon = ({ className = "w-6 h-6 sm:w-7 sm:h-7" }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M17.498 14.382c-.301-.15-1.767-.867-2.04-.966-.274-.101-.473-.15-.673.149-.199.299-.772.966-.946 1.165-.175.2-.349.224-.65.074-.3-.15-1.267-.465-2.413-1.485-.893-.795-1.496-1.777-1.67-2.076-.175-.3-.018-.462.132-.61.135-.134.3-.349.45-.523.15-.175.2-.299.3-.499.1-.2.05-.374-.025-.523s-.673-1.62-.923-2.217c-.243-.583-.49-.503-.673-.513-.174-.01-.373-.01-.573-.01-.2 0-.524.075-.798.374s-1.047 1.022-1.047 2.492 1.072 2.89 1.222 3.09c.15.199 2.11 3.22 5.11 4.515.714.309 1.272.493 1.707.63.718.228 1.371.196 1.888.118.577-.087 1.767-.722 2.016-1.42.249-.697.249-1.295.174-1.419-.074-.125-.274-.199-.574-.349z" />
+    <path d="M12 2a10 10 0 0 0-8.58 15.14L2 22l4.99-1.31A10 10 0 1 0 12 2z" />
+  </svg>
+)
+
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -105,22 +120,17 @@ export const Navbar = () => {
         <div className="w-full py-3 sm:py-3.5 border-b border-white/10">
           <div className="w-full px-4 sm:px-8 lg:px-12 flex items-center justify-between">
             
-            {/* 1. LEFT: WhatsApp Quick Call Pill (Desktop Only) */}
+            {/* 1. LEFT: WhatsApp Outline Icon Button (Matching Right Icons Style) */}
             <div className="hidden sm:flex flex-1 items-center justify-start">
               <a
                 href={`https://wa.me/${cleanPhone}?text=${encodeURIComponent('Hello Tours & Travels Concierge! I would like to inquire about a custom luxury journey.')}`}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2.5 px-3.5 sm:px-4 py-1.5 rounded-full bg-[#0B241E]/80 hover:bg-[#071A16] border border-[#6FCF45]/30 hover:border-[#6FCF45] transition-all duration-300 shadow-sm group cursor-pointer"
+                aria-label="WhatsApp Concierge"
+                title="Chat on WhatsApp"
+                className="text-white/90 hover:text-[#6FCF45] transition-all p-1 focus:outline-none cursor-pointer hover:scale-110 active:scale-95 flex items-center justify-center"
               >
-                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#25D366] flex items-center justify-center text-white shadow-xs group-hover:scale-110 transition-transform">
-                  <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" viewBox="0 0 24 24">
-                    <path d="M12.031 0C5.395 0 .013 5.384.013 12.019c0 2.119.553 4.186 1.606 6.009L0 24l6.167-1.618a11.96 11.96 0 0 0 5.864 1.528h.005c6.634 0 12.016-5.383 12.016-12.018C24.052 5.384 18.666 0 12.031 0zm0 22.003h-.004a9.97 9.97 0 0 1-5.086-1.39l-.365-.216-3.778.991 1.008-3.684-.237-.377a9.93 9.93 0 0 1-1.527-5.308c0-5.503 4.478-9.981 9.993-9.981 2.666 0 5.172 1.039 7.058 2.925a9.92 9.92 0 0 1 2.925 7.058c0 5.504-4.479 9.982-9.989 9.982zm5.474-7.481c-.3-.15-1.774-.876-2.049-.976-.275-.1-.475-.15-.675.15-.2.3-.775.976-.95 1.176-.175.2-.35.225-.65.075-.3-.15-1.267-.467-2.413-1.488-.892-.796-1.494-1.78-1.669-2.08-.175-.3-.019-.462.131-.611.135-.134.3-.35.45-.525.15-.175.2-.3.3-.5.1-.2.05-.375-.025-.525s-.675-1.626-.925-2.226c-.244-.585-.492-.505-.675-.515-.175-.01-.375-.01-.575-.01s-.525.075-.8.375c-.275.3-1.05 1.026-1.05 2.502s1.075 2.902 1.225 3.102c.15.2 2.116 3.23 5.127 4.53 3.011 1.3 3.011.867 3.561.817.55-.05 1.774-.725 2.024-1.426.25-.7.25-1.301.175-1.426-.075-.125-.275-.2-.575-.35z" />
-                  </svg>
-                </div>
-                <span className="text-xs sm:text-[13px] md:text-[14px] font-black text-white tracking-wider font-sans">
-                  {displayPhone}
-                </span>
+                <WhatsAppOutlineIcon className="w-6 h-6 sm:w-7 sm:h-7" />
               </a>
             </div>
 

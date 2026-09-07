@@ -100,8 +100,8 @@ export const AboutPage = () => {
 
   return (
     <div className="bg-[#FAF8F2] text-[#13251F] min-h-screen select-none">
-      {/* 1. Full-Width Cinematic Hero Banner (Exact Same Height & Layout as Tours Page) */}
-      <div className="relative w-full bg-[#071A16] text-white pt-28 sm:pt-36 pb-12 sm:pb-16 min-h-[560px] sm:min-h-[590px] lg:min-h-[610px] flex flex-col justify-center px-4 sm:px-6 lg:px-12 overflow-hidden shadow-2xl border-b border-white/10 mb-10 sm:mb-12">
+      {/* 1. Full-Width Cinematic Hero Banner */}
+      <div className="relative w-full bg-[#071A16] text-white pt-24 sm:pt-36 pb-8 sm:pb-16 min-h-[420px] sm:min-h-[560px] lg:min-h-[610px] flex flex-col justify-center px-4 sm:px-6 lg:px-12 overflow-hidden shadow-2xl border-b border-white/10 mb-8 sm:mb-12">
         {/* Background Luxury Heritage Banner Image Asset (100% Edge-to-Edge) */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <img
@@ -122,39 +122,39 @@ export const AboutPage = () => {
         {/* Left-Aligned Constrained Content Container */}
         <div className="max-w-[1440px] w-full mx-auto relative z-10 text-left">
           <div className="max-w-3xl text-left">
-            <div className="inline-flex items-center gap-2.5 mb-3 text-xs uppercase tracking-[0.25em] font-bold text-[#6FCF45] font-heading drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
-              <span className="w-6 h-[2px] bg-[#6FCF45]" />
+            <div className="inline-flex items-center gap-2 mb-2 sm:mb-3 text-[10px] sm:text-xs uppercase tracking-[0.25em] font-bold text-[#6FCF45] font-heading drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
+              <span className="w-4 sm:w-6 h-[2px] bg-[#6FCF45]" />
               <span>OUR HERITAGE &amp; ETHOS</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight font-heading leading-[1.1] text-left drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight font-heading leading-[1.1] text-left drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
               Redefining the Art of <br />
               <span className="text-[#6FCF45]">Extraordinary Travel.</span>
             </h1>
 
-            <p className="mt-3.5 text-xs sm:text-sm md:text-base text-white/90 max-w-2xl leading-relaxed font-normal text-left drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+            <p className="mt-2.5 sm:mt-3.5 text-xs sm:text-sm md:text-base text-white/90 max-w-2xl leading-relaxed font-normal text-left drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
               Tour &amp; Travels was born out of a passionate quest: to replace cookie-cutter tourism with soul-stirring, slow-paced luxury journeys that leave indelible marks on your soul.
             </p>
           </div>
 
-          {/* Action Strip (Matches Search Bar border position in ToursPage) */}
-          <div className="mt-8 pt-6 border-t border-white/15 flex flex-wrap items-center gap-4">
+          {/* Action Strip */}
+          <div className="mt-4 sm:mt-8 pt-3.5 sm:pt-6 border-t border-white/15 flex flex-row flex-wrap items-center gap-2.5 sm:gap-4">
             <Link
               to="/destinations"
-              className="bg-[#6FCF45] hover:bg-[#5eb937] text-[#071A16] px-7 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-200 shadow-lg shadow-[#6FCF45]/20 active:scale-95"
+              className="bg-[#6FCF45] hover:bg-[#5eb937] text-[#071A16] px-4 sm:px-7 py-2 sm:py-3 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-200 shadow-lg shadow-[#6FCF45]/20 active:scale-95"
             >
               Explore Destinations
             </Link>
             <Link
               to="/contact"
-              className="bg-[#0B241E]/80 hover:bg-[#12382E] text-white border border-white/20 px-7 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-200 backdrop-blur-md active:scale-95"
+              className="bg-[#0B241E]/80 hover:bg-[#12382E] text-white border border-white/20 px-4 sm:px-7 py-2 sm:py-3 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-200 backdrop-blur-md active:scale-95"
             >
               Contact Concierge
             </Link>
           </div>
 
           {/* Core Heritage Pillars Row */}
-          <div className="mt-5 flex flex-wrap items-center gap-2 pt-2">
+          <div className="mt-3.5 sm:mt-5 flex flex-wrap items-center gap-1.5 sm:gap-2 pt-1 sm:pt-2">
             {[
               { label: '100% Tailored Itineraries', icon: Gem },
               { label: '24/7 Dedicated Concierge', icon: Clock },
@@ -166,9 +166,9 @@ export const AboutPage = () => {
               return (
                 <div
                   key={idx}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-full bg-[#0B241E]/80 text-[#A8B5AF] border border-white/15 backdrop-blur-md"
+                  className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[9.5px] sm:text-xs font-bold uppercase tracking-wider rounded-full bg-[#0B241E]/80 text-[#A8B5AF] border border-white/15 backdrop-blur-md"
                 >
-                  <Icon className="w-3.5 h-3.5 text-[#6FCF45]" />
+                  <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#6FCF45]" />
                   <span>{pill.label}</span>
                 </div>
               )
@@ -180,21 +180,21 @@ export const AboutPage = () => {
       {/* Main Content Area with Crisp Green Outline Boxes */}
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10 pb-28 sm:pb-36">
 
-        {/* 2. Key Numbers & Stats Grid with Green Outlines */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-20">
+        {/* 2. Key Numbers & Stats Grid with Green Outlines (Single Row of 4 on Mobile & Desktop) */}
+        <div className="grid grid-cols-4 gap-1.5 sm:gap-6 mb-12 sm:mb-20">
           {stats.map((item, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 50, scale: 0.8 }}
+              initial={{ opacity: 0, y: 30, scale: 0.9 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: idx * 0.15, type: 'spring', bounce: 0.4 }}
-              className="bg-white rounded-[20px] p-6 sm:p-8 text-center border-2 border-[#6FCF45] shadow-[0_4px_20px_rgba(111,207,69,0.08)] hover:shadow-[0_15px_35px_rgba(111,207,69,0.2)] hover:border-[#58B832] flex flex-col items-center justify-center group transition-all duration-300"
+              viewport={{ once: true, margin: "-30px" }}
+              transition={{ duration: 0.5, delay: idx * 0.1, type: 'spring', bounce: 0.3 }}
+              className="bg-white rounded-[10px] sm:rounded-[20px] p-2 sm:p-8 text-center border sm:border-2 border-[#6FCF45] shadow-[0_2px_10px_rgba(111,207,69,0.06)] sm:shadow-[0_4px_20px_rgba(111,207,69,0.08)] hover:shadow-[0_15px_35px_rgba(111,207,69,0.2)] hover:border-[#58B832] flex flex-col items-center justify-center group transition-all duration-300"
             >
-              <span className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#2E4A35] font-heading group-hover:text-[#6FCF45] transition-colors">
+              <span className="text-sm xs:text-base sm:text-4xl lg:text-5xl font-extrabold text-[#2E4A35] font-heading group-hover:text-[#6FCF45] transition-colors leading-tight">
                 {item.value}
               </span>
-              <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#5C6E67] mt-2 font-heading">
+              <span className="text-[7.5px] xs:text-[8.5px] sm:text-sm font-bold uppercase tracking-tight sm:tracking-wider text-[#5C6E67] mt-1 sm:mt-2 font-heading leading-tight line-clamp-2">
                 {item.label}
               </span>
             </motion.div>
@@ -299,7 +299,7 @@ export const AboutPage = () => {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {pillars.map((card, idx) => (
               <GradientCard
                 key={idx}
@@ -331,24 +331,33 @@ export const AboutPage = () => {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-3 gap-2 sm:gap-8">
             {team.map((member, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-[22px] overflow-hidden border-2 border-[#6FCF45] shadow-[0_4px_20px_rgba(111,207,69,0.08)] hover:shadow-[0_15px_35px_rgba(111,207,69,0.2)] hover:border-[#58B832] transition-all duration-300 flex flex-col group"
+                className="bg-white rounded-[12px] sm:rounded-[22px] overflow-hidden border sm:border-2 border-[#6FCF45] shadow-[0_2px_10px_rgba(111,207,69,0.06)] sm:shadow-[0_4px_20px_rgba(111,207,69,0.08)] hover:shadow-[0_15px_35px_rgba(111,207,69,0.2)] hover:border-[#58B832] transition-all duration-300 flex flex-col group"
               >
-                <div className="h-64 w-full overflow-hidden bg-[#E5E0D5]/40 border-b-2 border-[#6FCF45]/30 flex items-center justify-center animate-pulse">
-                  <User className="w-24 h-24 text-[#5C6E67]/30" />
+                <div className="h-24 xs:h-32 sm:h-64 w-full overflow-hidden bg-[#E5E0D5]/40 border-b sm:border-b-2 border-[#6FCF45]/30 flex items-center justify-center relative">
+                  {member.image ? (
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <User className="w-8 h-8 sm:w-24 sm:h-24 text-[#5C6E67]/30" />
+                  )}
                 </div>
-                <div className="p-6 flex-1 flex flex-col justify-between">
+                <div className="p-1.5 xs:p-2 sm:p-6 flex-1 flex flex-col justify-between">
                   <div>
-                    <h3 className="text-lg font-bold text-[#13251F] group-hover:text-[#2E4A35] font-heading transition-colors">
+                    <h3 className="text-[11px] xs:text-xs sm:text-lg font-bold text-[#13251F] group-hover:text-[#2E4A35] font-heading transition-colors line-clamp-1">
                       {member.name}
                     </h3>
-                    <span className="inline-block text-xs font-extrabold uppercase tracking-wider text-[#2E4A35] bg-[#6FCF45]/15 border border-[#6FCF45]/40 px-2.5 py-0.5 rounded-full mt-1.5">
+                    <span className="inline-block text-[7px] xs:text-[8px] sm:text-xs font-extrabold uppercase tracking-tight sm:tracking-wider text-[#2E4A35] bg-[#6FCF45]/15 border border-[#6FCF45]/40 px-1 py-0.5 sm:px-2.5 sm:py-0.5 rounded-full mt-0.5 sm:mt-1 truncate max-w-full">
                       {member.role}
                     </span>
-                    <p className="text-xs text-[#5C6E67] mt-3 leading-relaxed">
+                    <p className="text-[7.5px] xs:text-[8.5px] sm:text-xs text-[#5C6E67] mt-1 sm:mt-3 leading-tight sm:leading-relaxed line-clamp-2 sm:line-clamp-none">
                       {member.bio}
                     </p>
                   </div>
