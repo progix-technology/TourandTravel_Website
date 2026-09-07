@@ -189,8 +189,8 @@ export const Hero = () => {
         </div>
       </div>
 
-      {/* Hero Statistics: FIRMLY INSIDE HERO SLIDE */}
-      <div className="relative z-20 w-full max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 flex justify-start sm:justify-end mb-2 sm:mb-4">
+      {/* Hero Statistics: Visible on Tablet/Desktop, Hidden on Mobile */}
+      <div className="hidden sm:flex relative z-20 w-full max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 justify-end mb-2 sm:mb-4">
         <div className="glass-panel rounded-[4px] px-5 py-3 sm:px-7 sm:py-3.5 border border-white/15 backdrop-blur-xl shadow-2xl inline-flex flex-wrap sm:flex-nowrap items-center justify-between gap-5 sm:gap-8">
           {/* Stat 1 */}
           <div className="flex flex-col">

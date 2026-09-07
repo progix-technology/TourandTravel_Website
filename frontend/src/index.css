@@ -154,3 +154,25 @@
 .animate-marquee-scroll:hover {
   animation-play-state: paused;
 }
+
+/* Holographic Globe Laser Scan Animation */
+@keyframes laserSweep {
+  0% {
+    top: 6%;
+    opacity: 0.2;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    top: 94%;
+    opacity: 0.2;
+  }
+}
+
+.animate-laser-sweep {
+  animation: laserSweep 2s ease-in-out infinite alternate;
+}

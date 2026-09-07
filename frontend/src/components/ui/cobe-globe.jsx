@@ -1,5 +1,69 @@
-import React, { useEffect, useRef, useCallback } from 'react'
+import React, { useEffect, useRef, useCallback, useState } from 'react'
 import createGlobe from 'cobe'
+
+// 3D Holographic Wireframe Sphere Loader (Option 2)
+function HolographicSphereLoader({ isLoaded }) {
+  const [coordsIndex, setCoordsIndex] = useState(0)
+  const coordsList = [
+    'LAT 34.08° N • LON 74.79° E [KASHMIR]',
+    'LAT 25.20° N • LON 55.27° E [DUBAI]',
+    'LAT 03.20° N • LON 73.22° E [MALDIVES]',
+    'LAT 48.85° N • LON 02.35° E [PARIS]',
+    'LAT 35.67° N • LON 139.65° E [TOKYO]',
+  ]
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCoordsIndex((prev) => (prev + 1) % coordsList.length)
+    }, 450)
+    return () => clearInterval(interval)
+  }, [coordsList.length])
+
+  return (
+    <div
+      className={`absolute inset-0 z-20 flex flex-col items-center justify-center rounded-full transition-opacity duration-700 select-none ${
+        isLoaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
+      }`}
+    >
+      {/* Background Soft Emerald Halo */}
+      <div className="absolute w-[80%] h-[80%] rounded-full bg-[#6FCF45]/10 blur-2xl pointer-events-none animate-pulse" />
+
+      {/* 3D Holographic Wireframe Rings Container */}
+      <div className="relative w-[78%] h-[78%] rounded-full flex items-center justify-center overflow-hidden border border-[#6FCF45]/30 shadow-[0_0_30px_rgba(111,207,69,0.15)] backdrop-blur-sm bg-[#071A16]/50">
+        {/* Outer Rotating Latitude/Longitude Rings */}
+        <div className="absolute inset-2 rounded-full border border-dashed border-[#6FCF45]/40 animate-[spin_8s_linear_infinite]" />
+        <div className="absolute inset-6 rounded-full border border-dotted border-white/25 animate-[spin_12s_linear_infinite_reverse]" />
+
+        {/* Holographic 3D Equatorial & Meridian Rings */}
+        <div className="absolute w-full h-[38%] rounded-full border border-[#6FCF45]/50 transform rotate-12 scale-95 animate-pulse" />
+        <div className="absolute h-full w-[38%] rounded-full border border-[#6FCF45]/40 transform -rotate-12 scale-95" />
+        <div className="absolute w-full h-[68%] rounded-full border border-white/20 transform -rotate-45" />
+
+        {/* Vertical Scanning Laser Radar Beam */}
+        <div className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#6FCF45] to-transparent shadow-[0_0_14px_#6FCF45] animate-laser-sweep" />
+
+        {/* Center Glowing Hub Beacon */}
+        <div className="relative z-10 flex flex-col items-center">
+          <div className="w-4 h-4 rounded-full bg-[#6FCF45] shadow-[0_0_20px_#6FCF45,0_0_40px_#6FCF45] animate-ping" />
+          <div className="absolute w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_10px_#FFFFFF]" />
+        </div>
+      </div>
+
+      {/* Lower HUD Telemetry Coordinates Badge */}
+      <div className="absolute bottom-6 flex flex-col items-center gap-1 z-30 pointer-events-none select-none">
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[4px] bg-[#071A16]/90 border border-[#6FCF45]/40 backdrop-blur-md shadow-lg">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#6FCF45] animate-ping" />
+          <span className="font-mono text-[8.5px] sm:text-[9.5px] font-bold text-[#6FCF45] tracking-wider uppercase">
+            CALIBRATING GLOBE
+          </span>
+        </div>
+        <span className="font-mono text-[7.5px] sm:text-[8.5px] text-[#A8B5AF] tracking-widest uppercase transition-all duration-300">
+          {coordsList[coordsIndex]}
+        </span>
+      </div>
+    </div>
+  )
+}
 
 export function Globe({
   markers = [],
@@ -21,6 +85,7 @@ export function Globe({
   mapSamples = 16000,
   opacity = 0.85,
 }) {
+  const [isLoaded, setIsLoaded] = useState(false)
   const canvasRef = useRef(null)
   const pointerInteracting = useRef(null)
   const lastPointer = useRef(null)
@@ -173,7 +238,10 @@ export function Globe({
         animationId = requestAnimationFrame(animate)
       }
       animate()
-      setTimeout(() => canvas && (canvas.style.opacity = '1'))
+      setTimeout(() => {
+        if (canvas) canvas.style.opacity = '1'
+        setIsLoaded(true)
+      }, 350)
     }
 
     if (canvas.offsetWidth > 0) {
@@ -216,6 +284,9 @@ export function Globe({
 
   return (
     <div className={`relative aspect-square select-none ${className}`}>
+      {/* Option 2: 3D Holographic Wireframe Sphere Loader */}
+      <HolographicSphereLoader isLoaded={isLoaded} />
+
       <canvas
         ref={canvasRef}
         onPointerDown={handlePointerDown}
@@ -275,3 +346,4 @@ export function Globe({
 }
 
 export default Globe
+
