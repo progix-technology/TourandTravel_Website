@@ -88,6 +88,14 @@ export const TourPackages = () => {
       }
     }
     loadFeatured()
+
+    const handleUpdated = () => {
+      loadFeatured()
+    }
+    window.addEventListener('tt_tours_updated', handleUpdated)
+    return () => {
+      window.removeEventListener('tt_tours_updated', handleUpdated)
+    }
   }, [])
 
   const featuredTours = toursList.slice(0, 4)

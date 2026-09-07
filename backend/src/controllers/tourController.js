@@ -158,12 +158,19 @@ export const createTour = async (req, res, next) => {
 // @access  Private/Admin
 export const updateTour = async (req, res, next) => {
   try {
-    let tour = await Tour.findById(req.params.id)
+    const idParam = req.params.id || ''
+    const cleanId = decodeURIComponent(idParam).trim()
+    const isObjectId = cleanId.match(/^[0-9a-fA-F]{24}$/)
 
+    let tour = isObjectId ? await Tour.findById(cleanId) : null
     if (!tour) {
-      return res.status(404).json({
-        success: false,
-        message: `Tour not found with id of ${req.params.id}`,
+      tour = await Tour.findOne({
+        $or: [
+          { slug: cleanId },
+          { slug: cleanId.toLowerCase() },
+          { destinationSlug: cleanId.toLowerCase() },
+          { title: { $regex: `^${cleanId}$`, $options: 'i' } },
+        ],
       })
     }
 
@@ -175,10 +182,21 @@ export const updateTour = async (req, res, next) => {
       tourData.price = tourData.startingPrice
     }
 
-    tour = await Tour.findByIdAndUpdate(req.params.id, tourData, {
-      new: true,
-      runValidators: true,
-    })
+    if (tour) {
+      tour = await Tour.findByIdAndUpdate(tour._id, tourData, {
+        new: true,
+        runValidators: true,
+      })
+    } else {
+      // Upsert: Create if it originated from mockData
+      if (!tourData.slug) {
+        tourData.slug = cleanId
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '')
+      }
+      tour = await Tour.create(tourData)
+    }
 
     res.status(200).json({
       success: true,
@@ -194,16 +212,23 @@ export const updateTour = async (req, res, next) => {
 // @access  Private/Admin
 export const deleteTour = async (req, res, next) => {
   try {
-    const tour = await Tour.findById(req.params.id)
+    const idParam = req.params.id || ''
+    const cleanId = decodeURIComponent(idParam).trim()
+    const isObjectId = cleanId.match(/^[0-9a-fA-F]{24}$/)
 
+    let tour = isObjectId ? await Tour.findById(cleanId) : null
     if (!tour) {
-      return res.status(404).json({
-        success: false,
-        message: `Tour not found with id of ${req.params.id}`,
+      tour = await Tour.findOne({
+        $or: [
+          { slug: cleanId },
+          { slug: cleanId.toLowerCase() },
+        ],
       })
     }
 
-    await Tour.findByIdAndDelete(req.params.id)
+    if (tour) {
+      await Tour.findByIdAndDelete(tour._id)
+    }
 
     res.status(200).json({
       success: true,

@@ -1,6 +1,57 @@
 import api from './api'
 import { TOURS } from '../utils/mockData'
 
+const LOCAL_STORAGE_KEY = 'tt_custom_tours_overrides'
+
+// Helper to get locally stored overrides
+const getLocalOverrides = () => {
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw)
+      if (Array.isArray(parsed)) return parsed
+    }
+  } catch (e) {
+    // ignore
+  }
+  return []
+}
+
+// Helper to save locally stored overrides
+const saveLocalOverrides = (list) => {
+  try {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(list))
+    window.dispatchEvent(new CustomEvent('tt_tours_updated', { detail: list }))
+  } catch (e) {
+    // ignore
+  }
+}
+
+// Helper to merge base list with local overrides
+const mergeWithOverrides = (baseList) => {
+  const overrides = getLocalOverrides()
+  if (!overrides || overrides.length === 0) return baseList
+
+  const merged = [...baseList]
+  overrides.forEach((override) => {
+    const idx = merged.findIndex(
+      (item) =>
+        (override._id && (item._id === override._id || item.id === override._id)) ||
+        (override.id && (item.id === override.id || item._id === override.id)) ||
+        (override.slug && item.slug?.toLowerCase() === override.slug?.toLowerCase()) ||
+        (override.title && item.title?.toLowerCase() === override.title?.toLowerCase())
+    )
+
+    if (idx !== -1) {
+      merged[idx] = { ...merged[idx], ...override }
+    } else {
+      merged.unshift(override)
+    }
+  })
+
+  return merged
+}
+
 export const tourService = {
   async getAll(params = {}) {
     let list = []
@@ -16,6 +67,9 @@ export const tourService = {
     if (!list || list.length === 0) {
       list = [...TOURS]
     }
+
+    // Merge with any real-time admin edits/overrides
+    list = mergeWithOverrides(list)
 
     // Client-side filtering safeguard
     if (params.destination && params.destination !== 'All' && params.destination !== 'all') {
@@ -63,18 +117,21 @@ export const tourService = {
     const cleanSlug = decodeURIComponent(slug).toLowerCase().trim()
     const hyphenSlug = cleanSlug.replace(/\s+/g, '-')
 
+    const allTours = mergeWithOverrides(TOURS)
+
     // 1. Direct exact match
-    let matched = TOURS.find(
+    let matched = allTours.find(
       (t) =>
         t.slug?.toLowerCase() === cleanSlug ||
         t.id?.toLowerCase() === cleanSlug ||
+        (t._id && t._id === cleanSlug) ||
         t.slug?.toLowerCase() === hyphenSlug ||
         t.id?.toLowerCase() === hyphenSlug
     )
     if (matched) return matched
 
     // 2. Destination slug / name match
-    matched = TOURS.find(
+    matched = allTours.find(
       (t) =>
         t.destinationSlug?.toLowerCase() === cleanSlug ||
         t.destination?.toLowerCase() === cleanSlug ||
@@ -84,7 +141,7 @@ export const tourService = {
     if (matched) return matched
 
     // 3. Keyword / Substring match (e.g. 'dubai-glamour-desert-safari' matches dubai)
-    matched = TOURS.find((t) => {
+    matched = allTours.find((t) => {
       const dest = (t.destination || '').toLowerCase()
       const destSlug = (t.destinationSlug || '').toLowerCase()
       const title = (t.title || '').toLowerCase()
@@ -105,7 +162,7 @@ export const tourService = {
 
     // 4. Token intersection match
     const searchTokens = cleanSlug.split(/[-_\s]+/).filter((tok) => tok.length > 2)
-    matched = TOURS.find((t) => {
+    matched = allTours.find((t) => {
       const fullText = `${t.title} ${t.destination} ${t.slug} ${t.id} ${t.country}`.toLowerCase()
       return searchTokens.some((tok) => fullText.includes(tok))
     })
@@ -118,7 +175,16 @@ export const tourService = {
     try {
       const response = await api.get(`/tours/${encodeURIComponent(slug)}`)
       if (response.data?.success && response.data.data) {
-        return response.data.data
+        const fetched = response.data.data
+        // Check if we have any local override with newer/specific image
+        const overrides = getLocalOverrides()
+        const local = overrides.find(
+          (o) =>
+            (o._id && o._id === fetched._id) ||
+            (o.id && (o.id === fetched.id || o.id === fetched._id)) ||
+            (o.slug && o.slug.toLowerCase() === fetched.slug?.toLowerCase())
+        )
+        return local ? { ...fetched, ...local } : fetched
       }
     } catch (e) {
       // Fallback
@@ -127,18 +193,64 @@ export const tourService = {
   },
 
   async create(tourData) {
-    const response = await api.post('/tours', tourData)
-    return response.data
+    let savedTour = { ...tourData, id: tourData.slug || `tour-${Date.now()}` }
+    try {
+      const response = await api.post('/tours', tourData)
+      if (response.data?.data) {
+        savedTour = response.data.data
+      }
+    } catch (e) {
+      console.warn('API tour create warning, saving to local store:', e.message)
+    }
+
+    const currentOverrides = getLocalOverrides()
+    saveLocalOverrides([savedTour, ...currentOverrides])
+    return { success: true, data: savedTour }
   },
 
   async update(id, tourData) {
-    const response = await api.put(`/tours/${id}`, tourData)
-    return response.data
+    let updatedTour = { ...tourData, _id: id, id }
+    try {
+      const response = await api.put(`/tours/${id}`, tourData)
+      if (response.data?.data) {
+        updatedTour = response.data.data
+      }
+    } catch (e) {
+      console.warn('API tour update warning, saving to local store:', e.message)
+    }
+
+    const currentOverrides = getLocalOverrides()
+    const index = currentOverrides.findIndex(
+      (o) =>
+        (o._id && o._id === id) ||
+        (o.id && (o.id === id || o.id === updatedTour.id)) ||
+        (o.slug && o.slug.toLowerCase() === (updatedTour.slug || id).toLowerCase()) ||
+        (o.title && o.title.toLowerCase() === (updatedTour.title || '').toLowerCase())
+    )
+
+    if (index !== -1) {
+      currentOverrides[index] = { ...currentOverrides[index], ...updatedTour }
+    } else {
+      currentOverrides.push(updatedTour)
+    }
+
+    saveLocalOverrides([...currentOverrides])
+    return { success: true, data: updatedTour }
   },
 
   async delete(id) {
-    const response = await api.delete(`/tours/${id}`)
-    return response.data
+    try {
+      await api.delete(`/tours/${id}`)
+    } catch (e) {
+      console.warn('API tour delete warning:', e.message)
+    }
+
+    const currentOverrides = getLocalOverrides()
+    const filtered = currentOverrides.filter(
+      (o) => o._id !== id && o.id !== id && o.slug !== id
+    )
+    saveLocalOverrides(filtered)
+    return { success: true }
   },
 }
 

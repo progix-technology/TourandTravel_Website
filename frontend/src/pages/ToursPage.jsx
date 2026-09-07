@@ -47,6 +47,14 @@ export const ToursPage = () => {
       }
     }
     loadTours()
+
+    const handleUpdated = () => {
+      loadTours()
+    }
+    window.addEventListener('tt_tours_updated', handleUpdated)
+    return () => {
+      window.removeEventListener('tt_tours_updated', handleUpdated)
+    }
   }, [])
 
   const categories = [

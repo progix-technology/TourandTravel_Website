@@ -52,7 +52,6 @@ export const TourDetails = () => {
   useEffect(() => {
     let isMounted = true
     const fetchTour = async () => {
-      if (!tour) setLoading(true)
       try {
         const data = await tourService.getBySlug(slug)
         if (isMounted && data) {
@@ -65,8 +64,15 @@ export const TourDetails = () => {
       }
     }
     fetchTour()
+
+    const handleToursUpdated = () => {
+      fetchTour()
+    }
+    window.addEventListener('tt_tours_updated', handleToursUpdated)
+
     return () => {
       isMounted = false
+      window.removeEventListener('tt_tours_updated', handleToursUpdated)
     }
   }, [slug])
 
