@@ -221,7 +221,7 @@ export const GALLERY_PHOTOS = [
     category: 'Heritage & Palaces',
     photographer: 'Samar Mehra',
     camera: 'Nikon Z8 · 14-30mm f/4',
-    image: 'https://images.unsplash.com/photo-1597659840241-37e2b9c2f55f?auto=format&fit=crop&w=1200&q=80',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Qutb_Minar_2022.jpg/1280px-Qutb_Minar_2022.jpg',
     aspect: 'tall',
     likes: 1120,
   },

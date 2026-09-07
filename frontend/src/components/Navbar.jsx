@@ -89,25 +89,19 @@ export const Navbar = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
           isAuthPage
             ? 'bg-transparent border-none shadow-none pointer-events-auto'
             : isScrolled
-            ? 'bg-[#071A16]/95 backdrop-blur-2xl border-b border-white/10 shadow-2xl'
-            : 'bg-transparent'
+            ? '-translate-y-full opacity-0 pointer-events-none'
+            : 'translate-y-0 opacity-100 bg-transparent'
         }`}
         style={{ fontFamily: "'Poppins', sans-serif" }}
       >
         {/* ========================================================================= */}
-        {/* TIER 1: TOP BRAND & UTILITY BAR (Hides & Collapses on Scroll)              */}
+        {/* TIER 1: TOP BRAND & UTILITY BAR                                           */}
         {/* ========================================================================= */}
-        <div
-          className={`transition-all duration-500 ease-in-out overflow-hidden ${
-            isScrolled
-              ? 'max-h-0 opacity-0 py-0 border-b-0 -translate-y-4 pointer-events-none'
-              : 'max-h-24 opacity-100 py-3 sm:py-3.5 border-b border-white/10 translate-y-0'
-          }`}
-        >
+        <div className="w-full py-3 sm:py-3.5 border-b border-white/10">
           <div className="w-full px-4 sm:px-8 lg:px-12 flex items-center justify-between">
             
             {/* 1. LEFT: WhatsApp Quick Call Pill (Exact Match to Screenshot) */}
@@ -203,13 +197,9 @@ export const Navbar = () => {
         </div>
 
         {/* ========================================================================= */}
-        {/* TIER 2: MAIN NAVIGATION BAR (Sticky & Turns Dark on Scroll)               */}
+        {/* TIER 2: MAIN NAVIGATION BAR                                               */}
         {/* ========================================================================= */}
-        <div
-          className={`transition-all duration-300 ${
-            isScrolled ? 'py-2.5 sm:py-3' : 'py-3 sm:py-3.5'
-          }`}
-        >
+        <div className="py-3 sm:py-3.5">
           <div className="w-full px-4 sm:px-8 lg:px-12 flex items-center justify-between">
             
             {/* 1. LEFT: Social Icons */}
@@ -267,26 +257,14 @@ export const Navbar = () => {
               })}
             </nav>
 
-            {/* 3. RIGHT: BOOK NOW CTA Button & Mobile Toggle */}
+            {/* 3. RIGHT: BOOK NOW CTA Button */}
             <div className="flex items-center justify-end gap-3">
               <Link
                 to="/custom-trip"
-                className="bg-[#6FCF45] hover:bg-[#5eb937] text-[#071A16] px-5 sm:px-6 py-2 sm:py-2.5 rounded-full font-black text-xs sm:text-[13px] tracking-widest uppercase transition-all shadow-lg shadow-[#6FCF45]/30 active:scale-95 cursor-pointer flex items-center gap-1.5"
+                className="px-5 sm:px-6 py-2 sm:py-2.5 rounded-full font-bold text-xs sm:text-[13px] tracking-widest uppercase transition-all duration-300 border border-white/70 hover:border-white bg-transparent hover:bg-white/10 text-white backdrop-blur-sm shadow-sm active:scale-95 cursor-pointer flex items-center gap-1.5"
               >
                 <span>BOOK NOW</span>
               </Link>
-
-              {/* Mobile Hamburger Toggle when scrolled */}
-              {isScrolled && (
-                <button
-                  type="button"
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="md:hidden text-white/90 hover:text-[#6FCF45] transition-colors p-1 focus:outline-none cursor-pointer"
-                  aria-label="Toggle Navigation Menu"
-                >
-                  {mobileMenuOpen ? <X className="w-6 h-6 stroke-[2.5]" /> : <Menu className="w-6 h-6 stroke-[2.5]" />}
-                </button>
-              )}
             </div>
 
           </div>
@@ -389,7 +367,7 @@ export const Navbar = () => {
             <Link
               to="/custom-trip"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full bg-[#6FCF45] text-[#071A16] py-3 rounded-full font-extrabold text-xs uppercase tracking-wider text-center block shadow-lg shadow-[#6FCF45]/30"
+              className="w-full bg-transparent hover:bg-white/10 text-white border border-white/70 hover:border-white py-3 rounded-full font-bold text-xs uppercase tracking-wider text-center block transition-all"
             >
               BOOK NOW
             </Link>

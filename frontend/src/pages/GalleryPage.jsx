@@ -25,6 +25,87 @@ import ImageLoader from '../components/ui/image-loading'
 import { GALLERY_PHOTOS } from '../utils/galleryData'
 import mediaService from '../services/mediaService'
 
+const INDIA_KEYWORDS = [
+  'india',
+  'kashmir',
+  'ladakh',
+  'spiti',
+  'himachal',
+  'manali',
+  'rohtang',
+  'sonamarg',
+  'pahalgam',
+  'agra',
+  'uttar pradesh',
+  'varanasi',
+  'rajasthan',
+  'jaipur',
+  'udaipur',
+  'jaisalmer',
+  'jodhpur',
+  'amritsar',
+  'punjab',
+  'delhi',
+  'karnataka',
+  'hampi',
+  'kerala',
+  'munnar',
+  'alleppey',
+  'varkala',
+  'meghalaya',
+  'dawki',
+  'cherrapunji',
+  'andaman',
+  'havelock',
+  'maharashtra',
+  'goa',
+  'sahyadri',
+  'mahabaleshwar',
+]
+
+const isIndiaPhoto = (photo) => {
+  if (!photo) return false
+  if (photo.country && photo.country.trim().toLowerCase() === 'india') return true
+  const text = `${photo.location || ''} ${photo.title || ''}`.toLowerCase()
+  return INDIA_KEYWORDS.some((kw) => text.includes(kw))
+}
+
+const matchCategory = (photo, filterCategory) => {
+  if (!photo) return false
+  const current = (filterCategory || 'ALL').toUpperCase().trim()
+  if (current === 'ALL') return true
+  if (current === 'INDIA') return isIndiaPhoto(photo)
+  if (current === 'INTERNATIONAL') return !isIndiaPhoto(photo)
+
+  const catStr = (photo.category || '').toUpperCase().trim()
+  const text = `${photo.category || ''} ${photo.title || ''} ${photo.location || ''}`.toLowerCase()
+
+  switch (current) {
+    case 'MOUNTAINS & ALPINE':
+      if (catStr === 'MOUNTAINS & ALPINE' || catStr.includes('MOUNTAIN') || catStr.includes('ALPINE')) return true
+      return /(mountain|alpine|peak|glacier|snow|pass|meadow|ridge|valley|himalaya|matterhorn|lauterbrunnen|grindelwald|dolomite|braies|fuji|batur|table mountain|banff|moraine|troms|aurora|yosemite|el capitan)/i.test(text)
+
+    case 'ISLANDS & COASTAL':
+      if (catStr === 'ISLANDS & COASTAL' || catStr.includes('ISLAND') || catStr.includes('COASTAL') || catStr.includes('BEACH')) return true
+      return /(island|coastal|coast|beach|ocean|sea|lagoon|reef|cliffside|maldives|bali|nusa penida|positano|amalfi|como|halong|maya bay|phi phi|santorini|oia|navagio|zakynthos|apostles|ocean road|seychelles|mauritius|le morne|alleppey|varkala|dawki|havelock|radhanagar)/i.test(text)
+
+    case 'DESERT & DUNES':
+      if (catStr === 'DESERT & DUNES' || catStr.includes('DESERT') || catStr.includes('DUNE')) return true
+      return /(desert|dune|dunes|sand|safari|nubra|hunder|thar|jaisalmer|arabian desert|abu dhabi|wadi rum|cappadocia|masai mara|savannah|grand canyon|salar de uyuni|salt flat)/i.test(text)
+
+    case 'HERITAGE & PALACES':
+      if (catStr === 'HERITAGE & PALACES' || catStr.includes('HERITAGE') || catStr.includes('PALACE') || catStr.includes('FORT') || catStr.includes('TEMPLE')) return true
+      return /(heritage|palace|fort|temple|monument|ghat|taj mahal|hawa mahal|pichola|mehrangarh|varanasi|dashashwamedh|amer fort|golden temple|harmandir|qutub minar|hampi|uluwatu|sheikh zayed|mosque|petra|al-khazneh|pyramid|giza|colosseum|fushimi inari|torii|hagia sophia|machu picchu|dubrovnik)/i.test(text)
+
+    case 'URBAN & SKYLINES':
+      if (catStr === 'URBAN & SKYLINES' || catStr.includes('URBAN') || catStr.includes('SKYLINE') || catStr.includes('CITY')) return true
+      return /(urban|skyline|city|downtown|neon|burj khalifa|dubai|eiffel tower|louvre|paris|venice|grand canal|shibuya|tokyo|marina bay|singapore|sydney opera|harbour bridge)/i.test(text)
+
+    default:
+      return catStr === current || catStr.includes(current)
+  }
+}
+
 export const GalleryPage = () => {
   const [photos, setPhotos] = useState(GALLERY_PHOTOS)
   const [loading, setLoading] = useState(true)
@@ -61,13 +142,7 @@ export const GalleryPage = () => {
   ]
 
   // Robust Filter photos based on Category selection
-  const filteredPhotos = photos.filter((photo) => {
-    const current = (activeCategory || 'ALL').toUpperCase()
-    if (current === 'ALL') return true
-    if (current === 'INDIA') return photo.country?.toLowerCase() === 'india'
-    if (current === 'INTERNATIONAL') return photo.country?.toLowerCase() !== 'india'
-    return photo.category?.toUpperCase() === current
-  })
+  const filteredPhotos = photos.filter((photo) => matchCategory(photo, activeCategory))
 
   const displayedPhotos = filteredPhotos.slice(0, visibleCount)
 
@@ -137,7 +212,7 @@ export const GalleryPage = () => {
             </p>
           </div>
 
-          {/* Floating Stats & Integrated Controls Row */}
+          {/* Floating Stats Row */}
           <div className="mt-8 pt-6 border-t border-white/15 flex flex-wrap items-center gap-6 sm:gap-10 text-left">
             <div>
               <span className="text-2xl sm:text-3xl font-extrabold text-[#6FCF45] font-heading">
@@ -148,24 +223,33 @@ export const GalleryPage = () => {
             <div className="w-px h-8 bg-white/15 hidden sm:block" />
             <div>
               <span className="text-2xl sm:text-3xl font-extrabold text-[#6FCF45] font-heading">
-                {photos.filter((p) => p.country === 'India').length}+
+                {photos.filter((p) => isIndiaPhoto(p)).length}+
               </span>
               <span className="text-[11px] uppercase tracking-wider text-white/80 block mt-0.5 font-medium">Incredible India Spots</span>
             </div>
             <div className="w-px h-8 bg-white/15 hidden sm:block" />
             <div>
               <span className="text-2xl sm:text-3xl font-extrabold text-[#6FCF45] font-heading">
-                {photos.filter((p) => p.country !== 'India').length}+
+                {photos.filter((p) => !isIndiaPhoto(p)).length}+
               </span>
               <span className="text-[11px] uppercase tracking-wider text-white/80 block mt-0.5 font-medium">Global Sanctuaries</span>
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Category Filter Pills (Exact Matching Height and Position as Tours/Destinations) */}
-          <div className="mt-5 flex flex-wrap items-center gap-2 pt-2">
+      {/* ========================================================================= */}
+      {/* 2. MAIN PAGE TOP CATEGORY FILTERS & STATS BAR                            */}
+      {/* ========================================================================= */}
+      <section className="pt-2 pb-6 px-4 sm:px-6 lg:px-10 max-w-[1440px] mx-auto">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#E5E0D5]">
+          {/* Category Filter Pills (Main Page Top) */}
+          <div className="flex flex-wrap items-center gap-2">
             {categories.map((cat) => {
               const Icon = cat.icon
               const isSelected = activeCategory === cat.value
+              const count = photos.filter((p) => matchCategory(p, cat.value)).length
+
               return (
                 <button
                   key={cat.value}
@@ -175,25 +259,40 @@ export const GalleryPage = () => {
                     setVisibleCount(28)
                     setActiveItemIndex(null)
                   }}
-                  className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 border cursor-pointer ${
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded-full transition-all duration-200 border cursor-pointer ${
                     isSelected
-                      ? 'bg-[#6FCF45] text-[#071A16] border-[#6FCF45] shadow-md shadow-[#6FCF45]/20 font-bold scale-105'
-                      : 'bg-[#0B241E]/80 text-[#A8B5AF] border-white/15 hover:border-white/40 hover:text-white'
+                      ? 'bg-[#071A16] text-[#6FCF45] border-[#071A16] shadow-md scale-105'
+                      : 'bg-white text-[#5C6E67] border-[#E5E0D5] hover:border-[#13251F]/40 hover:text-[#13251F] hover:bg-[#F7F5EE] shadow-sm'
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
                   <span>{cat.label}</span>
+                  <span
+                    className={`ml-1 text-[10px] px-1.5 py-0.5 rounded-full font-mono font-semibold ${
+                      isSelected
+                        ? 'bg-[#6FCF45]/20 text-[#6FCF45]'
+                        : 'bg-[#EDE8DC] text-[#71827A]'
+                    }`}
+                  >
+                    {count}
+                  </span>
                 </button>
               )
             })}
           </div>
+
+          {/* Quick Count Indicator */}
+          <div className="text-xs text-[#71827A] font-medium whitespace-nowrap self-start md:self-center">
+            Showing <span className="font-bold text-[#13251F]">{displayedPhotos.length}</span> of{' '}
+            <span className="font-bold text-[#13251F]">{filteredPhotos.length}</span> photos
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* ========================================================================= */}
       {/* 3. MASONRY PINTEREST-STYLE PHOTO GRID (105+ IMAGES)                      */}
       {/* ========================================================================= */}
-      <section className="py-8 sm:py-12 px-4 sm:px-6 lg:px-10 max-w-[1440px] mx-auto">
+      <section className="py-4 sm:py-8 px-4 sm:px-6 lg:px-10 max-w-[1440px] mx-auto">
         <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 sm:gap-6 space-y-4 sm:space-y-6">
           {displayedPhotos.map((photo, index) => {
             const isLiked = likedItems[photo.id]
@@ -206,22 +305,20 @@ export const GalleryPage = () => {
 
             return (
               <div
-                key={photo.id}
+                key={photo.id || photo._id || index}
                 onClick={() => setActiveItemIndex(index)}
                 className={`group relative break-inside-avoid rounded-[16px] overflow-hidden bg-[#071A16] border border-[#13251F]/10 shadow-xl cursor-pointer transition-all duration-300 hover:border-[#6FCF45]/50 hover:shadow-2xl hover:shadow-[#6FCF45]/15 hover:-translate-y-1 w-full ${aspectClass}`}
               >
-                {/* Generative Blinking Matrix ImageLoader */}
-                <ImageLoader
-                  src={photo.image}
+                {/* Clean, Fast-Loading Responsive Image */}
+                <img
+                  src={photo.image || photo.url}
                   alt={photo.title}
-                  gridSize={16}
-                  cellGap={3}
-                  cellShape="circle"
-                  cellColor="#12382E"
-                  blinkSpeed={1000}
-                  transitionDuration={600}
-                  fadeOutDuration={400}
+                  loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80'
+                  }}
                 />
 
                 {/* Dark Vignette Overlay on Hover */}
@@ -233,7 +330,7 @@ export const GalleryPage = () => {
                     <span className="px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md text-[10px] font-bold text-[#6FCF45] border border-white/15 uppercase tracking-wider">
                       {photo.category}
                     </span>
-                    {photo.country === 'India' && (
+                    {isIndiaPhoto(photo) && (
                       <span className="px-2 py-0.5 rounded-full bg-orange-500/20 backdrop-blur-md text-[10px] font-bold text-orange-300 border border-orange-500/30">
                         India
                       </span>
@@ -311,7 +408,7 @@ export const GalleryPage = () => {
                 <div>
                   <div className="flex items-center gap-2">
                     <h4 className="text-sm sm:text-base font-bold text-white font-heading">{activePhoto.title}</h4>
-                    {activePhoto.country === 'India' && (
+                    {isIndiaPhoto(activePhoto) && (
                       <span className="px-2 py-0.5 rounded-full bg-orange-500/20 text-[10px] font-bold text-orange-300 border border-orange-500/30">
                         India
                       </span>

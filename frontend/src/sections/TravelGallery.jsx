@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { X, MapPin, Camera } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { X, MapPin, Camera, ArrowRight, ArrowUpRight, Sparkles } from 'lucide-react'
 import SectionHeading from '../components/SectionHeading'
 import GalleryItem from '../components/GalleryItem'
 import ImageLoader from '../components/ui/image-loading'
@@ -24,25 +25,50 @@ export const TravelGallery = () => {
     fetchGallery()
   }, [])
 
+  // Limit home page display to 8 curated photos for clean visual layout
+  const displayedItems = items.slice(0, 8)
+
   return (
     <section id="gallery" className="bg-[#FAF8F2] text-[#13251F] py-14 sm:py-16 lg:py-20 border-t border-[#E5E0D5] select-none">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
-        <SectionHeading
-          title="Travel Gallery"
-          subtitle="Glimpses captured by our travelers and expedition photographers across pristine corners of the planet."
-          theme="light"
-          className="mb-8 sm:mb-10"
-        />
+        
+        {/* Section Heading */}
+        <div className="mb-8 sm:mb-10 text-left">
+          <div className="inline-flex items-center gap-2.5 mb-2.5 text-[11px] uppercase tracking-[0.22em] font-semibold text-[#4F8F45]">
+            <span className="w-5 h-[1.5px] bg-[#6FCF45]" />
+            <span>MOMENTS &amp; MEMORIES</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight leading-[1.18] text-[#13251F] font-heading">
+            Travel Gallery
+          </h2>
+          <p className="mt-2 text-xs sm:text-sm leading-relaxed text-[#5C6E67] max-w-2xl">
+            Glimpses captured by our travelers and expedition curators across pristine corners of the planet.
+          </p>
+        </div>
 
-        {/* Varied Compact Pinterest-Style Masonry Grid (4 Columns) */}
+        {/* Curated Masonry Grid (8 Photos) */}
         <div className="columns-2 sm:columns-3 lg:columns-4 gap-3.5 sm:gap-4.5">
-          {items.map((item) => (
+          {displayedItems.map((item) => (
             <GalleryItem
               key={item.id || item._id}
               item={item}
               onClick={() => setActiveItem(item)}
             />
           ))}
+        </div>
+
+        {/* Bottom Explore Link Bar */}
+        <div className="mt-10 pt-6 border-t border-[#E5E0D5] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#5C6E67]">
+          <span>
+            Showing <strong className="text-[#13251F]">8 of {items.length}</strong> expedition snapshots.
+          </span>
+          <Link
+            to="/gallery"
+            className="inline-flex items-center gap-1.5 font-bold uppercase tracking-wider text-[#071A16] hover:text-[#4F8F45] transition-colors"
+          >
+            <span>View all archive photos</span>
+            <ArrowUpRight className="w-4 h-4 text-[#4F8F45]" />
+          </Link>
         </div>
       </div>
 

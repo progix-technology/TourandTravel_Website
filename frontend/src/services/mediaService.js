@@ -12,12 +12,13 @@ const formatMediaItem = (item, index = 0) => {
     'Expedition Capture'
 
   const aspectOptions = ['tall', 'wide', 'medium']
-  const aspect = aspectOptions[index % aspectOptions.length]
+  const aspect = item.aspect || aspectOptions[index % aspectOptions.length]
   const heightClassOptions = ['h-[220px]', 'h-[280px]', 'h-[240px]', 'h-[300px]']
   const heightClass = heightClassOptions[index % heightClassOptions.length]
 
   const location = item.location || 'Global Sanctuary'
   const isIndia =
+    (item.country && item.country.toLowerCase() === 'india') ||
     location.toLowerCase().includes('india') ||
     cleanTitle.toLowerCase().includes('india') ||
     cleanTitle.toLowerCase().includes('kashmir') ||
@@ -28,19 +29,19 @@ const formatMediaItem = (item, index = 0) => {
     cleanTitle.toLowerCase().includes('manali')
 
   return {
-    id: item._id || `db-media-${index}`,
+    id: item._id || item.id || `db-media-${index}`,
     _id: item._id,
     title: cleanTitle,
     location: location,
-    country: isIndia ? 'India' : 'International',
+    country: item.country || (isIndia ? 'India' : 'International'),
     category: item.category || 'Mountains & Alpine',
-    photographer: 'Expedition Team',
-    camera: 'High Resolution Sensor',
-    image: item.url,
-    url: item.url,
+    photographer: item.photographer || 'Expedition Team',
+    camera: item.camera || 'High Resolution Sensor',
+    image: item.url || item.image,
+    url: item.url || item.image,
     aspect,
     heightClass,
-    likes: Math.floor(Math.random() * 400) + 120,
+    likes: item.likes || Math.floor(Math.random() * 400) + 120,
     isDynamic: true,
     createdAt: item.createdAt,
   }
@@ -58,13 +59,24 @@ export const mediaService = {
       if (Array.isArray(dbMedia) && dbMedia.length > 0) {
         // Filter only Image type or files with URL
         const imageItems = dbMedia.filter(
-          (m) => (!m.fileType || m.fileType === 'Image') && m.url
+          (m) => (!m.fileType || m.fileType === 'Image') && (m.url || m.image)
         )
         const formattedDbItems = imageItems.map((item, idx) => formatMediaItem(item, idx))
 
-        // Prepend dynamic DB items before baseline curated photos (preventing duplicate IDs)
-        const combined = [...formattedDbItems, ...GALLERY_PHOTOS]
-        return combined
+        // Prevent duplicates between DB media and baseline dataset
+        const existingUrls = new Set(
+          formattedDbItems.map((p) => p.image || p.url).filter(Boolean)
+        )
+        const existingTitles = new Set(
+          formattedDbItems.map((p) => p.title?.toLowerCase().trim()).filter(Boolean)
+        )
+        const uniqueBaseline = GALLERY_PHOTOS.filter(
+          (p) =>
+            !existingUrls.has(p.image) &&
+            !existingTitles.has(p.title?.toLowerCase().trim())
+        )
+
+        return [...formattedDbItems, ...uniqueBaseline]
       }
       return GALLERY_PHOTOS
     } catch (error) {

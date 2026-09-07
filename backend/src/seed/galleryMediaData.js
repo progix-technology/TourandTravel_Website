@@ -160,7 +160,7 @@ export const ALL_GALLERY_PHOTOS = [
     title: 'Qutub Minar Red Sandstone Victory Tower',
     location: 'New Delhi, India',
     category: 'Heritage & Palaces',
-    url: 'https://images.unsplash.com/photo-1597659840241-37e2b9c2f55f?auto=format&fit=crop&w=1200&q=80',
+    url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Qutb_Minar_2022.jpg/1280px-Qutb_Minar_2022.jpg',
     fileType: 'Image',
     size: '2.9 MB',
   },
