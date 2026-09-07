@@ -266,14 +266,14 @@ export const PrivateAviation = () => {
           ))}
         </div>
 
-        {/* 5. Center Grand Flying Airplane (Position & scroll behavior EXACTLY preserved) */}
+        {/* 5. Center Grand Flying Airplane (Fine-tuned balanced elevation) */}
         <div className="relative w-full flex-1 flex items-center justify-center pointer-events-none">
           <motion.div
             style={{
               x: planeX,
               opacity: planeOpacity,
             }}
-            className="relative z-30 w-full max-w-[900px] sm:max-w-[1150px] lg:max-w-[1380px] xl:max-w-[1550px] flex items-center justify-center select-none"
+            className="relative z-30 w-full max-w-[900px] sm:max-w-[1150px] lg:max-w-[1380px] xl:max-w-[1550px] flex items-center justify-center select-none -translate-y-4 sm:-translate-y-8 lg:-translate-y-11"
           >
             {/* Aerodynamic Soft Shadow */}
             <div className="absolute w-[90%] h-14 bg-black/15 rounded-full blur-2xl top-[86%] left-1/2 -translate-x-1/2 scale-y-50 pointer-events-none" />
