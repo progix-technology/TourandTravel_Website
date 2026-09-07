@@ -39,7 +39,9 @@ const travelArcs = [
 ]
 
 export const Hero = () => {
-  const [isDesktop, setIsDesktop] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(
+    typeof window !== 'undefined' ? window.innerWidth >= 1024 : false
+  )
 
   useEffect(() => {
     const checkWidth = () => setIsDesktop(window.innerWidth >= 1024)
@@ -53,10 +55,10 @@ export const Hero = () => {
   const springConfig = { damping: 28, stiffness: 180, mass: 0.2, restDelta: 0.001 }
   const smoothScrollY = useSpring(scrollY, springConfig)
 
-  // 1. Hero slide: Grand Scale (1.12x), Pure White illuminated dots
-  // 2. 2nd slide: Clean prominent scale (0.60x) firmly locked at EXACT DEAD CENTER (75vh height, -21.8vw X)
-  const globeX = useTransform(scrollY, [0, 380, 2000], ['0%', isDesktop ? '-21.8vw' : '0%', isDesktop ? '-21.8vw' : '0%'])
-  const globeY = useTransform(scrollY, [0, 380, 2000], ['0vh', isDesktop ? '75vh' : '71vh', isDesktop ? '75vh' : '71vh'])
+  // 1. Desktop: Moves smoothly to next slide position
+  // 2. Mobile: Stays firmly in place in the hero section without moving downwards
+  const globeX = useTransform(scrollY, [0, 380, 2000], ['0%', '-21.8vw', '-21.8vw'])
+  const globeY = useTransform(scrollY, [0, 380, 2000], ['0vh', '75vh', '75vh'])
   const globeScale = useTransform(scrollY, [0, 380, 2000], [1.12, 0.60, 0.60])
   const globeOpacity = useTransform(scrollY, [0, 380, 1400, 1800], [1, 1, 1, 0])
 
@@ -144,13 +146,22 @@ export const Hero = () => {
                 mass: 0.7,
                 delay: 0.1,
               }}
-              style={{
-                x: globeX,
-                y: globeY,
-                scale: globeScale,
-                opacity: globeOpacity,
-                willChange: 'transform, opacity',
-              }}
+              style={
+                isDesktop
+                  ? {
+                      x: globeX,
+                      y: globeY,
+                      scale: globeScale,
+                      opacity: globeOpacity,
+                      willChange: 'transform, opacity',
+                    }
+                  : {
+                      x: 0,
+                      y: 0,
+                      scale: 1,
+                      opacity: 1,
+                    }
+              }
               className="w-full max-w-[340px] sm:max-w-[400px] lg:max-w-[450px] xl:max-w-[480px] relative z-50 origin-center will-change-transform"
             >
               {/* Subtle soft ambient aura */}

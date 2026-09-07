@@ -11,50 +11,109 @@ export const Experiences = () => {
   // Target and smoothly interpolated coordinates
   const targetPos = useRef({ x: 300, y: 350 })
   const currentPos = useRef({ x: 300, y: 350 })
-  const [beaconCoords, setBeaconCoords] = useState({ x: 900, y: 300 })
+  const [beaconCoords, setBeaconCoords] = useState({ x: 300, y: 300 })
   const [beamData, setBeamData] = useState({
-    polygonPoints: '900,300 200,200 250,500',
-    targetX: 300,
+    polygonPoints: '300,300 100,200 150,500',
+    targetX: 200,
     targetY: 350,
     angleDeg: 195,
-    distance: 600,
+    distance: 400,
   })
-  const isHovered = useRef(false)
+  const isUserInteracting = useRef(false)
+  const lastInteractionTime = useRef(0)
   const idleTime = useRef(0)
+  const frameCount = useRef(0)
 
-  // Update Beacon coordinates on resize & scroll
+  // Update Beacon coordinates on resize, scroll, image load
   const updateBeaconPos = () => {
     if (sectionRef.current && beaconRef.current) {
       const secRect = sectionRef.current.getBoundingClientRect()
       const becRect = beaconRef.current.getBoundingClientRect()
       const bx = becRect.left - secRect.left + becRect.width / 2
       const by = becRect.top - secRect.top + becRect.height / 2
-      setBeaconCoords({ x: bx, y: by })
+      if (bx > 0 && by > 0) {
+        setBeaconCoords({ x: bx, y: by })
+      }
     }
   }
 
   useEffect(() => {
     updateBeaconPos()
+    const timer = setTimeout(updateBeaconPos, 300)
     window.addEventListener('resize', updateBeaconPos)
     window.addEventListener('scroll', updateBeaconPos)
 
-    // Smooth animation loop (Lerp mouse tracking + Idle oceanic sweep)
+    // Global unified pointer/touch tracker that captures every cursor hover & drag movement
+    const updateTargetFromClient = (clientX, clientY) => {
+      if (!sectionRef.current) return
+      const rect = sectionRef.current.getBoundingClientRect()
+
+      // When cursor is within the vertical section area in the viewport
+      if (clientY >= rect.top - 60 && clientY <= rect.bottom + 60) {
+        const x = Math.max(0, Math.min(rect.width, clientX - rect.left))
+        const y = Math.max(0, Math.min(rect.height, clientY - rect.top))
+        targetPos.current.x = x
+        targetPos.current.y = y
+        isUserInteracting.current = true
+        lastInteractionTime.current = Date.now()
+      } else {
+        isUserInteracting.current = false
+      }
+    }
+
+    const onPointerMove = (e) => {
+      updateTargetFromClient(e.clientX, e.clientY)
+    }
+
+    const onMouseMove = (e) => {
+      updateTargetFromClient(e.clientX, e.clientY)
+    }
+
+    const onTouchMove = (e) => {
+      if (e.touches && e.touches[0]) {
+        updateTargetFromClient(e.touches[0].clientX, e.touches[0].clientY)
+      }
+    }
+
+    const onTouchStart = (e) => {
+      updateBeaconPos()
+      if (e.touches && e.touches[0]) {
+        updateTargetFromClient(e.touches[0].clientX, e.touches[0].clientY)
+      }
+    }
+
+    window.addEventListener('pointermove', onPointerMove, { passive: true })
+    window.addEventListener('mousemove', onMouseMove, { passive: true })
+    window.addEventListener('touchmove', onTouchMove, { passive: true })
+    window.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('pointerdown', onPointerMove, { passive: true })
+
+    // Smooth animation loop (Lerp mouse tracking + Continuous oceanic sweep)
     let animationFrameId
     const renderLoop = () => {
-      if (!isHovered.current) {
-        // Idle oceanic scanning mode
-        idleTime.current += 0.015
+      frameCount.current += 1
+      if (frameCount.current % 45 === 0) {
+        updateBeaconPos()
+      }
+
+      const timeSinceTouch = Date.now() - lastInteractionTime.current
+      const activeUser = isUserInteracting.current && timeSinceTouch < 3500
+
+      if (!activeUser) {
+        // Slow, elegant oceanic scanning sweep ONLY when user is NOT moving cursor
+        idleTime.current += 0.005
         if (sectionRef.current) {
-          const secWidth = sectionRef.current.offsetWidth || 1200
-          const secHeight = sectionRef.current.offsetHeight || 700
-          targetPos.current.x = secWidth * 0.28 + Math.sin(idleTime.current) * (secWidth * 0.22)
-          targetPos.current.y = secHeight * 0.45 + Math.cos(idleTime.current * 1.4) * (secHeight * 0.25)
+          const secWidth = sectionRef.current.offsetWidth || window.innerWidth || 380
+          const secHeight = sectionRef.current.offsetHeight || 600
+          targetPos.current.x = secWidth * 0.32 + Math.sin(idleTime.current * 0.7) * (secWidth * 0.28)
+          targetPos.current.y = secHeight * 0.42 + Math.cos(idleTime.current * 0.9) * (secHeight * 0.25)
         }
       }
 
-      // Smooth Linear Interpolation (Physics spring follow)
-      currentPos.current.x += (targetPos.current.x - currentPos.current.x) * 0.085
-      currentPos.current.y += (targetPos.current.y - currentPos.current.y) * 0.085
+      // Responsive lerp: fast follow (0.4) on active cursor/touch, gentle slow glide (0.04) on idle sweep
+      const lerpSpeed = activeUser ? 0.4 : 0.04
+      currentPos.current.x += (targetPos.current.x - currentPos.current.x) * lerpSpeed
+      currentPos.current.y += (targetPos.current.y - currentPos.current.y) * lerpSpeed
 
       const bx = beaconCoords.x
       const by = beaconCoords.y
@@ -69,7 +128,7 @@ export const Experiences = () => {
 
       // Calculate the projected cone geometry
       const extendDist = dist + 130
-      const spreadWidth = Math.max(110, dist * 0.25)
+      const spreadWidth = Math.max(90, dist * 0.26)
 
       const cx = bx + Math.cos(angle) * extendDist
       const cy = by + Math.sin(angle) * extendDist
@@ -94,55 +153,22 @@ export const Experiences = () => {
     animationFrameId = requestAnimationFrame(renderLoop)
 
     return () => {
+      clearTimeout(timer)
       cancelAnimationFrame(animationFrameId)
       window.removeEventListener('resize', updateBeaconPos)
       window.removeEventListener('scroll', updateBeaconPos)
+      window.removeEventListener('pointermove', onPointerMove)
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('touchmove', onTouchMove)
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('pointerdown', onPointerMove)
     }
   }, [beaconCoords.x, beaconCoords.y])
-
-  // Mouse Move Handler
-  const handleMouseMove = (e) => {
-    if (!sectionRef.current) return
-    const rect = sectionRef.current.getBoundingClientRect()
-    targetPos.current.x = e.clientX - rect.left
-    targetPos.current.y = e.clientY - rect.top
-    isHovered.current = true
-  }
-
-  // Touch Move Handler for Mobile devices
-  const handleTouchMove = (e) => {
-    if (!sectionRef.current || !e.touches[0]) return
-    const rect = sectionRef.current.getBoundingClientRect()
-    targetPos.current.x = e.touches[0].clientX - rect.left
-    targetPos.current.y = e.touches[0].clientY - rect.top
-    isHovered.current = true
-  }
-
-  const handleTouchStart = (e) => {
-    if (!sectionRef.current || !e.touches[0]) return
-    updateBeaconPos()
-    const rect = sectionRef.current.getBoundingClientRect()
-    targetPos.current.x = e.touches[0].clientX - rect.left
-    targetPos.current.y = e.touches[0].clientY - rect.top
-    isHovered.current = true
-  }
-
-  const handleMouseLeave = () => {
-    isHovered.current = false
-  }
 
   return (
     <section
       id="experiences"
       ref={sectionRef}
-      onMouseMove={handleMouseMove}
-      onTouchMove={handleTouchMove}
-      onTouchStart={handleTouchStart}
-      onMouseEnter={() => {
-        isHovered.current = true
-        updateBeaconPos()
-      }}
-      onMouseLeave={handleMouseLeave}
       className="bg-[#071A16] text-white min-h-[680px] lg:min-h-[760px] py-16 sm:py-20 md:py-24 lg:py-28 relative overflow-hidden border-t border-white/10 flex flex-col justify-center select-none"
     >
       {/* ========================================================================= */}
@@ -270,16 +296,17 @@ export const Experiences = () => {
         <img
           src={lighthouseImg}
           alt="Lighthouse Beacon"
+          onLoad={updateBeaconPos}
           className="w-full h-auto object-contain object-bottom drop-shadow-[0_20px_60px_rgba(0,0,0,0.95)]"
         />
 
         {/* ========================================================================= */}
         {/* ULTRA-BOLD RADIANT BEACON LIGHT SOURCE & OPTICAL LENS FLARES              */}
-        {/* Exact Anchor Pivot centered at top: 17.2%, right: 18.6%                   */}
+        {/* Exact Anchor Pivot centered: right-[13.5%] on mobile, right-[18.6%] on sm+*/}
         {/* ========================================================================= */}
         <div
           ref={beaconRef}
-          className="absolute top-[17.2%] right-[18.6%] w-8 h-8 -translate-x-1/2 -translate-y-1/2 pointer-events-none flex items-center justify-center"
+          className="absolute top-[17.2%] right-[13.5%] sm:right-[18.6%] w-8 h-8 -translate-x-1/2 -translate-y-1/2 pointer-events-none flex items-center justify-center"
         >
           {/* Bold Multi-Spoke Optical Star Flare Rays */}
           <div className="absolute w-36 h-[2.5px] bg-gradient-to-r from-transparent via-white to-transparent animate-pulse" />
@@ -295,8 +322,8 @@ export const Experiences = () => {
         </div>
 
         {/* Expansive Ambient Warm Golden Glass Chamber Flare - Anchored Exactly */}
-        <div className="absolute top-[17.2%] right-[18.6%] -translate-x-1/2 -translate-y-1/2 w-44 h-44 bg-amber-400/50 rounded-full blur-3xl pointer-events-none animate-pulse" />
-        <div className="absolute top-[17.2%] right-[18.6%] -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-yellow-200/60 rounded-full blur-xl pointer-events-none" />
+        <div className="absolute top-[17.2%] right-[13.5%] sm:right-[18.6%] -translate-x-1/2 -translate-y-1/2 w-44 h-44 bg-amber-400/50 rounded-full blur-3xl pointer-events-none animate-pulse" />
+        <div className="absolute top-[17.2%] right-[13.5%] sm:right-[18.6%] -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-yellow-200/60 rounded-full blur-xl pointer-events-none" />
       </div>
 
       {/* Main Foreground Content */}

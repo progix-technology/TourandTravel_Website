@@ -8,6 +8,7 @@ import {
   User,
   Phone,
   Plane,
+  ChevronLeft,
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useWishlist } from '../context/WishlistContext'
@@ -104,13 +105,13 @@ export const Navbar = () => {
         <div className="w-full py-3 sm:py-3.5 border-b border-white/10">
           <div className="w-full px-4 sm:px-8 lg:px-12 flex items-center justify-between">
             
-            {/* 1. LEFT: WhatsApp Quick Call Pill (Exact Match to Screenshot) */}
-            <div className="flex-1 flex items-center justify-start">
+            {/* 1. LEFT: WhatsApp Quick Call Pill (Desktop Only) */}
+            <div className="hidden sm:flex flex-1 items-center justify-start">
               <a
                 href={`https://wa.me/${cleanPhone}?text=${encodeURIComponent('Hello Tours & Travels Concierge! I would like to inquire about a custom luxury journey.')}`}
                 target="_blank"
                 rel="noreferrer"
-                className="hidden sm:inline-flex items-center gap-2.5 px-3.5 sm:px-4 py-1.5 rounded-full bg-[#0B241E]/80 hover:bg-[#071A16] border border-[#6FCF45]/30 hover:border-[#6FCF45] transition-all duration-300 shadow-sm group cursor-pointer"
+                className="inline-flex items-center gap-2.5 px-3.5 sm:px-4 py-1.5 rounded-full bg-[#0B241E]/80 hover:bg-[#071A16] border border-[#6FCF45]/30 hover:border-[#6FCF45] transition-all duration-300 shadow-sm group cursor-pointer"
               >
                 <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#25D366] flex items-center justify-center text-white shadow-xs group-hover:scale-110 transition-transform">
                   <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" viewBox="0 0 24 24">
@@ -123,83 +124,84 @@ export const Navbar = () => {
               </a>
             </div>
 
-            {/* 2. CENTER: Full Horizontal Brand Logo */}
-            <div className="flex-shrink-0 flex items-center justify-center">
-              <Link to="/" className="flex items-center gap-3 sm:gap-3.5 group focus:outline-none">
+            {/* 2. CENTER / LEFT (on mobile): Full Horizontal Brand Logo */}
+            <div className="flex-shrink-0 flex items-center justify-start sm:justify-center">
+              <Link to="/" className="flex items-center gap-2.5 sm:gap-3.5 group focus:outline-none">
                 <img
                   src={logoImg}
                   alt="Tours &amp; Travels Logo"
-                  className="h-8 sm:h-9 md:h-10 w-auto object-contain drop-shadow-[0_2px_10px_rgba(111,207,69,0.4)] transition-transform duration-300 group-hover:scale-105"
+                  className="h-7 sm:h-9 md:h-10 w-auto object-contain drop-shadow-[0_2px_10px_rgba(111,207,69,0.4)] transition-transform duration-300 group-hover:scale-105"
                 />
-                <span className="font-extrabold text-base sm:text-xl md:text-2xl tracking-[0.22em] text-white uppercase leading-none font-heading drop-shadow-lg">
+                <span className="font-extrabold text-sm sm:text-xl md:text-2xl tracking-[0.2em] text-white uppercase leading-none font-heading drop-shadow-lg">
                   TOURS <span className="text-[#6FCF45]">&amp;</span> TRAVELS
                 </span>
               </Link>
             </div>
 
-            {/* 3. RIGHT: Search, Wishlist & User Profile Icons */}
-            <div className="flex-1 flex items-center justify-end gap-4 sm:gap-6">
-              
-              {/* Search Icon Button */}
-              <button
-                type="button"
-                onClick={() => setSearchModalOpen(true)}
-                aria-label="Search Packages"
-                className="text-white/90 hover:text-[#6FCF45] transition-all p-1 focus:outline-none cursor-pointer hover:scale-110 active:scale-95"
-                title="Search Journeys &amp; Expeditions"
-              >
-                <Search className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
-              </button>
+            {/* 3. RIGHT: Desktop Icons + Mobile Hamburger Toggle */}
+            <div className="flex-1 flex items-center justify-end">
+              {/* Desktop Icons (Hidden on Mobile) */}
+              <div className="hidden md:flex items-center gap-4 sm:gap-6">
+                {/* Search Icon Button */}
+                <button
+                  type="button"
+                  onClick={() => setSearchModalOpen(true)}
+                  aria-label="Search Packages"
+                  className="text-white/90 hover:text-[#6FCF45] transition-all p-1 focus:outline-none cursor-pointer hover:scale-110 active:scale-95"
+                  title="Search Journeys &amp; Expeditions"
+                >
+                  <Search className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
+                </button>
 
-              {/* Wishlist Icon with Dynamic Badge */}
-              <Link
-                to="/wishlist"
-                aria-label="View Saved Wishlist"
-                className="text-white/90 hover:text-[#6FCF45] transition-all p-1 relative focus:outline-none cursor-pointer hover:scale-110 active:scale-95"
-                title="Saved Wishlist Expeditions"
-              >
-                <Heart className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
-                {wishlist && wishlist.length > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#6FCF45] text-[#071A16] text-[10px] font-extrabold flex items-center justify-center shadow-md animate-pulse">
-                    {wishlist.length}
-                  </span>
-                )}
-              </Link>
+                {/* Wishlist Icon with Dynamic Badge */}
+                <Link
+                  to="/wishlist"
+                  aria-label="View Saved Wishlist"
+                  className="text-white/90 hover:text-[#6FCF45] transition-all p-1 relative focus:outline-none cursor-pointer hover:scale-110 active:scale-95"
+                  title="Saved Wishlist Expeditions"
+                >
+                  <Heart className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
+                  {wishlist && wishlist.length > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#6FCF45] text-[#071A16] text-[10px] font-extrabold flex items-center justify-center shadow-md animate-pulse">
+                      {wishlist.length}
+                    </span>
+                  )}
+                </Link>
 
-              {/* User Account / Profile */}
-              <Link
-                to={isAuthenticated ? (user?.role === 'admin' ? '/admin' : '/account') : '/login'}
-                aria-label={isAuthenticated ? (user?.role === 'admin' ? 'Admin Portal' : 'Client Account Portal') : 'Guest Sign In'}
-                className="flex items-center gap-2 text-white/90 hover:text-[#6FCF45] transition-all p-1 focus:outline-none cursor-pointer hover:scale-110 active:scale-95"
-                title={isAuthenticated ? `Logged in as ${user?.name || 'Explorer'} (${user?.role === 'admin' ? 'Super Admin' : 'Member'})` : 'Guest Sign In'}
-              >
-                <User className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
-                {isAuthenticated && (
-                  <span className="hidden xl:inline text-xs font-extrabold uppercase tracking-wider text-[#6FCF45] max-w-[95px] truncate">
-                    {user?.name?.split(' ')[0] || 'VIP'}
-                  </span>
-                )}
-              </Link>
+                {/* User Account / Profile */}
+                <Link
+                  to={isAuthenticated ? (user?.role === 'admin' ? '/admin' : '/account') : '/login'}
+                  aria-label={isAuthenticated ? (user?.role === 'admin' ? 'Admin Portal' : 'Client Account Portal') : 'Guest Sign In'}
+                  className="flex items-center gap-2 text-white/90 hover:text-[#6FCF45] transition-all p-1 focus:outline-none cursor-pointer hover:scale-110 active:scale-95"
+                  title={isAuthenticated ? `Logged in as ${user?.name || 'Explorer'} (${user?.role === 'admin' ? 'Super Admin' : 'Member'})` : 'Guest Sign In'}
+                >
+                  <User className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
+                  {isAuthenticated && (
+                    <span className="hidden xl:inline text-xs font-extrabold uppercase tracking-wider text-[#6FCF45] max-w-[95px] truncate">
+                      {user?.name?.split(' ')[0] || 'VIP'}
+                    </span>
+                  )}
+                </Link>
+              </div>
 
-              {/* Mobile Hamburger Toggle */}
+              {/* Mobile Hamburger Toggle (Visible ONLY on Mobile) */}
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden text-white/90 hover:text-[#6FCF45] transition-colors p-1 focus:outline-none ml-1 cursor-pointer"
+                className="md:hidden text-white/90 hover:text-[#6FCF45] transition-colors p-1.5 rounded-lg hover:bg-white/5 focus:outline-none ml-1 cursor-pointer"
                 aria-label="Toggle Navigation Menu"
               >
-                {mobileMenuOpen ? <X className="w-7 h-7 stroke-[2.5]" /> : <Menu className="w-7 h-7 stroke-[2.5]" />}
+                {mobileMenuOpen ? <X className="w-6 h-6 stroke-[2.5]" /> : <Menu className="w-6 h-6 stroke-[2.5]" />}
               </button>
-
             </div>
 
           </div>
         </div>
 
         {/* ========================================================================= */}
-        {/* TIER 2: MAIN NAVIGATION BAR                                               */}
+        {/* TIER 2: MAIN NAVIGATION BAR (Desktop Only - Hidden on Mobile)             */}
         {/* ========================================================================= */}
-        <div className="py-3 sm:py-3.5">
+        <div className="hidden md:block py-3 sm:py-3.5">
           <div className="w-full px-4 sm:px-8 lg:px-12 flex items-center justify-between">
             
             {/* 1. LEFT: Social Icons */}
@@ -286,35 +288,31 @@ export const Navbar = () => {
               <X className="w-6 h-6" />
             </button>
 
-            <div className="text-center mb-6">
-              <span className="text-xs font-extrabold uppercase tracking-[0.25em] text-[#6FCF45] font-heading">
-                EXPEDITION DISCOVERY
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-heading mt-1">
-                Where would you like to travel?
-              </h2>
-            </div>
+            <h3 className="text-xl sm:text-2xl font-bold text-white font-heading mb-6 flex items-center gap-2">
+              <Search className="w-6 h-6 text-[#6FCF45]" />
+              <span>Search Luxury Expeditions</span>
+            </h3>
 
             <form onSubmit={handleSearchSubmit} className="relative">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by destination (e.g. Kashmir, Maldives, Paris, Switzerland)..."
+                placeholder="Search by destination (e.g. Kashmir, Maldives, Bali, Switzerland)..."
+                className="w-full bg-[#071A16] border-2 border-[#6FCF45] rounded-full py-4 pl-6 pr-32 text-white placeholder-white/40 focus:outline-none focus:ring-4 focus:ring-[#6FCF45]/20 text-sm sm:text-base font-medium"
                 autoFocus
-                className="w-full bg-[#071A16] border-2 border-white/20 focus:border-[#6FCF45] rounded-2xl px-5 py-4 text-sm sm:text-base text-white placeholder:text-white/40 focus:outline-none shadow-inner transition-all pr-28"
               />
               <button
                 type="submit"
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-[#6FCF45] hover:bg-[#5eb937] text-[#071A16] px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all"
+                className="absolute right-2 top-2 bottom-2 px-6 rounded-full bg-[#6FCF45] text-[#071A16] font-bold text-xs uppercase tracking-wider hover:bg-[#85e65b] transition-colors"
               >
                 Search
               </button>
             </form>
 
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-xs text-white/70">
-              <span className="text-white/40 uppercase font-semibold text-[10px]">Popular:</span>
-              {['Kashmir', 'Maldives', 'Switzerland', 'Rajasthan', 'Kerala', 'Dubai'].map((tag) => (
+            <div className="mt-6 flex flex-wrap items-center gap-2">
+              <span className="text-xs text-white/50">Popular:</span>
+              {['Kashmir', 'Maldives', 'Bali', 'Switzerland', 'Dubai', 'Rajasthan'].map((tag) => (
                 <button
                   key={tag}
                   type="button"
@@ -322,7 +320,7 @@ export const Navbar = () => {
                     navigate(`/tours?search=${encodeURIComponent(tag)}`)
                     setSearchModalOpen(false)
                   }}
-                  className="px-3 py-1 rounded-full bg-white/5 hover:bg-[#6FCF45] hover:text-[#071A16] transition-colors border border-white/10 cursor-pointer"
+                  className="text-xs px-3 py-1 rounded-full bg-white/5 hover:bg-[#6FCF45]/20 text-white/80 hover:text-[#6FCF45] border border-white/10 transition-colors"
                 >
                   {tag}
                 </button>
@@ -333,12 +331,77 @@ export const Navbar = () => {
       )}
 
       {/* ========================================================================= */}
-      {/* MOBILE FULL-SCREEN NAVIGATION DRAWER                                      */}
+      {/* MOBILE SLIDE-OVER NAVIGATION DRAWER (Compact & Integrated)                */}
       {/* ========================================================================= */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 top-[60px] z-40 bg-[#071A16]/98 backdrop-blur-2xl md:hidden flex flex-col justify-between p-6 overflow-y-auto animate-fadeIn select-none border-t border-white/10">
-          <div className="space-y-4 pt-4">
-            <nav className="flex flex-col space-y-3">
+        <div className="fixed inset-0 z-[100] md:hidden">
+          {/* Backdrop Overlay (No Blur) */}
+          <div
+            onClick={() => setMobileMenuOpen(false)}
+            className="fixed inset-0 bg-black/60 animate-fadeIn cursor-pointer"
+          />
+
+          {/* Compact Slide-over Drawer Panel */}
+          <div className="fixed top-0 right-0 bottom-0 w-[310px] sm:w-[340px] max-w-[90vw] bg-[#071A16] border-l border-white/10 p-5 overflow-y-auto z-10 animate-slideLeft flex flex-col justify-start select-none shadow-2xl">
+            {/* Top Bar: '<' Back Button */}
+            <div className="flex items-center justify-start pb-3.5 border-b border-white/10">
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-[#6FCF45] text-white hover:text-[#071A16] flex items-center justify-center transition-all cursor-pointer"
+                aria-label="Back / Close Menu"
+              >
+                <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
+              </button>
+            </div>
+
+            {/* Quick Actions Grid: Search, Wishlist, User Profile (3 Compact Cards) */}
+            <div className="grid grid-cols-3 gap-2 py-3.5 border-b border-white/10">
+              {/* 1. Search */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false)
+                  setSearchModalOpen(true)
+                }}
+                className="flex flex-col items-center justify-center gap-1 py-2.5 px-1 rounded-xl bg-white/5 border border-white/10 text-white hover:text-[#6FCF45] hover:border-[#6FCF45]/50 transition-all cursor-pointer active:scale-95"
+              >
+                <Search className="w-4 h-4 text-[#6FCF45]" />
+                <span className="text-[9.5px] font-bold uppercase tracking-wider">Search</span>
+              </button>
+
+              {/* 2. Wishlist */}
+              <Link
+                to="/wishlist"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex flex-col items-center justify-center gap-1 py-2.5 px-1 rounded-xl bg-white/5 border border-white/10 text-white hover:text-[#6FCF45] hover:border-[#6FCF45]/50 transition-all relative cursor-pointer active:scale-95"
+              >
+                <div className="relative">
+                  <Heart className="w-4 h-4 text-[#6FCF45]" />
+                  {wishlist && wishlist.length > 0 && (
+                    <span className="absolute -top-1.5 -right-2 w-3.5 h-3.5 rounded-full bg-[#6FCF45] text-[#071A16] text-[9px] font-extrabold flex items-center justify-center shadow-md">
+                      {wishlist.length}
+                    </span>
+                  )}
+                </div>
+                <span className="text-[9.5px] font-bold uppercase tracking-wider">Wishlist</span>
+              </Link>
+
+              {/* 3. User Profile */}
+              <Link
+                to={isAuthenticated ? (user?.role === 'admin' ? '/admin' : '/account') : '/login'}
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex flex-col items-center justify-center gap-1 py-2.5 px-1 rounded-xl bg-white/5 border border-white/10 text-white hover:text-[#6FCF45] hover:border-[#6FCF45]/50 transition-all cursor-pointer active:scale-95"
+              >
+                <User className="w-4 h-4 text-[#6FCF45]" />
+                <span className="text-[9.5px] font-bold uppercase tracking-wider truncate max-w-[70px]">
+                  {isAuthenticated ? (user?.name?.split(' ')[0] || 'Profile') : 'Sign In'}
+                </span>
+              </Link>
+            </div>
+
+            {/* Nav Links */}
+            <nav className="flex flex-col space-y-0.5 py-2.5">
               {navLinks.map((link) => {
                 const isActive =
                   link.path === '/'
@@ -350,9 +413,9 @@ export const Navbar = () => {
                     key={link.name}
                     to={link.path}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`text-base font-bold tracking-[0.16em] uppercase py-2 px-3 rounded-lg transition-all ${
+                    className={`text-xs font-bold tracking-[0.16em] uppercase py-2 px-3 rounded-lg transition-all ${
                       isActive
-                        ? 'text-[#6FCF45] bg-white/5 border-l-4 border-[#6FCF45]'
+                        ? 'text-[#6FCF45] bg-white/10 border-l-4 border-[#6FCF45]'
                         : 'text-white/80 hover:text-white hover:bg-white/5'
                     }`}
                   >
@@ -361,26 +424,27 @@ export const Navbar = () => {
                 )
               })}
             </nav>
-          </div>
 
-          <div className="pt-6 border-t border-white/10 space-y-3">
-            <Link
-              to="/custom-trip"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full bg-transparent hover:bg-white/10 text-white border border-white/70 hover:border-white py-3 rounded-full font-bold text-xs uppercase tracking-wider text-center block transition-all"
-            >
-              BOOK NOW
-            </Link>
+            {/* Bottom CTAs: Directly underneath Nav Links */}
+            <div className="pt-3.5 border-t border-white/10 space-y-2 mt-1">
+              <Link
+                to="/custom-trip"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full bg-transparent hover:bg-white/10 text-white border border-white/70 hover:border-white py-2.5 rounded-full font-bold text-xs uppercase tracking-widest text-center block transition-all shadow-sm active:scale-95 cursor-pointer"
+              >
+                BOOK NOW
+              </Link>
 
-            <a
-              href={`https://wa.me/${cleanPhone}`}
-              target="_blank"
-              rel="noreferrer"
-              className="w-full bg-white/5 border border-white/10 text-white py-3 rounded-full font-bold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2"
-            >
-              <Phone className="w-3.5 h-3.5 text-[#6FCF45]" />
-              <span>{displayPhone}</span>
-            </a>
+              <a
+                href={`https://wa.me/${cleanPhone}`}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white py-2.5 rounded-full font-semibold text-xs uppercase tracking-wider text-center flex items-center justify-center gap-2 transition-colors cursor-pointer"
+              >
+                <Phone className="w-3.5 h-3.5 text-[#6FCF45]" />
+                <span>Call Now: {displayPhone}</span>
+              </a>
+            </div>
           </div>
         </div>
       )}

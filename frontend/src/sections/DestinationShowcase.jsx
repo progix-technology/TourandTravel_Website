@@ -193,7 +193,7 @@ export const DestinationShowcase = () => {
   return (
     <section
       id="destination-gallery"
-      className="relative min-h-screen bg-[#071A16] text-white pt-7 sm:pt-8 lg:pt-9 pb-8 sm:pb-10 lg:pb-12 px-3 sm:px-6 lg:px-8 overflow-hidden flex flex-col justify-between select-none"
+      className="relative bg-[#071A16] text-white pt-6 sm:pt-8 lg:pt-9 pb-8 sm:pb-10 lg:pb-12 px-3 sm:px-6 lg:px-8 overflow-hidden flex flex-col justify-start select-none"
     >
       {/* Background Ambient Glows & Brand Logo Watermark */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#6FCF45]/5 rounded-full blur-[120px] pointer-events-none -z-10" />
@@ -220,8 +220,8 @@ export const DestinationShowcase = () => {
       </div>
 
       {/* 1. Header Section with Balanced Spacing */}
-      <div className="relative z-20 w-full max-w-[1720px] mx-auto mb-4 sm:mb-5 lg:mb-6">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-3">
+      <div className="relative z-20 w-full max-w-[1720px] mx-auto mb-3 sm:mb-4 lg:mb-6">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-2.5 sm:gap-3">
           {/* Center Heading with flight loop emerging directly from 'd' in World */}
           <div className="flex-1 flex flex-col items-center text-center relative">
             <div className="relative inline-flex items-center">
@@ -247,7 +247,7 @@ export const DestinationShowcase = () => {
           </div>
 
           {/* Right Statistics Counters: Direct Clean Icons */}
-          <div className="flex items-center gap-5 sm:gap-7 lg:gap-8 lg:absolute lg:right-0">
+          <div className="flex items-center gap-5 sm:gap-7 lg:gap-8 lg:absolute lg:right-0 mt-1 lg:mt-0">
             {/* Stat 1: Destinations */}
             <div className="flex flex-col items-center text-center group cursor-default">
               <Globe2 className="w-5 h-5 text-[#6FCF45] mb-0.5 drop-shadow-[0_0_8px_rgba(111,207,69,0.5)] transition-transform duration-300 group-hover:scale-110" />
@@ -284,9 +284,9 @@ export const DestinationShowcase = () => {
         </div>
       </div>
 
-      {/* 2. 8-Panel Full-Width Showcase: Horizontal snap-swipe on mobile, Grand expanding accordion on desktop */}
-      <div className="relative z-10 w-full max-w-[1720px] mx-auto flex-1 flex flex-col justify-center">
-        <div className="w-full flex lg:flex-row gap-2.5 sm:gap-3 items-stretch overflow-x-auto lg:overflow-visible no-scrollbar snap-x snap-mandatory py-2 h-[440px] sm:h-[500px] lg:h-[680px] xl:h-[720px] px-1">
+      {/* 2. 8-Panel Showcase: 2-column grid on mobile (all 8 visible), 4-column on tablet, Grand expanding accordion on desktop */}
+      <div className="relative z-10 w-full max-w-[1720px] mx-auto mt-1 sm:mt-2">
+        <div className="w-full grid grid-cols-2 sm:grid-cols-4 lg:flex lg:flex-row gap-2.5 sm:gap-3 items-stretch py-2 lg:h-[680px] xl:h-[720px] px-0.5 sm:px-1">
           {destinations.map((dest, idx) => {
             const isExpanded = activePanel === idx
             const DestinationIcon = dest.Icon
@@ -303,11 +303,11 @@ export const DestinationShowcase = () => {
                   stiffness: 280,
                   damping: 30,
                 }}
-                className={`relative rounded-[18px] sm:rounded-[22px] lg:rounded-[24px] overflow-hidden cursor-pointer select-none transition-all duration-500 shadow-xl border border-white/10 group snap-center shrink-0 w-[240px] sm:w-[280px] lg:w-auto lg:shrink ${
+                className={`relative rounded-[16px] sm:rounded-[22px] lg:rounded-[24px] overflow-hidden cursor-pointer select-none transition-all duration-500 shadow-xl border border-white/10 group h-[200px] sm:h-[260px] lg:h-full w-full lg:w-auto ${
                   isExpanded
                     ? 'lg:flex-[2.8] ring-2 ring-[#6FCF45]/50'
                     : activePanel !== null
-                    ? 'lg:flex-[0.85] opacity-75 hover:opacity-95'
+                    ? 'lg:flex-[0.85] opacity-80 hover:opacity-95'
                     : 'lg:flex-1 opacity-95 hover:opacity-100'
                 }`}
               >
@@ -329,46 +329,48 @@ export const DestinationShowcase = () => {
                 </div>
 
                 {/* Top Label: Destination Name & Country */}
-                <div className="absolute top-0 inset-x-0 p-3.5 sm:p-4 z-20 flex flex-col items-center text-center">
-                  <h3 className="text-lg sm:text-xl lg:text-[22px] font-bold tracking-tight text-white font-heading leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] whitespace-nowrap">
+                <div className="absolute top-0 inset-x-0 p-2.5 sm:p-3.5 lg:p-4 z-20 flex flex-col items-center text-center">
+                  <h3 className="text-base sm:text-lg lg:text-[22px] font-bold tracking-tight text-white font-heading leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] whitespace-nowrap truncate max-w-full">
                     {dest.name}
                   </h3>
-                  <span className="text-[11px] sm:text-xs font-semibold tracking-wider text-[#6FCF45] font-sans mt-0.5 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] whitespace-nowrap">
+                  <span className="text-[10px] sm:text-[11px] lg:text-xs font-semibold tracking-wider text-[#6FCF45] font-sans mt-0.5 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] whitespace-nowrap truncate max-w-full">
                     {dest.country}
                   </span>
                 </div>
 
                 {/* Bottom Center: Minimalist Landmark Line Art Icon */}
-                <div className="absolute bottom-4 sm:bottom-4.5 inset-x-0 z-20 flex flex-col items-center justify-center pointer-events-none transition-transform duration-300 group-hover:scale-110">
+                <div className={`absolute bottom-3 sm:bottom-4 lg:bottom-4.5 inset-x-0 z-20 flex flex-col items-center justify-center pointer-events-none transition-transform duration-300 group-hover:scale-110 ${
+                  isExpanded ? 'opacity-0' : 'opacity-100'
+                }`}>
                   <DestinationIcon />
                 </div>
 
                 {/* Bottom Overlay: Revealed on Expanded State */}
                 <div
-                  className={`absolute bottom-0 inset-x-0 p-4 sm:p-5 z-30 flex flex-col justify-end bg-gradient-to-t from-black/95 via-black/80 to-transparent transition-all duration-300 ${
+                  className={`absolute bottom-0 inset-x-0 p-2.5 sm:p-4 lg:p-5 z-30 flex flex-col justify-end bg-gradient-to-t from-black/95 via-black/85 to-transparent transition-all duration-300 ${
                     isExpanded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
                   }`}
                 >
-                  <p className="text-[11px] sm:text-xs text-white/90 font-normal leading-relaxed line-clamp-2 drop-shadow-md mb-2.5">
+                  <p className="text-[9.5px] sm:text-[11px] lg:text-xs text-white/90 font-normal leading-tight sm:leading-relaxed line-clamp-2 drop-shadow-md mb-1.5 sm:mb-2.5">
                     {dest.tagline}
                   </p>
 
-                  <div className="flex items-center justify-between pt-2.5 border-t border-white/20">
+                  <div className="flex items-center justify-between pt-1.5 sm:pt-2.5 border-t border-white/20">
                     <div>
-                      <span className="text-[9px] uppercase tracking-wider text-white/70 block">
+                      <span className="text-[7.5px] sm:text-[9px] uppercase tracking-wider text-white/70 block">
                         {dest.duration}
                       </span>
-                      <span className="text-xs sm:text-sm font-bold text-[#6FCF45] font-mono">
+                      <span className="text-[10.5px] sm:text-xs lg:text-sm font-bold text-[#6FCF45] font-mono">
                         From {dest.price}
                       </span>
                     </div>
 
                     <Link
                       to={dest.link}
-                      className="inline-flex items-center gap-1 bg-white text-[#071A16] px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider hover:bg-[#6FCF45] transition-colors shadow-lg"
+                      className="inline-flex items-center gap-0.5 sm:gap-1 bg-white text-[#071A16] px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-[9px] sm:text-[11px] font-semibold uppercase tracking-wider hover:bg-[#6FCF45] transition-colors shadow-lg"
                     >
                       <span>Explore</span>
-                      <ArrowUpRight className="w-3 h-3" />
+                      <ArrowUpRight className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                     </Link>
                   </div>
                 </div>

@@ -1,12 +1,22 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-import { ArrowRight, Compass } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import userAirplaneImg from '../assets/images/user_airplane.png'
 import thirdSlideBg from '../assets/images/3rdslidebg.png'
 
 export const PrivateAviation = () => {
   const containerRef = useRef(null)
+  const [isDesktop, setIsDesktop] = useState(
+    typeof window !== 'undefined' ? window.innerWidth >= 768 : false
+  )
+
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth >= 768)
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   // Scroll runway - EXACTLY preserved
   const { scrollYProgress } = useScroll({
@@ -18,9 +28,9 @@ export const PrivateAviation = () => {
   const springConfig = { damping: 18, stiffness: 140, mass: 0.5 }
   const smoothFlight = useSpring(scrollYProgress, springConfig)
 
-  // Airplane flight traverse - EXACTLY preserved
-  const planeX = useTransform(smoothFlight, [0.06, 0.50, 0.88], ['-130vw', '0vw', '130vw'])
-  const planeOpacity = useTransform(smoothFlight, [0, 0.06, 0.88, 0.96], [0, 1, 1, 0])
+  // Airplane flight traverse - Smoothly traverses across the middle of the slide
+  const planeX = useTransform(smoothFlight, [0.08, 0.5, 0.92], ['-130vw', '0vw', '130vw'])
+  const planeOpacity = useTransform(smoothFlight, [0, 0.08, 0.92, 0.98], [0, 1, 1, 0])
 
   // Precision Matched Coordinates for each 3D Landmark Illustrated on the Map
   const destinations = [
@@ -28,89 +38,107 @@ export const PrivateAviation = () => {
       name: 'NEW YORK',
       country: 'USA',
       icon: '🗽',
-      // Statue of Liberty in North America
       top: '23%',
       left: '20%',
+      showOnMobile: false,
     },
     {
       name: 'MACHU PICCHU',
       country: 'PERU',
       icon: '🛕',
-      // Mountain Rainforest Temple in South America
       top: '60%',
       left: '24%',
+      showOnMobile: false,
     },
     {
       name: 'PARIS',
       country: 'FRANCE',
       icon: '🗼',
-      // Eiffel Tower in Europe
-      top: '15%',
+      // Directly on Eiffel Tower 3D structure
+      top: '20%',
       left: '44%',
+      mobileTop: '25%',
+      mobileLeft: '22%',
+      showOnMobile: true,
     },
     {
-      name: 'SANTORINI',
-      country: 'GREECE',
-      icon: '🏛️',
-      // White Domes Island in Mediterranean
+      name: 'SWITZERLAND',
+      country: 'EUROPE',
+      icon: '🏔️',
+      // Scenic Alpine & Mediterranean Haven
       top: '36%',
       left: '44%',
+      mobileTop: '43%',
+      mobileLeft: '26%',
+      showOnMobile: true,
     },
     {
       name: 'CAPE TOWN',
       country: 'SOUTH AFRICA',
       icon: '🌊',
-      // Southern African Tip
+      // Directly on the Southern African Mountains & Lake
       top: '72%',
       left: '48%',
+      mobileTop: '77%',
+      mobileLeft: '27%',
+      showOnMobile: true,
     },
     {
       name: 'DUBAI',
       country: 'UAE',
       icon: '🏙️',
-      // Burj Khalifa & Futuristic Skyline in Middle East
+      // Directly on Burj Khalifa & Futuristic Skyline Island
       top: '28%',
       left: '58%',
+      mobileTop: '35%',
+      mobileLeft: '72%',
+      showOnMobile: true,
     },
     {
       name: 'KASHMIR',
       country: 'INDIA',
       icon: '🏔️',
-      // Snow-Capped Himalayan Mountain Range
       top: '14%',
       left: '69%',
+      showOnMobile: false,
     },
     {
       name: 'MALDIVES',
       country: 'INDIAN OCEAN',
       icon: '🏝️',
-      // Overwater Tropical Lagoon Villas in Indian Ocean
-      top: '77%',
-      left: '65%',
+      // Directly on the Bottom-Right Turquoise Lagoon Overwater Villas
+      top: '60%',
+      left: '64%',
+      mobileTop: '72%',
+      mobileLeft: '88%',
+      showOnMobile: true,
     },
     {
       name: 'BALI',
       country: 'INDONESIA',
       icon: '⛩️',
-      // Balinese Pagoda Temple & Palm Island
+      // Directly on Central Palm Oasis Island
       top: '50%',
       left: '74%',
+      mobileTop: '57%',
+      mobileLeft: '32%',
+      showOnMobile: true,
     },
     {
       name: 'TOKYO',
       country: 'JAPAN',
       icon: '🌸',
-      // Japanese Pagoda & Cherry Blossoms in East Asia
       top: '27%',
       left: '83%',
+      showOnMobile: false,
     },
     {
       name: 'SYDNEY',
       country: 'AUSTRALIA',
       icon: '⛵',
-      // Australian Continent Landmark Marker
       top: '74%',
       left: '86%',
+      showOnMobile: false,
     },
   ]
 
@@ -121,7 +149,7 @@ export const PrivateAviation = () => {
       className="relative h-[180vh] bg-[#FAF8F2] w-full select-none"
     >
       {/* Sticky Full-Width Viewport Slide */}
-      <div className="sticky top-0 h-screen flex flex-col justify-between overflow-hidden w-full max-w-none p-6 sm:p-10 lg:p-14">
+      <div className="sticky top-0 h-screen overflow-hidden w-full max-w-none">
         {/* 1. Travel World-Map Relief Background */}
         <div className="absolute inset-0 w-full h-full pointer-events-none">
           <img
@@ -208,7 +236,7 @@ export const PrivateAviation = () => {
           />
           {/* Bali to Maldives */}
           <path
-            d="M 74 50 Q 70 64 65 77"
+            d="M 74 50 Q 69 58 64 60"
             fill="none"
             stroke="url(#goldRouteGrad)"
             strokeWidth="1.5"
@@ -241,19 +269,18 @@ export const PrivateAviation = () => {
           {destinations.map((dest) => (
             <div
               key={dest.name}
-              style={{ top: dest.top, left: dest.left }}
-              className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center gap-1.5 group pointer-events-auto cursor-default transition-transform duration-300 hover:scale-110"
+              style={{
+                top: !isDesktop && dest.mobileTop ? dest.mobileTop : dest.top,
+                left: !isDesktop && dest.mobileLeft ? dest.mobileLeft : dest.left,
+              }}
+              className={`absolute -translate-x-1/2 -translate-y-1/2 ${
+                dest.showOnMobile ? 'flex' : 'hidden md:flex'
+              } flex-col items-center group pointer-events-auto cursor-default transition-transform duration-300 hover:scale-110`}
             >
-              {/* Subtle Gold / Olive Location Pin Marker */}
-              <span className="relative flex h-2.5 w-2.5 shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C69242] opacity-60" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#C69242] border border-white shadow-sm" />
-              </span>
-
               {/* Minimal Cartography Annotation Badge */}
-              <div className="flex flex-col text-left bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-[3px] border border-[#C69242]/30 shadow-[0_3px_10px_rgba(0,0,0,0.08)]">
+              <div className="flex flex-col items-center text-center bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-[3px] border border-[#C69242]/30 shadow-[0_3px_10px_rgba(0,0,0,0.08)]">
                 <div className="flex items-center gap-1.5 leading-none">
-                  <span className="text-[10px] sm:text-[10.5px] font-bold uppercase tracking-[0.14em] text-[#13251F] font-heading whitespace-nowrap">
+                  <span className="text-[9.5px] sm:text-[10.5px] font-bold uppercase tracking-[0.14em] text-[#13251F] font-heading whitespace-nowrap">
                     {dest.name}
                   </span>
                   <span className="text-[10px] leading-none">{dest.icon}</span>
@@ -262,21 +289,30 @@ export const PrivateAviation = () => {
                   {dest.country}
                 </span>
               </div>
+
+              {/* Subtle Gold Location Pin Marker Underneath Badge */}
+              <div className="flex flex-col items-center mt-0.5">
+                <div className="w-[1px] h-1.5 bg-[#C69242]/70" />
+                <span className="relative flex h-2 w-2 shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#C69242] opacity-60" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-[#C69242] border border-white shadow-sm" />
+                </span>
+              </div>
             </div>
           ))}
         </div>
 
-        {/* 5. Center Grand Flying Airplane (Fine-tuned balanced elevation) */}
-        <div className="relative w-full flex-1 flex items-center justify-center pointer-events-none">
+        {/* 5. Center Flying Airplane Crossing Directly Across the Middle of the Slide */}
+        <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none z-30">
           <motion.div
             style={{
               x: planeX,
               opacity: planeOpacity,
             }}
-            className="relative z-30 w-full max-w-[900px] sm:max-w-[1150px] lg:max-w-[1380px] xl:max-w-[1550px] flex items-center justify-center select-none -translate-y-4 sm:-translate-y-8 lg:-translate-y-11"
+            className="relative w-full max-w-[850px] sm:max-w-[1100px] lg:max-w-[1350px] xl:max-w-[1500px] flex items-center justify-center select-none translate-y-0"
           >
             {/* Aerodynamic Soft Shadow */}
-            <div className="absolute w-[90%] h-14 bg-black/15 rounded-full blur-2xl top-[86%] left-1/2 -translate-x-1/2 scale-y-50 pointer-events-none" />
+            <div className="absolute w-[88%] h-14 bg-black/15 rounded-full blur-2xl top-[86%] left-1/2 -translate-x-1/2 scale-y-50 pointer-events-none" />
 
             {/* Exact Airplane Image */}
             <img
@@ -287,33 +323,33 @@ export const PrivateAviation = () => {
           </motion.div>
         </div>
 
-        {/* 6. Lower Area: Editorial Heading, Description, CTA, Bottom-Left Text & Right Stats */}
-        <div className="relative z-20 w-full grid grid-cols-1 md:grid-cols-12 gap-6 items-end pb-2 sm:pb-4">
-          {/* Main Editorial Heading & CTA (Center-Left / Lower-Center) */}
+        {/* 6. Lower Editorial Content Block (Firmly pinned at the bottom of the slide) */}
+        <div className="absolute bottom-2.5 sm:bottom-5 lg:bottom-7 left-4 sm:left-10 lg:left-14 right-4 sm:right-10 lg:right-14 z-20 grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-6 items-end pointer-events-auto">
+          {/* Main Editorial Heading & CTA */}
           <div className="md:col-span-8 flex flex-col items-start text-left max-w-xl">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold tracking-tight text-[#13251F] leading-[1.1] font-heading">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold tracking-tight text-[#13251F] leading-[1.08] font-heading">
               ONE JOURNEY. <br />
               <span className="text-[#13251F]">COUNTLESS </span>
               <span className="text-[#C69242] font-bold">STORIES.</span>
             </h2>
 
-            <p className="mt-2.5 text-xs sm:text-sm text-[#4A5D54] leading-relaxed max-w-lg font-normal">
+            <p className="mt-1.5 sm:mt-2.5 text-xs sm:text-sm text-[#4A5D54] leading-relaxed max-w-lg font-normal">
               From iconic destinations to hidden escapes, discover journeys made for unforgettable memories.
             </p>
 
             {/* Premium CTA Button */}
-            <div className="mt-4 sm:mt-5">
+            <div className="mt-3 sm:mt-4">
               <Link
                 to="/destinations"
-                className="group inline-flex items-center gap-2.5 bg-[#071A16] text-white px-6 py-3 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 hover:bg-[#0F352C] hover:shadow-lg active:scale-95"
+                className="group inline-flex items-center gap-2.5 bg-[#071A16] text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 hover:bg-[#0F352C] hover:shadow-lg active:scale-95 cursor-pointer"
               >
                 <span>Explore Destinations</span>
                 <ArrowRight className="w-4 h-4 text-[#C69242] transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </div>
 
-            {/* Bottom-Left Editorial Text */}
-            <div className="mt-5 flex items-baseline gap-2 text-xs font-medium text-[#1E2B25]/80 uppercase tracking-widest font-heading">
+            {/* Bottom-Left Editorial Tagline */}
+            <div className="mt-2.5 sm:mt-4 flex items-baseline gap-2 text-xs font-medium text-[#1E2B25]/80 uppercase tracking-widest font-heading">
               <span>EVERY PLACE</span>
               <span className="text-[#C69242] font-semibold italic capitalize tracking-normal font-sans text-sm">
                 Tells a Story
@@ -321,7 +357,7 @@ export const PrivateAviation = () => {
             </div>
           </div>
 
-          {/* Right-Side Subtle Micro Statistics */}
+          {/* Right-Side Subtle Micro Statistics (Desktop only) */}
           <div className="hidden md:flex md:col-span-4 justify-end">
             <div className="flex items-center gap-6 lg:gap-8 bg-white/80 backdrop-blur-md px-5 py-3 rounded-[3px] border border-[#1E2B25]/10 shadow-sm">
               <div className="flex flex-col text-left">
