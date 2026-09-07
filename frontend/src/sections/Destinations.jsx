@@ -30,7 +30,7 @@ export const Destinations = () => {
   const paris = destList.find((d) => (d.slug || d.id) === 'paris') || destList[5] || destList[0]
 
   return (
-    <section id="destinations" className="relative bg-[#FAF8F2] text-[#13251F] pt-40 sm:pt-48 lg:pt-56 pb-20 sm:pb-24 lg:pb-28 z-10">
+    <section id="destinations" className="relative bg-[#FAF8F2] text-[#13251F] pt-8 sm:pt-14 lg:pt-56 pb-14 sm:pb-20 lg:pb-28 z-10">
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Heading with VIEW ALL → link (without DESTINATIONS eyebrow) */}
         <SectionHeading
