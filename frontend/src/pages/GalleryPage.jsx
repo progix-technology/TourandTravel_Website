@@ -178,10 +178,12 @@ export const GalleryPage = () => {
         {/* Background Banner Image Asset (100% Edge-to-Edge) */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <img
-            src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=2000&q=85"
+            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1440&q=75"
             alt="Travel Gallery Banner"
             className="w-full h-full object-cover object-center scale-105"
             loading="eager"
+            fetchPriority="high"
+            decoding="async"
           />
           {/* Layered Gradient Overlays */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#071A16]/90 via-black/35 to-[#071A16]/40" />

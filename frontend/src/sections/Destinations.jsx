@@ -31,7 +31,7 @@ export const Destinations = () => {
 
   return (
     <section id="destinations" className="relative bg-[#FAF8F2] text-[#13251F] pt-8 sm:pt-14 lg:pt-56 pb-14 sm:pb-20 lg:pb-28 z-10">
-      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1560px] mx-auto px-4 sm:px-6 lg:px-10">
         {/* Section Heading with VIEW ALL → link (without DESTINATIONS eyebrow) */}
         <SectionHeading
           title="Where Will You Go Next?"

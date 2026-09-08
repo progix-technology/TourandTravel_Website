@@ -98,6 +98,26 @@ const getRegionKey = (loc) => {
   return country || 'Global'
 }
 
+// Format cluster numbers with elegant '+' thresholds (e.g. 206 -> 200+, 159 -> 150+, 39 -> 30+, 17 -> 15+, 7 -> 5+)
+const formatClusterBadge = (count) => {
+  if (count >= 100) {
+    const rounded = Math.floor(count / 50) * 50
+    return `${rounded}+`
+  }
+  if (count >= 20) {
+    const rounded = Math.floor(count / 10) * 10
+    return `${rounded}+`
+  }
+  if (count >= 10) {
+    const rounded = Math.floor(count / 5) * 5
+    return `${rounded}+`
+  }
+  if (count >= 5) {
+    return '5+'
+  }
+  return `${count}`
+}
+
 export const ExploreMap = ({
   locations = [],
   activeMode = 'WORLD', // 'INDIA' | 'WORLD'
@@ -300,11 +320,12 @@ export const ExploreMap = ({
       if (isMulti || (!showDestinationNameDetails && !isSelected && !isHovered)) {
         const centerLat = cluster.centerLat
         const centerLng = cluster.centerLng
+        const displayBadge = isMulti ? formatClusterBadge(count) : '1'
 
         const clusterHtml = `
-          <div class="flex items-center justify-center cursor-pointer select-none transition-transform duration-200 hover:scale-115 no-underline" style="width: 36px; height: 36px;">
-            <div style="width: 32px; height: 32px; min-width: 32px; min-height: 32px; max-width: 32px; max-height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.18); border: 1.5px solid rgba(7, 79, 69, 0.15); text-decoration: none; aspect-ratio: 1 / 1;">
-              <span style="font-family: inherit; font-size: 11.5px; font-weight: 800; color: #074F45; text-decoration: none; line-height: 1; text-align: center; user-select: none;">${count}</span>
+          <div class="flex items-center justify-center cursor-pointer select-none transition-transform duration-200 hover:scale-115 no-underline" style="width: 38px; height: 38px;">
+            <div style="min-width: 34px; height: 34px; padding: 0 5px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.18); border: 1.5px solid rgba(7, 79, 69, 0.15); text-decoration: none;">
+              <span style="font-family: inherit; font-size: 11px; font-weight: 800; color: #074F45; text-decoration: none; line-height: 1; text-align: center; user-select: none; letter-spacing: -0.3px;">${displayBadge}</span>
             </div>
           </div>
         `
@@ -312,8 +333,8 @@ export const ExploreMap = ({
         const clusterIcon = L.divIcon({
           className: 'custom-cluster-badge bg-transparent border-none',
           html: clusterHtml,
-          iconSize: [36, 36],
-          iconAnchor: [18, 18],
+          iconSize: [38, 38],
+          iconAnchor: [19, 19],
         })
 
         const marker = L.marker([centerLat, centerLng], { icon: clusterIcon })

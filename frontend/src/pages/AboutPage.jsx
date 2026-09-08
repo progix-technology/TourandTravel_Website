@@ -105,9 +105,12 @@ export const AboutPage = () => {
         {/* Background Luxury Heritage Banner Image Asset (100% Edge-to-Edge) */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <img
-            src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=2000&q=85"
+            src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1440&q=75"
             alt="About Tour and Travels Banner"
             className="w-full h-full object-cover object-center scale-105"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
           />
           {/* Transparent Layered Gradient Overlays */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#071A16]/90 via-black/35 to-[#071A16]/40" />

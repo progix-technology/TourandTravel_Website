@@ -150,9 +150,12 @@ export const ContactPage = () => {
         {/* Full-Bleed High-Res Destination Image Background */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
           <img
-            src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=2400&q=95"
+            src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1440&q=75"
             alt="Luxury Travel Concierge"
             className="w-full h-full object-cover object-center scale-105"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
           />
           {/* Transparent Layered Gradient Overlays */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#071A16]/90 via-black/35 to-[#071A16]/40" />
