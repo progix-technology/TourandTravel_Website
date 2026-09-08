@@ -169,7 +169,7 @@ export const Experiences = () => {
     <section
       id="experiences"
       ref={sectionRef}
-      className="bg-[#071A16] text-white min-h-[680px] lg:min-h-[760px] py-16 sm:py-20 md:py-24 lg:py-28 relative overflow-hidden border-t border-white/10 flex flex-col justify-center select-none"
+      className="bg-[#071A16] text-white min-h-[580px] sm:min-h-[680px] lg:min-h-[760px] py-12 sm:py-20 md:py-24 lg:py-28 relative overflow-hidden border-t border-white/10 flex flex-col justify-center select-none"
     >
       {/* ========================================================================= */}
       {/* ULTRA-BOLD HIGH-LUMINANCE LIGHTHOUSE SEARCHLIGHT CONE & SPOTLIGHT         */}
@@ -292,7 +292,7 @@ export const Experiences = () => {
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#6FCF45]/10 rounded-full blur-[140px] pointer-events-none" />
 
       {/* Majestic Lighthouse Background Element on Bottom-Right */}
-      <div className="absolute -bottom-8 -right-8 sm:-right-4 lg:right-0 xl:right-4 w-[360px] sm:w-[440px] md:w-[540px] lg:w-[640px] xl:w-[720px] 2xl:w-[800px] pointer-events-none z-0 opacity-60 sm:opacity-70 lg:opacity-85 transition-all select-none">
+      <div className="absolute -bottom-8 -right-8 sm:-right-4 lg:right-0 xl:right-4 w-[280px] xs:w-[340px] sm:w-[440px] md:w-[540px] lg:w-[640px] xl:w-[720px] 2xl:w-[800px] pointer-events-none z-0 opacity-60 sm:opacity-70 lg:opacity-85 transition-all select-none">
         <img
           src={lighthouseImg}
           alt="Lighthouse Beacon"

@@ -138,30 +138,30 @@ export const VacationPlanner = () => {
           </div>
 
           {/* Clean White Testimonial Card with Uniform Height */}
-          <div className="max-w-4xl mx-auto bg-white rounded-[16px] p-5 sm:p-7 md:p-8 shadow-sm relative overflow-hidden border border-[#E5E0D5] flex flex-col justify-between min-h-[260px] sm:min-h-[270px] md:min-h-[280px]">
+          <div className="max-w-4xl mx-auto bg-white rounded-[16px] p-4 xs:p-5 sm:p-7 md:p-8 shadow-sm relative overflow-hidden border border-[#E5E0D5] flex flex-col justify-between min-h-[220px] sm:min-h-[270px] md:min-h-[280px]">
             <div>
               {/* Decorative Quote Mark */}
-              <div className="absolute top-5 right-5 text-[#E5E0D5] pointer-events-none select-none">
-                <Quote className="w-12 h-12 sm:w-16 sm:h-16 opacity-40" />
+              <div className="absolute top-4 right-4 sm:top-5 sm:right-5 text-[#E5E0D5] pointer-events-none select-none">
+                <Quote className="w-10 h-10 sm:w-16 sm:h-16 opacity-40" />
               </div>
 
               {/* 5-Star Rating */}
-              <div className="flex items-center gap-1 mb-3.5">
+              <div className="flex items-center gap-1 mb-2.5 sm:mb-3.5">
                 {[...Array(activeTestimonial.rating || 5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-[#4F8F45] text-[#4F8F45]" />
+                  <Star key={i} className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-[#4F8F45] text-[#4F8F45]" />
                 ))}
               </div>
 
               {/* Quote Body with Consistent Height */}
-              <blockquote className="text-sm sm:text-base md:text-[17px] font-normal text-[#13251F] leading-relaxed tracking-tight mb-5 relative z-10 italic min-h-[76px] sm:min-h-[84px] md:min-h-[90px] flex items-center">
+              <blockquote className="text-xs xs:text-sm sm:text-base md:text-[17px] font-normal text-[#13251F] leading-relaxed tracking-tight mb-4 sm:mb-5 relative z-10 italic min-h-[55px] sm:min-h-[84px] md:min-h-[90px] flex items-center">
                 "{activeTestimonial.review}"
               </blockquote>
             </div>
 
             {/* Author Details (Fixed at bottom) */}
-            <div className="flex items-center gap-3.5 border-t border-[#E5E0D5] pt-4 mt-auto">
-              <div className="w-10 h-10 rounded-full bg-[#EBF7E7] border-2 border-[#4F8F45] flex items-center justify-center text-[#4F8F45] shrink-0 shadow-xs">
-                <User className="w-5 h-5 stroke-[2.2]" />
+            <div className="flex items-center gap-3 sm:gap-3.5 border-t border-[#E5E0D5] pt-3 sm:pt-4 mt-auto">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#EBF7E7] border-2 border-[#4F8F45] flex items-center justify-center text-[#4F8F45] shrink-0 shadow-xs">
+                <User className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.2]" />
               </div>
               <div>
                 <div className="flex items-center gap-1.5">

@@ -225,58 +225,58 @@ export const DestinationShowcase = () => {
           {/* Center Heading with flight loop emerging directly from 'd' in World */}
           <div className="flex-1 flex flex-col items-center text-center relative">
             <div className="relative inline-flex items-center">
-              <h2 className="relative z-10 text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-bold tracking-tight text-white font-heading leading-tight drop-shadow-[0_4px_14px_rgba(0,0,0,0.9)] flex items-center">
+              <h2 className="relative z-10 text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-bold tracking-tight text-white font-heading leading-tight drop-shadow-[0_4px_14px_rgba(0,0,0,0.9)] flex items-center">
                 Explore{' '}
-                <span className="text-[#6FCF45] ml-2 sm:ml-2.5 relative inline-flex items-center">
+                <span className="text-[#6FCF45] ml-1.5 sm:ml-2.5 relative inline-flex items-center">
                   The World
                   {/* Flight Trail emerging directly from the very end of 'd' */}
-                  <span className="relative inline-block -ml-1 sm:-ml-1.5 lg:-ml-2 -translate-y-1.5 sm:-translate-y-2 lg:-translate-y-2.5">
+                  <span className="relative inline-block -ml-1 sm:-ml-1.5 lg:-ml-2 -translate-y-1 sm:-translate-y-2 lg:-translate-y-2.5">
                     <img
                       src={svgplaneImg}
                       alt="Flight Trail"
-                      className="w-16 sm:w-22 md:w-26 lg:w-30 max-w-none h-auto object-contain pointer-events-none select-none drop-shadow-[0_0_15px_rgba(111,207,69,0.85)]"
+                      className="w-12 xs:w-16 sm:w-22 md:w-26 lg:w-30 max-w-none h-auto object-contain pointer-events-none select-none drop-shadow-[0_0_15px_rgba(111,207,69,0.85)]"
                     />
                   </span>
                 </span>
               </h2>
             </div>
 
-            <p className="relative z-10 mt-0.5 text-[11px] sm:text-xs text-[#A8B5AF] font-normal tracking-wide">
+            <p className="relative z-10 mt-0.5 text-[10.5px] xs:text-[11px] sm:text-xs text-[#A8B5AF] font-normal tracking-wide">
               Extraordinary places. Unforgettable experiences.
             </p>
           </div>
 
           {/* Right Statistics Counters: Direct Clean Icons */}
-          <div className="flex items-center gap-5 sm:gap-7 lg:gap-8 lg:absolute lg:right-0 mt-1 lg:mt-0">
+          <div className="flex items-center gap-4 xs:gap-5 sm:gap-7 lg:gap-8 lg:absolute lg:right-0 mt-1 lg:mt-0">
             {/* Stat 1: Destinations */}
             <div className="flex flex-col items-center text-center group cursor-default">
-              <Globe2 className="w-5 h-5 text-[#6FCF45] mb-0.5 drop-shadow-[0_0_8px_rgba(111,207,69,0.5)] transition-transform duration-300 group-hover:scale-110" />
-              <span className="text-sm sm:text-base font-bold text-white font-mono leading-none">
+              <Globe2 className="w-4 h-4 xs:w-5 xs:h-5 text-[#6FCF45] mb-0.5 drop-shadow-[0_0_8px_rgba(111,207,69,0.5)] transition-transform duration-300 group-hover:scale-110" />
+              <span className="text-xs xs:text-sm sm:text-base font-bold text-white font-mono leading-none">
                 120+
               </span>
-              <span className="text-[8.5px] text-[#A8B5AF] font-medium tracking-wider uppercase mt-0.5">
+              <span className="text-[8px] xs:text-[8.5px] text-[#A8B5AF] font-medium tracking-wider uppercase mt-0.5">
                 Destinations
               </span>
             </div>
 
             {/* Stat 2: Countries */}
             <div className="flex flex-col items-center text-center group cursor-default">
-              <Map className="w-5 h-5 text-[#6FCF45] mb-0.5 drop-shadow-[0_0_8px_rgba(111,207,69,0.5)] transition-transform duration-300 group-hover:scale-110" />
-              <span className="text-sm sm:text-base font-bold text-white font-mono leading-none">
+              <Map className="w-4 h-4 xs:w-5 xs:h-5 text-[#6FCF45] mb-0.5 drop-shadow-[0_0_8px_rgba(111,207,69,0.5)] transition-transform duration-300 group-hover:scale-110" />
+              <span className="text-xs xs:text-sm sm:text-base font-bold text-white font-mono leading-none">
                 35+
               </span>
-              <span className="text-[8.5px] text-[#A8B5AF] font-medium tracking-wider uppercase mt-0.5">
+              <span className="text-[8px] xs:text-[8.5px] text-[#A8B5AF] font-medium tracking-wider uppercase mt-0.5">
                 Countries
               </span>
             </div>
 
             {/* Stat 3: Experiences */}
             <div className="flex flex-col items-center text-center group cursor-default">
-              <Compass className="w-5 h-5 text-[#6FCF45] mb-0.5 drop-shadow-[0_0_8px_rgba(111,207,69,0.5)] transition-transform duration-300 group-hover:scale-110" />
-              <span className="text-sm sm:text-base font-bold text-white font-mono leading-none">
+              <Compass className="w-4 h-4 xs:w-5 xs:h-5 text-[#6FCF45] mb-0.5 drop-shadow-[0_0_8px_rgba(111,207,69,0.5)] transition-transform duration-300 group-hover:scale-110" />
+              <span className="text-xs xs:text-sm sm:text-base font-bold text-white font-mono leading-none">
                 500+
               </span>
-              <span className="text-[8.5px] text-[#A8B5AF] font-medium tracking-wider uppercase mt-0.5">
+              <span className="text-[8px] xs:text-[8.5px] text-[#A8B5AF] font-medium tracking-wider uppercase mt-0.5">
                 Experiences
               </span>
             </div>
@@ -286,7 +286,7 @@ export const DestinationShowcase = () => {
 
       {/* 2. 8-Panel Showcase: 2-column grid on mobile (all 8 visible), 4-column on tablet, Grand expanding accordion on desktop */}
       <div className="relative z-10 w-full max-w-[1720px] mx-auto mt-1 sm:mt-2">
-        <div className="w-full grid grid-cols-2 sm:grid-cols-4 lg:flex lg:flex-row gap-2.5 sm:gap-3 items-stretch py-2 lg:h-[680px] xl:h-[720px] px-0.5 sm:px-1">
+        <div className="w-full grid grid-cols-2 sm:grid-cols-4 lg:flex lg:flex-row gap-2 xs:gap-2.5 sm:gap-3 items-stretch py-2 lg:h-[680px] xl:h-[720px] px-0.5 sm:px-1">
           {destinations.map((dest, idx) => {
             const isExpanded = activePanel === idx
             const DestinationIcon = dest.Icon
@@ -303,7 +303,7 @@ export const DestinationShowcase = () => {
                   stiffness: 280,
                   damping: 30,
                 }}
-                className={`relative rounded-[16px] sm:rounded-[22px] lg:rounded-[24px] overflow-hidden cursor-pointer select-none transition-all duration-500 shadow-xl border border-white/10 group h-[200px] sm:h-[260px] lg:h-full w-full lg:w-auto ${
+                className={`relative rounded-[14px] xs:rounded-[16px] sm:rounded-[22px] lg:rounded-[24px] overflow-hidden cursor-pointer select-none transition-all duration-500 shadow-xl border border-white/10 group h-[190px] xs:h-[220px] sm:h-[260px] lg:h-full w-full lg:w-auto ${
                   isExpanded
                     ? 'lg:flex-[2.8] ring-2 ring-[#6FCF45]/50'
                     : activePanel !== null
@@ -329,11 +329,11 @@ export const DestinationShowcase = () => {
                 </div>
 
                 {/* Top Label: Destination Name & Country */}
-                <div className="absolute top-0 inset-x-0 p-2.5 sm:p-3.5 lg:p-4 z-20 flex flex-col items-center text-center">
-                  <h3 className="text-base sm:text-lg lg:text-[22px] font-bold tracking-tight text-white font-heading leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] whitespace-nowrap truncate max-w-full">
+                <div className="absolute top-0 inset-x-0 p-2 sm:p-3.5 lg:p-4 z-20 flex flex-col items-center text-center">
+                  <h3 className="text-sm xs:text-base sm:text-lg lg:text-[22px] font-bold tracking-tight text-white font-heading leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] whitespace-nowrap truncate max-w-full">
                     {dest.name}
                   </h3>
-                  <span className="text-[10px] sm:text-[11px] lg:text-xs font-semibold tracking-wider text-[#6FCF45] font-sans mt-0.5 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] whitespace-nowrap truncate max-w-full">
+                  <span className="text-[9.5px] xs:text-[10px] sm:text-[11px] lg:text-xs font-semibold tracking-wider text-[#6FCF45] font-sans mt-0.5 drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] whitespace-nowrap truncate max-w-full">
                     {dest.country}
                   </span>
                 </div>

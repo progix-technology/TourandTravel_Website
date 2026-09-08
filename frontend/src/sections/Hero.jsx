@@ -63,7 +63,7 @@ export const Hero = () => {
   const globeOpacity = useTransform(scrollY, [0, 380, 1400, 1800], [1, 1, 1, 0])
 
   return (
-    <section className="relative h-screen min-h-[680px] max-h-[1080px] flex flex-col justify-between overflow-visible pt-28 sm:pt-32 lg:pt-36 pb-8 sm:pb-12 z-40">
+    <section className="relative min-h-[560px] xs:min-h-[600px] sm:min-h-[640px] lg:h-screen lg:min-h-[680px] lg:max-h-[1080px] flex flex-col justify-between overflow-hidden lg:overflow-visible pt-20 xs:pt-24 sm:pt-28 lg:pt-36 pb-5 sm:pb-12 z-40">
       {/* Background Image: Full-width cinematic landscape (Clipped to hero only) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <img
@@ -79,33 +79,33 @@ export const Hero = () => {
 
       {/* Main Hero Viewport Grid */}
       <div className="relative z-10 w-full max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 flex-1 flex items-center">
-        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-4 items-center">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 lg:gap-4 items-center">
           {/* Left Column: Editorial Typography */}
           <div className="lg:col-span-7 flex flex-col items-start text-left relative z-20 pt-1 sm:pt-2">
             {/* Hero Main Heading (Responsive on Small & Large Screens) */}
-            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-[92px] xl:text-[102px] font-bold tracking-tight leading-[0.98] text-white">
+            <h1 className="text-3xl xs:text-4xl sm:text-6xl md:text-7xl lg:text-[92px] xl:text-[102px] font-bold tracking-tight leading-[0.98] text-white">
               Discover <br />
               <span className="text-[#6FCF45] font-bold">the World.</span>
             </h1>
 
             {/* Supporting Heading */}
-            <p className="mt-4 text-xl sm:text-2xl md:text-3xl font-light text-white/95 tracking-wide font-heading">
+            <p className="mt-2 xs:mt-3 sm:mt-4 text-base xs:text-lg sm:text-2xl md:text-3xl font-light text-white/95 tracking-wide font-heading">
               Your Journey Starts Here.
             </p>
 
             {/* Paragraph */}
-            <p className="mt-3.5 text-xs sm:text-sm text-[#A8B5AF] max-w-[480px] leading-relaxed font-normal">
+            <p className="mt-1.5 xs:mt-2.5 sm:mt-3.5 text-xs sm:text-sm text-[#A8B5AF] max-w-[480px] leading-relaxed font-normal">
               Curated journeys, unforgettable destinations and seamless travel experiences crafted for the modern explorer.
             </p>
 
             {/* Hero Action Buttons */}
-            <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-4 sm:gap-5 w-full sm:w-auto">
+            <div className="mt-4 sm:mt-7 flex flex-col xs:flex-row items-stretch xs:items-center gap-2.5 sm:gap-4 w-full sm:w-auto">
               <Button
                 to="/tours"
                 variant="primary"
                 size="lg"
                 icon={true}
-                className="w-full sm:w-auto text-xs sm:text-sm px-8 h-[48px]"
+                className="w-full sm:w-auto text-xs sm:text-sm px-5 sm:px-8 h-[40px] xs:h-[44px] sm:h-[48px] justify-center"
               >
                 EXPLORE TOURS
               </Button>
@@ -114,27 +114,27 @@ export const Hero = () => {
                 to="/custom-trip"
                 variant="secondary"
                 size="lg"
-                className="w-full sm:w-auto text-xs sm:text-sm px-8 h-[48px]"
+                className="w-full sm:w-auto text-xs sm:text-sm px-5 sm:px-8 h-[40px] xs:h-[44px] sm:h-[48px] justify-center"
               >
                 PLAN MY TRIP
               </Button>
             </div>
 
             {/* Trust Badges */}
-            <div className="mt-5 sm:mt-6 flex items-center gap-6 text-xs text-[#A8B5AF] font-light">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#6FCF45]" />
+            <div className="mt-3 xs:mt-4 sm:mt-6 flex flex-wrap sm:flex-nowrap items-center gap-3.5 sm:gap-6 text-[10px] xs:text-[11px] sm:text-xs text-[#A8B5AF] font-light">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#6FCF45] shrink-0" />
                 <span>100% Tailored Guarantee</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Star className="w-4 h-4 text-[#6FCF45] fill-[#6FCF45]" />
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#6FCF45] fill-[#6FCF45] shrink-0" />
                 <span>4.9/5 Explorer Rating</span>
               </div>
             </div>
           </div>
 
           {/* Right-Center Column: 3D Globe - Finely balanced 0.70x scale */}
-          <div className="lg:col-span-5 flex items-center justify-center lg:justify-end relative pointer-events-auto -mt-6 sm:-mt-10 lg:-mt-14 z-50">
+          <div className="lg:col-span-5 flex items-center justify-center lg:justify-end relative pointer-events-auto mt-2 xs:mt-3 sm:mt-6 lg:-mt-14 z-50">
             {/* Animated Wrapper with Initial Pop & Clamped Scroll-Stop Transition */}
             <motion.div
               initial={{ scale: 0.3, opacity: 0 }}
@@ -162,10 +162,10 @@ export const Hero = () => {
                       opacity: 1,
                     }
               }
-              className="w-full max-w-[340px] sm:max-w-[400px] lg:max-w-[450px] xl:max-w-[480px] relative z-50 origin-center will-change-transform"
+              className="w-full max-w-[190px] xs:max-w-[220px] sm:max-w-[300px] lg:max-w-[450px] xl:max-w-[480px] relative z-50 origin-center will-change-transform"
             >
               {/* Subtle soft ambient aura */}
-              <div className="absolute w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] bg-[#6FCF45]/12 rounded-full blur-[80px] pointer-events-none -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+              <div className="absolute w-[180px] h-[180px] sm:w-[380px] sm:h-[380px] bg-[#6FCF45]/12 rounded-full blur-[50px] sm:blur-[80px] pointer-events-none -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 
               <Globe
                 markers={travelMarkers}

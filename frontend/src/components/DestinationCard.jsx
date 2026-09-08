@@ -5,13 +5,13 @@ import { ArrowUpRight, MapPin } from 'lucide-react'
 export const DestinationCard = ({ destination, aspect = 'medium', className = '' }) => {
   // Asymmetric height mapping
   const heightClasses = {
-    tall: 'h-[440px] md:h-[500px]',
-    wide: 'h-[280px] md:h-[320px]',
-    medium: 'h-[340px] md:h-[380px]',
-    small: 'h-[240px] md:h-[260px]',
+    tall: 'h-[320px] sm:h-[420px] md:h-[500px]',
+    wide: 'h-[200px] sm:h-[260px] md:h-[320px]',
+    medium: 'h-[240px] sm:h-[300px] md:h-[380px]',
+    small: 'h-[180px] sm:h-[220px] md:h-[260px]',
   }
 
-  const selectedHeight = heightClasses[aspect || destination.aspect] || heightClasses.medium
+  const selectedHeight = heightClasses[aspect || destination?.aspect] || heightClasses.medium
 
   return (
     <Link

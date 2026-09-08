@@ -324,34 +324,34 @@ export const PrivateAviation = () => {
         </div>
 
         {/* 6. Lower Editorial Content Block (Firmly pinned at the bottom of the slide) */}
-        <div className="absolute bottom-2.5 sm:bottom-5 lg:bottom-7 left-4 sm:left-10 lg:left-14 right-4 sm:right-10 lg:right-14 z-20 grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-6 items-end pointer-events-auto">
+        <div className="absolute bottom-2 sm:bottom-5 lg:bottom-7 left-3 sm:left-10 lg:left-14 right-3 sm:right-10 lg:right-14 z-20 grid grid-cols-1 md:grid-cols-12 gap-2 sm:gap-6 items-end pointer-events-auto">
           {/* Main Editorial Heading & CTA */}
           <div className="md:col-span-8 flex flex-col items-start text-left max-w-xl">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold tracking-tight text-[#13251F] leading-[1.08] font-heading">
+            <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold tracking-tight text-[#13251F] leading-[1.08] font-heading">
               ONE JOURNEY. <br />
               <span className="text-[#13251F]">COUNTLESS </span>
               <span className="text-[#C69242] font-bold">STORIES.</span>
             </h2>
 
-            <p className="mt-1.5 sm:mt-2.5 text-xs sm:text-sm text-[#4A5D54] leading-relaxed max-w-lg font-normal">
+            <p className="mt-1 sm:mt-2.5 text-[11px] sm:text-sm text-[#4A5D54] leading-relaxed max-w-lg font-normal line-clamp-2 sm:line-clamp-none">
               From iconic destinations to hidden escapes, discover journeys made for unforgettable memories.
             </p>
 
             {/* Premium CTA Button */}
-            <div className="mt-3 sm:mt-4">
+            <div className="mt-2 sm:mt-4">
               <Link
                 to="/destinations"
-                className="group inline-flex items-center gap-2.5 bg-[#071A16] text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 hover:bg-[#0F352C] hover:shadow-lg active:scale-95 cursor-pointer"
+                className="group inline-flex items-center gap-2 sm:gap-2.5 bg-[#071A16] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-wider transition-all duration-300 hover:bg-[#0F352C] hover:shadow-lg active:scale-95 cursor-pointer"
               >
                 <span>Explore Destinations</span>
-                <ArrowRight className="w-4 h-4 text-[#C69242] transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#C69242] transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </div>
 
             {/* Bottom-Left Editorial Tagline */}
-            <div className="mt-2.5 sm:mt-4 flex items-baseline gap-2 text-xs font-medium text-[#1E2B25]/80 uppercase tracking-widest font-heading">
+            <div className="mt-1.5 sm:mt-4 flex items-baseline gap-2 text-[10px] sm:text-xs font-medium text-[#1E2B25]/80 uppercase tracking-widest font-heading">
               <span>EVERY PLACE</span>
-              <span className="text-[#C69242] font-semibold italic capitalize tracking-normal font-sans text-sm">
+              <span className="text-[#C69242] font-semibold italic capitalize tracking-normal font-sans text-xs sm:text-sm">
                 Tells a Story
               </span>
             </div>
