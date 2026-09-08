@@ -12,22 +12,32 @@ export const uploadImage = async (req, res) => {
 
     let result
 
-    // 1. First priority: Signed upload using API Secret
-    if (process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) {
+    const preset = process.env.CLOUDINARY_UPLOAD_PRESET || 'Tourandtraveller'
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME || 'dbp97xecb'
+
+    // 1. Try unsigned upload using preset (Fastest & avoids API secret expiry issues)
+    if (preset && cloudName) {
+      try {
+        result = await cloudinary.uploader.unsigned_upload(dataURI, preset, {
+          cloud_name: cloudName,
+          folder: 'tours-and-travellers',
+        })
+      } catch (unsignedError) {
+        console.warn('Unsigned upload failed, attempting signed upload:', unsignedError.message)
+        if (process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) {
+          result = await cloudinary.uploader.upload(dataURI, {
+            folder: 'tours-and-travellers',
+            resource_type: 'auto',
+          })
+        } else {
+          throw unsignedError
+        }
+      }
+    } else if (process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) {
       result = await cloudinary.uploader.upload(dataURI, {
         folder: 'tours-and-travellers',
         resource_type: 'auto',
       })
-    } else if (process.env.CLOUDINARY_UPLOAD_PRESET) {
-      // 2. Second priority: Unsigned upload via preset
-      result = await cloudinary.uploader.unsigned_upload(
-        dataURI,
-        process.env.CLOUDINARY_UPLOAD_PRESET,
-        {
-          cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-          folder: 'tours-and-travellers',
-        }
-      )
     } else {
       return res.status(400).json({
         success: false,

@@ -5,7 +5,7 @@ import { protect, authorize } from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
-// Only admins can upload images
-router.post('/', protect, authorize('admin'), upload.single('image'), uploadImage)
+// Allow authenticated admins and users to upload images
+router.post('/', protect, upload.single('image'), uploadImage)
 
 export default router
