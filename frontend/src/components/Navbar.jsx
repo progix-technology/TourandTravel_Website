@@ -9,6 +9,7 @@ import {
   Phone,
   Plane,
   ChevronLeft,
+  Map,
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useWishlist } from '../context/WishlistContext'
@@ -91,9 +92,9 @@ export const Navbar = () => {
 
   const navLinks = [
     { name: 'HOME', path: '/' },
-    { name: 'ABOUT US', path: '/about' },
     { name: 'DESTINATIONS', path: '/destinations' },
     { name: 'PACKAGES', path: '/tours' },
+    { name: 'ABOUT US', path: '/about' },
     { name: 'GALLERY', path: '/gallery' },
     { name: 'CONTACT US', path: '/contact' },
   ]
@@ -151,7 +152,7 @@ export const Navbar = () => {
             {/* 3. RIGHT: Desktop Icons + Mobile Hamburger Toggle */}
             <div className="flex-1 flex items-center justify-end">
               {/* Desktop Icons (Hidden on Mobile) */}
-              <div className="hidden md:flex items-center gap-4 sm:gap-6">
+              <div className="hidden md:flex items-center gap-3.5 sm:gap-5">
                 {/* Search Icon Button */}
                 <button
                   type="button"
@@ -162,6 +163,16 @@ export const Navbar = () => {
                 >
                   <Search className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
                 </button>
+
+                {/* Explore World Map Button (Circular Icon) */}
+                <Link
+                  to="/explore"
+                  aria-label="Explore Interactive World Map"
+                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-white/40 hover:border-[#6FCF45] bg-white/5 hover:bg-[#6FCF45]/15 text-white/90 hover:text-[#6FCF45] flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm"
+                  title="Explore 400+ World Destinations on Interactive Map"
+                >
+                  <Map className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.2]" />
+                </Link>
 
                 {/* Wishlist Icon with Dynamic Badge */}
                 <Link
@@ -365,8 +376,8 @@ export const Navbar = () => {
               </button>
             </div>
 
-            {/* Quick Actions Grid: Search, Wishlist, User Profile (3 Compact Cards) */}
-            <div className="grid grid-cols-3 gap-2 py-3.5 border-b border-white/10">
+            {/* Quick Actions Grid: Search, Explore Map, Wishlist, User Profile (4 Compact Cards) */}
+            <div className="grid grid-cols-4 gap-1.5 py-3.5 border-b border-white/10">
               {/* 1. Search */}
               <button
                 type="button"
@@ -377,10 +388,20 @@ export const Navbar = () => {
                 className="flex flex-col items-center justify-center gap-1 py-2.5 px-1 rounded-xl bg-white/5 border border-white/10 text-white hover:text-[#6FCF45] hover:border-[#6FCF45]/50 transition-all cursor-pointer active:scale-95"
               >
                 <Search className="w-4 h-4 text-[#6FCF45]" />
-                <span className="text-[9.5px] font-bold uppercase tracking-wider">Search</span>
+                <span className="text-[9px] font-bold uppercase tracking-wider">Search</span>
               </button>
 
-              {/* 2. Wishlist */}
+              {/* 2. Explore Map */}
+              <Link
+                to="/explore"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex flex-col items-center justify-center gap-1 py-2.5 px-1 rounded-xl bg-white/5 border border-white/10 text-white hover:text-[#6FCF45] hover:border-[#6FCF45]/50 transition-all cursor-pointer active:scale-95"
+              >
+                <Map className="w-4 h-4 text-[#6FCF45]" />
+                <span className="text-[9px] font-bold uppercase tracking-wider">Map</span>
+              </Link>
+
+              {/* 3. Wishlist */}
               <Link
                 to="/wishlist"
                 onClick={() => setMobileMenuOpen(false)}
@@ -394,17 +415,17 @@ export const Navbar = () => {
                     </span>
                   )}
                 </div>
-                <span className="text-[9.5px] font-bold uppercase tracking-wider">Wishlist</span>
+                <span className="text-[9px] font-bold uppercase tracking-wider">Wishlist</span>
               </Link>
 
-              {/* 3. User Profile */}
+              {/* 4. User Profile */}
               <Link
                 to={isAuthenticated ? (user?.role === 'admin' ? '/admin' : '/account') : '/login'}
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex flex-col items-center justify-center gap-1 py-2.5 px-1 rounded-xl bg-white/5 border border-white/10 text-white hover:text-[#6FCF45] hover:border-[#6FCF45]/50 transition-all cursor-pointer active:scale-95"
               >
                 <User className="w-4 h-4 text-[#6FCF45]" />
-                <span className="text-[9.5px] font-bold uppercase tracking-wider truncate max-w-[70px]">
+                <span className="text-[9px] font-bold uppercase tracking-wider truncate max-w-[55px]">
                   {isAuthenticated ? (user?.name?.split(' ')[0] || 'Profile') : 'Sign In'}
                 </span>
               </Link>

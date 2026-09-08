@@ -67,6 +67,34 @@ const DestinationSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    featured: {
+      type: Boolean,
+      default: false,
+    },
+    countryCode: {
+      type: String,
+      trim: true,
+    },
+    type: {
+      type: String,
+      default: 'destination',
+    },
+    toursCount: {
+      type: Number,
+      default: 12,
+    },
+    hotelsCount: {
+      type: Number,
+      default: 40,
+    },
+    coordinates: {
+      lat: {
+        type: Number,
+      },
+      lng: {
+        type: Number,
+      },
+    },
   },
   {
     timestamps: true,

@@ -85,41 +85,103 @@ export const ToursPage = () => {
   }
 
   const filteredTours = useMemo(() => {
-    return toursList.filter((t) => {
-      const q = searchQuery.toLowerCase().trim()
-      const matchesSearch =
-        !q ||
-        t.title?.toLowerCase().includes(q) ||
-        t.subtitle?.toLowerCase().includes(q) ||
-        t.destination?.toLowerCase().includes(q) ||
-        t.category?.toLowerCase().includes(q) ||
-        t.overview?.toLowerCase().includes(q)
+    return toursList
+      .filter((t) => {
+        const q = searchQuery.toLowerCase().trim()
+        let matchesSearch = !q
+        if (q) {
+          matchesSearch =
+            t.title?.toLowerCase().includes(q) ||
+            t.subtitle?.toLowerCase().includes(q) ||
+            t.destination?.toLowerCase().includes(q) ||
+            t.destinationSlug?.toLowerCase().includes(q) ||
+            t.category?.toLowerCase().includes(q) ||
+            t.overview?.toLowerCase().includes(q) ||
+            (Array.isArray(t.highlights) && t.highlights.some((h) => h.toLowerCase().includes(q))) ||
+            (Array.isArray(t.itinerary) &&
+              t.itinerary.some(
+                (item) =>
+                  item.title?.toLowerCase().includes(q) || item.desc?.toLowerCase().includes(q)
+              ))
 
-      let matchesCat = true
-      if (selectedCategory === 'india') {
-        matchesCat =
-          ['kashmir', 'rajasthan', 'kerala', 'goa', 'ladakh', 'nepal'].includes(t.destinationSlug) ||
-          t.destination?.toLowerCase().includes('india') ||
-          t.destination?.toLowerCase().includes('kerala') ||
-          t.destination?.toLowerCase().includes('nepal')
-      } else if (selectedCategory === 'global') {
-        matchesCat = ['switzerland', 'paris', 'tokyo', 'iceland', 'amalfi-coast', 'dubai'].includes(t.destinationSlug)
-      } else if (selectedCategory === 'beach') {
-        matchesCat = ['maldives', 'goa', 'bali', 'santorini', 'amalfi-coast'].includes(t.destinationSlug)
-      } else if (selectedCategory === 'culture') {
-        matchesCat = ['rajasthan', 'paris', 'tokyo', 'nepal'].includes(t.destinationSlug)
-      } else if (selectedCategory === 'nature') {
-        matchesCat = ['kashmir', 'switzerland', 'bali', 'ladakh', 'iceland'].includes(t.destinationSlug)
-      }
+          // Intelligent destination aliases
+          if (!matchesSearch) {
+            if (
+              (q.includes('taj') || q.includes('agra')) &&
+              (t.destinationSlug?.includes('agra') || t.title?.toLowerCase().includes('taj'))
+            ) {
+              matchesSearch = true
+            }
+            if (
+              (q.includes('udaipur') || q.includes('jaipur') || q.includes('jaisalmer') || q.includes('jodhpur')) &&
+              (t.destinationSlug?.includes('rajasthan') || t.title?.toLowerCase().includes('rajasthan'))
+            ) {
+              matchesSearch = true
+            }
+            if (
+              (q.includes('alleppey') || q.includes('munnar') || q.includes('backwater')) &&
+              (t.destinationSlug?.includes('kerala') || t.title?.toLowerCase().includes('kerala'))
+            ) {
+              matchesSearch = true
+            }
+            if (
+              (q.includes('manali') || q.includes('shimla') || q.includes('spiti') || q.includes('rohtang')) &&
+              (t.destinationSlug?.includes('himachal') || t.title?.toLowerCase().includes('himachal'))
+            ) {
+              matchesSearch = true
+            }
+          }
+        }
 
-      return matchesSearch && matchesCat
-    }).sort((a, b) => {
-      if (sortBy === 'price-low') return a.startingPrice - b.startingPrice
-      if (sortBy === 'price-high') return b.startingPrice - a.startingPrice
-      if (sortBy === 'duration') return b.days - a.days
-      return b.rating - a.rating // default popular / top rated
-    })
-  }, [selectedCategory, searchQuery, sortBy])
+        let matchesCat = true
+        if (selectedCategory === 'india') {
+          matchesCat =
+            ['kashmir', 'rajasthan', 'kerala', 'goa', 'ladakh', 'nepal', 'agra'].includes(
+              t.destinationSlug
+            ) ||
+            t.destination?.toLowerCase().includes('india') ||
+            t.destination?.toLowerCase().includes('kerala') ||
+            t.destination?.toLowerCase().includes('nepal')
+        } else if (selectedCategory === 'global') {
+          matchesCat = [
+            'switzerland',
+            'paris',
+            'tokyo',
+            'iceland',
+            'amalfi-coast',
+            'dubai',
+            'rome',
+            'london',
+          ].includes(t.destinationSlug)
+        } else if (selectedCategory === 'beach') {
+          matchesCat = ['maldives', 'goa', 'bali', 'santorini', 'amalfi-coast', 'andaman'].includes(
+            t.destinationSlug
+          )
+        } else if (selectedCategory === 'culture') {
+          matchesCat = ['rajasthan', 'paris', 'tokyo', 'nepal', 'varanasi', 'rome'].includes(
+            t.destinationSlug
+          )
+        } else if (selectedCategory === 'nature') {
+          matchesCat = [
+            'kashmir',
+            'switzerland',
+            'bali',
+            'ladakh',
+            'iceland',
+            'meghalaya',
+            'himachal',
+          ].includes(t.destinationSlug)
+        }
+
+        return matchesSearch && matchesCat
+      })
+      .sort((a, b) => {
+        if (sortBy === 'price-low') return a.startingPrice - b.startingPrice
+        if (sortBy === 'price-high') return b.startingPrice - a.startingPrice
+        if (sortBy === 'duration') return b.days - a.days
+        return b.rating - a.rating // default popular / top rated
+      })
+  }, [toursList, selectedCategory, searchQuery, sortBy])
 
   const displayedTours = useMemo(() => {
     return filteredTours.slice(0, visibleCount)
@@ -263,17 +325,39 @@ export const ToursPage = () => {
             ))}
           </div>
         ) : filteredTours.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-2xl border border-[#13251F]/5 p-8">
-            <p className="text-base text-[#5C6E67] font-medium">No tour packages match your current filters.</p>
-            <button
-              onClick={() => {
-                handleCategoryChange('All')
-                handleSearchChange('')
-              }}
-              className="mt-4 px-5 py-2 bg-[#2E4A35] text-white text-xs font-bold uppercase tracking-wider rounded-full hover:bg-[#233A29]"
-            >
-              Reset Filters
-            </button>
+          <div className="text-center py-16 bg-white rounded-3xl border border-[#13251F]/10 p-8 sm:p-12 shadow-sm max-w-2xl mx-auto my-8">
+            <div className="w-14 h-14 rounded-2xl bg-[#071A16] text-[#6FCF45] flex items-center justify-center mx-auto mb-4 shadow-md">
+              <Sparkles className="w-7 h-7" />
+            </div>
+            <h3 className="text-lg sm:text-xl font-bold text-[#071A16] font-heading mb-2">
+              {searchQuery
+                ? `No standard packages found for "${searchQuery}"`
+                : 'No tour packages match your current filters'}
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed mb-6">
+              Our luxury travel concierges craft 100% personalized, bespoke private itineraries for any destination worldwide.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {searchQuery && (
+                <Link
+                  to={`/custom-trip?destination=${encodeURIComponent(searchQuery)}`}
+                  className="px-6 py-2.5 bg-[#071A16] hover:bg-[#0B241E] text-[#6FCF45] text-xs font-bold uppercase tracking-wider rounded-full flex items-center gap-2 shadow-md transition-all active:scale-95"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>Plan Custom Tour for {searchQuery}</span>
+                </Link>
+              )}
+              <button
+                type="button"
+                onClick={() => {
+                  handleCategoryChange('All')
+                  handleSearchChange('')
+                }}
+                className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider rounded-full transition-all"
+              >
+                Reset Filters
+              </button>
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">

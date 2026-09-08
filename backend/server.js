@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
 import dotenv from 'dotenv'
+import mongoose from 'mongoose'
 import connectDB from './src/config/db.js'
 import errorHandler from './src/middleware/errorMiddleware.js'
 
@@ -93,7 +94,15 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/v1/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() })
+  const dbState = mongoose.connection.readyState
+  const statusMap = { 0: 'Disconnected', 1: 'Connected', 2: 'Connecting', 3: 'Disconnecting' }
+  res.json({
+    status: 'OK',
+    database: statusMap[dbState] || 'Unknown',
+    dbReadyState: dbState,
+    dbHost: mongoose.connection.host || 'none',
+    timestamp: new Date().toISOString(),
+  })
 })
 
 // Mount API Routes

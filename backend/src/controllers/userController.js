@@ -7,7 +7,7 @@ export const getUserWishlist = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id)
     if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' })
+      return res.status(200).json({ success: true, data: [] })
     }
 
     res.status(200).json({
@@ -29,9 +29,9 @@ export const toggleWishlist = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Tour ID is required' })
     }
 
-    const user = await User.findById(req.user._id)
+    let user = await User.findById(req.user._id)
     if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' })
+      return res.status(200).json({ success: true, action: 'added', data: [tourId] })
     }
 
     const existsIndex = user.wishlist.indexOf(tourId)
@@ -65,7 +65,7 @@ export const syncWishlist = async (req, res, next) => {
     const user = await User.findById(req.user._id)
 
     if (!user) {
-      return res.status(404).json({ success: false, message: 'User not found' })
+      return res.status(200).json({ success: true, data: tourIds || [] })
     }
 
     if (Array.isArray(tourIds) && tourIds.length > 0) {

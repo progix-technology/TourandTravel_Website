@@ -29,16 +29,22 @@ export const Login = () => {
     setLoading(true)
     setErrorMsg('')
     try {
-      const res = await login({ email, password })
+      const cleanEmail = email.trim().toLowerCase()
+      const cleanPassword = password.trim()
+      const res = await login({ email: cleanEmail, password: cleanPassword })
       if (res.user?.role === 'admin') {
         navigate('/admin', { replace: true })
       } else {
         navigate(from, { replace: true })
       }
     } catch (err) {
-      setErrorMsg(
-        err.response?.data?.message || 'Invalid email or password. Please verify your credentials.'
-      )
+      if (!err.response) {
+        setErrorMsg('Unable to connect to live backend server. Please verify backend deployment and network connection.')
+      } else {
+        setErrorMsg(
+          err.response?.data?.message || 'Invalid email or password. Please verify your credentials.'
+        )
+      }
     } finally {
       setLoading(false)
     }

@@ -13,6 +13,7 @@ import AdminLayout from './layouts/AdminLayout'
 
 // Direct Page Imports for Instant 0ms Load & Zero-Chunk-Failure Guarantee
 import Home from './pages/Home'
+import ExplorePage from './pages/ExplorePage'
 import DestinationsPage from './pages/DestinationsPage'
 import DestinationDetails from './pages/DestinationDetails'
 import ToursPage from './pages/ToursPage'
@@ -125,6 +126,7 @@ function App() {
                 {/* --- Public / Customer Routes (Uses MainLayout) --- */}
                 <Route element={<MainLayout />}>
                   <Route path="/" element={<Home />} />
+                  <Route path="/explore" element={<ExplorePage />} />
                   <Route path="/destinations" element={<DestinationsPage />} />
                   <Route path="/destinations/:slug" element={<DestinationDetails />} />
                   <Route path="/tours" element={<ToursPage />} />

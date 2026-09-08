@@ -1,10 +1,18 @@
 import express from 'express'
-import { getDestinations, getDestinationBySlug, deleteDestination, createDestination, updateDestination } from '../controllers/destinationController.js'
+import {
+  getDestinations,
+  getDestinationBySlug,
+  getDestinationsByCountry,
+  deleteDestination,
+  createDestination,
+  updateDestination,
+} from '../controllers/destinationController.js'
 import { protect, authorize } from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
 router.get('/', getDestinations)
+router.get('/country/:country', getDestinationsByCountry)
 router.get('/:slug', getDestinationBySlug)
 
 // Admin routes

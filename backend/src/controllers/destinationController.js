@@ -5,26 +5,59 @@ import Destination from '../models/Destination.js'
 // @access  Public
 export const getDestinations = async (req, res, next) => {
   try {
-    const { region, search, isPopular } = req.query
+    const { region, country, search, isPopular, featured } = req.query
     let query = {}
 
     if (region && region !== 'All' && region !== 'all') {
       query.region = { $regex: region, $options: 'i' }
     }
 
+    if (country && country !== 'All' && country !== 'All Countries') {
+      query.country = { $regex: country, $options: 'i' }
+    }
+
     if (isPopular) {
       query.isPopular = isPopular === 'true'
+    }
+
+    if (featured) {
+      query.featured = featured === 'true'
     }
 
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: 'i' } },
+        { name: { $regex: search, $options: 'i' } },
         { country: { $regex: search, $options: 'i' } },
         { region: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
       ]
     }
 
     const destinations = await Destination.find(query).sort('-rating')
+
+    res.status(200).json({
+      success: true,
+      count: destinations.length,
+      data: destinations,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+// @desc    Get destinations by country
+// @route   GET /api/v1/destinations/country/:country
+// @access  Public
+export const getDestinationsByCountry = async (req, res, next) => {
+  try {
+    const { country } = req.params
+    const destinations = await Destination.find({
+      $or: [
+        { country: { $regex: new RegExp(`^${country}$`, 'i') } },
+        { countryCode: { $regex: new RegExp(`^${country}$`, 'i') } },
+      ],
+    }).sort('-rating')
 
     res.status(200).json({
       success: true,

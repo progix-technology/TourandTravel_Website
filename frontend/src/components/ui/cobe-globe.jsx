@@ -150,7 +150,7 @@ export function Globe({
     if (!canvasRef.current) return
     const canvas = canvasRef.current
     let globe = null
-    let animationId
+    let animationId = null
     let phi = 0
     let ro = null
 
@@ -189,59 +189,46 @@ export function Globe({
           arcHeight,
           opacity,
         })
+
+        function animate() {
+          if (!isPausedRef.current) {
+            phi += speed
+            if (
+              Math.abs(velocity.current.phi) > 0.0001 ||
+              Math.abs(velocity.current.theta) > 0.0001
+            ) {
+              phiOffsetRef.current += velocity.current.phi
+              thetaOffsetRef.current += velocity.current.theta
+              velocity.current.phi *= 0.95
+              velocity.current.theta *= 0.95
+            }
+            const thetaMin = -0.4,
+              thetaMax = 0.4
+            if (thetaOffsetRef.current < thetaMin) {
+              thetaOffsetRef.current += (thetaMin - thetaOffsetRef.current) * 0.1
+            } else if (thetaOffsetRef.current > thetaMax) {
+              thetaOffsetRef.current += (thetaMax - thetaOffsetRef.current) * 0.1
+            }
+          }
+
+          if (globe) {
+            globe.update({
+              phi: phi + phiOffsetRef.current + dragOffset.current.phi,
+              theta: theta + thetaOffsetRef.current + dragOffset.current.theta,
+            })
+          }
+          animationId = requestAnimationFrame(animate)
+        }
+
+        animate()
+
+        setTimeout(() => {
+          if (canvas) canvas.style.opacity = '1'
+          setIsLoaded(true)
+        }, 150)
       } catch (err) {
         console.warn('Globe WebGL init error:', err)
       }
-
-      function animate() {
-        if (!isPausedRef.current) {
-          phi += speed
-          if (
-            Math.abs(velocity.current.phi) > 0.0001 ||
-            Math.abs(velocity.current.theta) > 0.0001
-          ) {
-            phiOffsetRef.current += velocity.current.phi
-            thetaOffsetRef.current += velocity.current.theta
-            velocity.current.phi *= 0.95
-            velocity.current.theta *= 0.95
-          }
-          const thetaMin = -0.4,
-            thetaMax = 0.4
-          if (thetaOffsetRef.current < thetaMin) {
-            thetaOffsetRef.current += (thetaMin - thetaOffsetRef.current) * 0.1
-          } else if (thetaOffsetRef.current > thetaMax) {
-            thetaOffsetRef.current += (thetaMax - thetaOffsetRef.current) * 0.1
-          }
-        }
-        if (globe) {
-          globe.update({
-            phi: phi + phiOffsetRef.current + dragOffset.current.phi,
-            theta: theta + thetaOffsetRef.current + dragOffset.current.theta,
-            dark,
-            mapBrightness,
-            markerColor,
-            baseColor,
-            arcColor,
-            markerElevation,
-            markers: markers.map((m) => ({
-              location: m.location,
-              size: markerSize,
-              id: m.id,
-            })),
-            arcs: arcs.map((a) => ({
-              from: a.from,
-              to: a.to,
-              id: a.id,
-            })),
-          })
-        }
-        animationId = requestAnimationFrame(animate)
-      }
-      animate()
-      setTimeout(() => {
-        if (canvas) canvas.style.opacity = '1'
-        setIsLoaded(true)
-      }, 350)
     }
 
     if (canvas.offsetWidth > 0) {
@@ -260,7 +247,13 @@ export function Globe({
     return () => {
       if (animationId) cancelAnimationFrame(animationId)
       if (ro) ro.disconnect()
-      if (globe) globe.destroy()
+      if (globe) {
+        try {
+          globe.destroy()
+        } catch (e) {
+          // ignore
+        }
+      }
     }
   }, [
     markers,
@@ -294,8 +287,8 @@ export function Globe({
           width: '100%',
           height: '100%',
           cursor: 'grab',
-          opacity: 0,
-          transition: 'opacity 1.2s ease',
+          opacity: isLoaded ? 1 : 0,
+          transition: 'opacity 0.6s ease',
           borderRadius: '50%',
           touchAction: 'none',
         }}

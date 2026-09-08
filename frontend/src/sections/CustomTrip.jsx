@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Sparkles,
@@ -29,6 +29,7 @@ import api from '../services/api'
 
 export const CustomTrip = ({ isPage = false }) => {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { user, isAuthenticated } = useAuth()
   const { settings } = useSettings()
 
@@ -55,6 +56,26 @@ export const CustomTrip = ({ isPage = false }) => {
   const [approxDuration, setApproxDuration] = useState('6–8 Days')
   const [adults, setAdults] = useState(2)
   const [travelMode, setTravelMode] = useState('Flight')
+
+  // Read URL query parameters to pre-fill destination from Explore Map or elsewhere
+  useEffect(() => {
+    const destParam = searchParams.get('destination') || searchParams.get('dest')
+    const countryParam = searchParams.get('country')
+    if (destParam) {
+      const cleanDest = destParam.split(',')[0].trim()
+      const displayVal =
+        countryParam && !cleanDest.toLowerCase().includes(countryParam.toLowerCase())
+          ? `${cleanDest}, ${countryParam}`
+          : cleanDest
+      setDestination({
+        city: cleanDest,
+        state: '',
+        country: countryParam || '',
+        display: displayVal,
+      })
+      setDestSearchQuery(displayVal)
+    }
+  }, [searchParams])
 
   // Live Departure Autocomplete Search
   const [depSearchQuery, setDepSearchQuery] = useState('Lucknow, Uttar Pradesh, India')
