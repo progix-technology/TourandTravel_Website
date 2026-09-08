@@ -99,13 +99,13 @@ export const Hero = () => {
             </p>
 
             {/* Hero Action Buttons */}
-            <div className="mt-4 sm:mt-7 flex flex-col xs:flex-row items-stretch xs:items-center gap-2.5 sm:gap-4 w-full sm:w-auto">
+            <div className="mt-4 sm:mt-7 flex flex-row flex-wrap items-center gap-3 sm:gap-4 w-auto">
               <Button
                 to="/tours"
                 variant="primary"
                 size="lg"
                 icon={true}
-                className="w-full sm:w-auto text-xs sm:text-sm px-5 sm:px-8 h-[40px] xs:h-[44px] sm:h-[48px] justify-center"
+                className="w-auto text-xs sm:text-sm px-5 sm:px-8 h-[42px] sm:h-[48px] justify-center shadow-lg"
               >
                 EXPLORE TOURS
               </Button>
@@ -114,7 +114,7 @@ export const Hero = () => {
                 to="/custom-trip"
                 variant="secondary"
                 size="lg"
-                className="w-full sm:w-auto text-xs sm:text-sm px-5 sm:px-8 h-[40px] xs:h-[44px] sm:h-[48px] justify-center"
+                className="w-auto text-xs sm:text-sm px-5 sm:px-8 h-[42px] sm:h-[48px] justify-center"
               >
                 PLAN MY TRIP
               </Button>

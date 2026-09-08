@@ -1,7 +1,6 @@
 import React from 'react'
 import Hero from '../sections/Hero'
 import Destinations from '../sections/Destinations'
-import HomeExploreMap from '../sections/HomeExploreMap'
 import PrivateAviation from '../sections/PrivateAviation'
 import DestinationShowcase from '../sections/DestinationShowcase'
 import Experiences from '../sections/Experiences'
@@ -71,9 +70,6 @@ export const Home = () => {
 
       {/* 2. Destinations Section */}
       <Destinations />
-
-      {/* 2.5. Interactive Global Travel Map Atlas Preview */}
-      <HomeExploreMap />
 
       {/* 3. Travel Map 3D Airplane Slide */}
       <PrivateAviation />

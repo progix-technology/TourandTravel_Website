@@ -152,56 +152,51 @@ export const Navbar = () => {
             {/* 3. RIGHT: Desktop Icons + Mobile Hamburger Toggle */}
             <div className="flex-1 flex items-center justify-end">
               {/* Desktop Icons (Hidden on Mobile) */}
-              <div className="hidden md:flex items-center gap-3.5 sm:gap-5">
-                {/* Search Icon Button */}
+              <div className="hidden md:flex items-center gap-2.5 sm:gap-3">
+                {/* 1. Search Icon Button (Circular) */}
                 <button
                   type="button"
                   onClick={() => setSearchModalOpen(true)}
                   aria-label="Search Packages"
-                  className="text-white/90 hover:text-[#6FCF45] transition-all p-1 focus:outline-none cursor-pointer hover:scale-110 active:scale-95"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-white/25 hover:border-[#6FCF45] bg-white/5 hover:bg-[#6FCF45]/15 text-white/90 hover:text-[#6FCF45] flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm focus:outline-none cursor-pointer"
                   title="Search Journeys &amp; Expeditions"
                 >
-                  <Search className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
+                  <Search className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.2]" />
                 </button>
 
-                {/* Explore World Map Button (Circular Icon) */}
+                {/* 2. Explore World Map Button (Circular) */}
                 <Link
                   to="/explore"
                   aria-label="Explore Interactive World Map"
-                  className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-white/40 hover:border-[#6FCF45] bg-white/5 hover:bg-[#6FCF45]/15 text-white/90 hover:text-[#6FCF45] flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-white/25 hover:border-[#6FCF45] bg-white/5 hover:bg-[#6FCF45]/15 text-white/90 hover:text-[#6FCF45] flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm focus:outline-none cursor-pointer"
                   title="Explore 400+ World Destinations on Interactive Map"
                 >
                   <Map className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.2]" />
                 </Link>
 
-                {/* Wishlist Icon with Dynamic Badge */}
+                {/* 3. Wishlist Icon with Dynamic Badge (Circular) */}
                 <Link
                   to="/wishlist"
                   aria-label="View Saved Wishlist"
-                  className="text-white/90 hover:text-[#6FCF45] transition-all p-1 relative focus:outline-none cursor-pointer hover:scale-110 active:scale-95"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-white/25 hover:border-[#6FCF45] bg-white/5 hover:bg-[#6FCF45]/15 text-white/90 hover:text-[#6FCF45] flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm focus:outline-none cursor-pointer relative"
                   title="Saved Wishlist Expeditions"
                 >
-                  <Heart className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
+                  <Heart className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.2]" />
                   {wishlist && wishlist.length > 0 && (
-                    <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#6FCF45] text-[#071A16] text-[10px] font-extrabold flex items-center justify-center shadow-md animate-pulse">
+                    <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#6FCF45] text-[#071A16] text-[10px] font-extrabold flex items-center justify-center shadow-md animate-pulse">
                       {wishlist.length}
                     </span>
                   )}
                 </Link>
 
-                {/* User Account / Profile */}
+                {/* 4. User Account / Profile (Circular) */}
                 <Link
                   to={isAuthenticated ? (user?.role === 'admin' ? '/admin' : '/account') : '/login'}
                   aria-label={isAuthenticated ? (user?.role === 'admin' ? 'Admin Portal' : 'Client Account Portal') : 'Guest Sign In'}
-                  className="flex items-center gap-2 text-white/90 hover:text-[#6FCF45] transition-all p-1 focus:outline-none cursor-pointer hover:scale-110 active:scale-95"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-white/25 hover:border-[#6FCF45] bg-white/5 hover:bg-[#6FCF45]/15 text-white/90 hover:text-[#6FCF45] flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm focus:outline-none cursor-pointer relative"
                   title={isAuthenticated ? `Logged in as ${user?.name || 'Explorer'} (${user?.role === 'admin' ? 'Super Admin' : 'Member'})` : 'Guest Sign In'}
                 >
-                  <User className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
-                  {isAuthenticated && (
-                    <span className="hidden xl:inline text-xs font-extrabold uppercase tracking-wider text-[#6FCF45] max-w-[95px] truncate">
-                      {user?.name?.split(' ')[0] || 'VIP'}
-                    </span>
-                  )}
+                  <User className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-[2.2]" />
                 </Link>
               </div>
 
