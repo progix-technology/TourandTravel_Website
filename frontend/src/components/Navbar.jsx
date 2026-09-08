@@ -294,8 +294,13 @@ export const Navbar = () => {
       {/* FULL-SCREEN SEARCH OVERLAY MODAL                                          */}
       {/* ========================================================================= */}
       {searchModalOpen && (
-        <div className="fixed inset-0 z-50 bg-[#071A16]/95 backdrop-blur-xl flex items-center justify-center px-4 animate-fadeIn select-none">
-          <div className="w-full max-w-2xl bg-[#0F2922] border border-[#6FCF45]/30 rounded-3xl p-6 sm:p-10 shadow-2xl relative">
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSearchModalOpen(false)
+          }}
+          className="fixed inset-0 z-50 bg-transparent flex items-start sm:items-center justify-center pt-24 sm:pt-0 px-4 animate-fadeIn select-none"
+        >
+          <div className="w-full max-w-2xl bg-[#071A16] border-2 border-[#6FCF45]/50 rounded-3xl p-6 sm:p-10 shadow-[0_25px_80px_rgba(0,0,0,0.95)] relative animate-scaleUp">
             <button
               onClick={() => setSearchModalOpen(false)}
               className="absolute top-5 right-5 text-white/60 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors"
