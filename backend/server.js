@@ -1,3 +1,4 @@
+// Tours & Travellers Backend Server - Active
 import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
@@ -20,6 +21,7 @@ import couponRoutes from './src/routes/couponRoutes.js'
 import mediaRoutes from './src/routes/mediaRoutes.js'
 import dashboardRoutes from './src/routes/dashboardRoutes.js'
 import uploadRoutes from './src/routes/uploadRoutes.js'
+import paymentRoutes from './src/routes/paymentRoutes.js'
 
 // Load environment variables
 dotenv.config()
@@ -119,6 +121,7 @@ app.use('/api/v1/coupons', couponRoutes)
 app.use('/api/v1/media', mediaRoutes)
 app.use('/api/v1/dashboard', dashboardRoutes)
 app.use('/api/v1/upload', uploadRoutes)
+app.use('/api/v1/payment', paymentRoutes)
 
 // Centralized Error Handling Middleware
 app.use(errorHandler)

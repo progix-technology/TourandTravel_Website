@@ -10,6 +10,7 @@ import Footer from './components/Footer'
 import ScrollToTopButton from './components/ScrollToTopButton'
 import ProtectedRoute from './components/ProtectedRoute'
 import AdminLayout from './layouts/AdminLayout'
+import SplashScreen from './components/SplashScreen'
 
 // Direct Page Imports for Instant 0ms Load & Zero-Chunk-Failure Guarantee
 import Home from './pages/Home'
@@ -98,6 +99,8 @@ function App() {
       <SettingsProvider>
         <WishlistProvider>
           <BookingProvider>
+            {/* Elegant Kinetic Luxury Splash Screen */}
+            <SplashScreen minDisplayTime={1800} />
             <Router>
               <ScrollToTop />
               <Routes>

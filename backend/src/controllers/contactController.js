@@ -81,6 +81,13 @@ export const getAllEnquiries = async (req, res, next) => {
         duration: ct.approxDurationDays,
         travellers: ct.travellers,
         budget: ct.budgetTier,
+        totalAmount: ct.totalAmount || ct.quoteAmount || 0,
+        paymentStatus: ct.paymentStatus || 'Pending Arrival',
+        paymentMethod: ct.paymentMethod || 'Zero-Deposit VIP Hold',
+        paymentId: ct.paymentId || '',
+        travelersDetails: ct.travelersDetails || [],
+        spot: ct.spot || '',
+        transit: ct.transit || ct.transport || ct.travelMode || '',
         type: 'Bespoke Trip Inquiry',
         inquiryType: 'custom_trip',
         status: ct.status === 'Confirmed' || ct.status === 'Closed' ? 'Resolved' : 

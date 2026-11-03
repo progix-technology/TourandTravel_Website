@@ -25,7 +25,9 @@ import {
   ChevronDown,
   Building,
   Plane,
-  MessageSquare
+  MessageSquare,
+  CreditCard,
+  ShieldCheck,
 } from 'lucide-react'
 import api from '../services/api'
 
@@ -402,9 +404,9 @@ export const AdminPackages = () => {
             <thead>
               <tr className="bg-[#13151A] text-[#A8B5AF] text-[11px] font-bold uppercase tracking-wider border-b border-white/10">
                 <th className="p-4">Package Ref &amp; Client</th>
-                <th className="p-4">Route &amp; Destinations</th>
+                <th className="p-4">Route &amp; Transit</th>
                 <th className="p-4">Duration &amp; Guests</th>
-                <th className="p-4">Estimated Budget</th>
+                <th className="p-4">Payment &amp; Amount</th>
                 <th className="p-4 text-center">Status</th>
                 <th className="p-4 text-right">Actions</th>
               </tr>
@@ -454,16 +456,24 @@ export const AdminPackages = () => {
                         </div>
                       </td>
 
-                      {/* Route & Destinations */}
+                      {/* Route & Destinations & Transit */}
                       <td className="p-4">
                         <div className="flex items-center gap-1.5 text-white font-medium">
                           <MapPin className="w-3.5 h-3.5 text-[#6FCF45]" />
                           <span className="max-w-[220px] truncate" title={destinations.join(' → ')}>
-                            {destinations.length > 0 ? destinations.join(' → ') : 'Custom Itinerary'}
+                            {destinations.length > 0 ? destinations.join(' → ') : (pkg.destination || 'Custom Itinerary')}
                           </span>
                         </div>
+                        {pkg.spot && (
+                          <div className="text-[10px] text-[#6FCF45] font-semibold ml-5 truncate max-w-[200px]">
+                            ✦ {pkg.spot}
+                          </div>
+                        )}
                         <div className="text-[11px] text-[#A8B5AF] ml-5 flex items-center gap-1 mt-0.5">
-                          <span>From: {pkg.fromLocation || 'India'}</span>
+                          <span>From: {pkg.fromLocation || pkg.departure || 'India'}</span>
+                          {(pkg.transit || pkg.transport || pkg.travelMode) && (
+                            <span className="text-white/60">• {pkg.transit || pkg.transport || pkg.travelMode}</span>
+                          )}
                         </div>
                       </td>
 
@@ -471,21 +481,36 @@ export const AdminPackages = () => {
                       <td className="p-4">
                         <div className="flex items-center gap-1.5 text-white font-medium">
                           <Calendar className="w-3.5 h-3.5 text-blue-400" />
-                          <span>{pkg.approxDurationDays || 7} Days</span>
+                          <span>{pkg.approxDurationDays || pkg.duration || 7} Days</span>
                         </div>
                         <div className="text-[11px] text-[#A8B5AF] ml-5 flex items-center gap-1 mt-0.5">
                           <Users className="w-3 h-3 text-[#A8B5AF]" />
                           <span>{travelersCount} Guests</span>
+                          {pkg.travelersDetails?.length > 0 && (
+                            <span className="text-[#6FCF45] font-mono text-[10px] font-bold">({pkg.travelersDetails.length} Names)</span>
+                          )}
                         </div>
                       </td>
 
-                      {/* Budget */}
+                      {/* Payment & Amount */}
                       <td className="p-4">
                         <div className="font-mono font-extrabold text-[#6FCF45] text-sm">
-                          ₹{budgetVal.toLocaleString()}
+                          ₹{(pkg.totalAmount || pkg.quoteAmount || Number(pkg.budgetEstimatedINR) || 0).toLocaleString('en-IN')}
                         </div>
-                        <span className="text-[10px] text-[#A8B5AF] uppercase">
-                          {pkg.budgetTier || 'Signature Luxury'}
+                        <div className="mt-1">
+                          <span
+                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider ${
+                              (pkg.paymentStatus || '').toLowerCase().includes('paid')
+                                ? 'bg-[#6FCF45]/15 text-[#6FCF45] border border-[#6FCF45]/30'
+                                : 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
+                            }`}
+                          >
+                            <CreditCard className="w-2.5 h-2.5" />
+                            <span>{pkg.paymentStatus || 'Pending Arrival'}</span>
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-[#A8B5AF] block mt-0.5 truncate max-w-[150px]">
+                          {pkg.paymentMethod || 'Zero-Deposit Hold'}
                         </span>
                       </td>
 
@@ -840,32 +865,71 @@ export const AdminPackages = () => {
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-6 space-y-4 text-xs">
               
-              {/* Status & Budget */}
-              <div className="grid grid-cols-2 gap-3 p-4 bg-[#13151A] rounded-2xl border border-white/5">
-                <div>
-                  <span className="text-[10px] text-[#A8B5AF] uppercase tracking-wider block">Estimated Budget</span>
-                  <span className="text-lg font-mono font-extrabold text-[#6FCF45]">
-                    ₹{Number(selectedPackage.budgetEstimatedINR || 250000).toLocaleString()}
-                  </span>
-                  <span className="text-[10px] text-[#A8B5AF] block mt-0.5">{selectedPackage.budgetTier}</span>
+              {/* Payment Status & Financial Breakdown Card */}
+              <div className="p-4 bg-[#13151A] rounded-2xl border border-white/5 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
+                  <div>
+                    <span className="text-[10px] text-[#A8B5AF] uppercase tracking-wider block font-bold">
+                      Booking Amount Payable / Paid
+                    </span>
+                    <span className="text-xl sm:text-2xl font-mono font-black text-[#6FCF45]">
+                      ₹{(selectedPackage.totalAmount || selectedPackage.quoteAmount || Number(selectedPackage.budgetEstimatedINR) || 0).toLocaleString('en-IN')}
+                    </span>
+                    <span className="text-[10px] text-[#A8B5AF] block mt-0.5">
+                      Tier: {selectedPackage.budgetTier || 'Signature Luxury'}
+                    </span>
+                  </div>
+
+                  <div className="sm:text-right">
+                    <span className="text-[10px] text-[#A8B5AF] uppercase tracking-wider block font-bold">
+                      Payment Status
+                    </span>
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 mt-1 rounded-full text-xs font-black uppercase tracking-wider border ${
+                        (selectedPackage.paymentStatus || '').toLowerCase().includes('paid')
+                          ? 'bg-[#6FCF45]/15 text-[#6FCF45] border-[#6FCF45]/30 shadow-md shadow-[#6FCF45]/10'
+                          : 'bg-amber-500/15 text-amber-400 border-amber-500/30'
+                      }`}
+                    >
+                      <CreditCard className="w-3.5 h-3.5" />
+                      <span>{selectedPackage.paymentStatus || 'Pending Arrival / Cash on Check-in'}</span>
+                    </span>
+                  </div>
                 </div>
 
-                <div>
-                  <span className="text-[10px] text-[#A8B5AF] uppercase tracking-wider block">Status</span>
-                  <span className={`inline-block px-3 py-1 mt-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getStatusBadge(selectedPackage.status || 'New')}`}>
-                    {selectedPackage.status || 'New'}
-                  </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-white pt-1">
+                  <div>
+                    <span className="text-[10px] text-[#A8B5AF] uppercase block font-semibold">Payment Gateway / Option</span>
+                    <span className="font-bold text-white text-xs">{selectedPackage.paymentMethod || 'Zero-Deposit VIP Hold (Pay on Arrival)'}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-[#A8B5AF] uppercase block font-semibold">Razorpay Transaction ID</span>
+                    <span className="font-mono text-xs text-[#38bdf8] font-bold">
+                      {selectedPackage.paymentId || 'N/A (Pay on Check-in Hold)'}
+                    </span>
+                  </div>
                 </div>
+              </div>
+
+              {/* Inquiry Operational Status */}
+              <div className="p-3.5 bg-[#13151A] rounded-2xl border border-white/5 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] text-[#A8B5AF] uppercase tracking-wider block font-semibold">Concierge Review Status</span>
+                  <span className="text-white font-bold">{selectedPackage.status || 'New'}</span>
+                </div>
+                <span className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${getStatusBadge(selectedPackage.status || 'New')}`}>
+                  {selectedPackage.status || 'New'}
+                </span>
               </div>
 
               {/* Client Contact Info & Direct WhatsApp Chat */}
               <div className="p-4 bg-[#13151A] rounded-2xl border border-white/5 space-y-3">
                 <span className="text-[10px] text-[#6FCF45] uppercase tracking-wider font-bold block">
-                  Traveler Contact Details &amp; Discussion
+                  Lead Traveler Contact &amp; Quick WhatsApp Connect
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-white">
                   <div>
-                    <span className="text-[10px] text-[#A8B5AF] uppercase block">Full Name</span>
+                    <span className="text-[10px] text-[#A8B5AF] uppercase block">Lead Full Name</span>
                     <span className="font-semibold">{selectedPackage.contactInfo?.fullName || selectedPackage.name || 'Valued Explorer'}</span>
                   </div>
                   <div>
@@ -875,11 +939,11 @@ export const AdminPackages = () => {
                     </a>
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#A8B5AF] uppercase block">WhatsApp / Phone</span>
+                    <span className="text-[10px] text-[#A8B5AF] uppercase block">Phone / WhatsApp</span>
                     <span className="font-mono font-bold text-[#6FCF45]">{selectedPackage.contactInfo?.phone || selectedPackage.phone || 'Not provided'}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#A8B5AF] uppercase block">Travel Departure Date</span>
+                    <span className="text-[10px] text-[#A8B5AF] uppercase block">Travel Date</span>
                     <span className="text-amber-400 font-medium">{selectedPackage.travelDate || selectedPackage.startDate || 'Flexible / Next 30 Days'}</span>
                   </div>
                 </div>
@@ -888,11 +952,11 @@ export const AdminPackages = () => {
                   <div className="pt-2">
                     <a
                       href={`https://wa.me/${(selectedPackage.contactInfo?.phone || selectedPackage.phone).replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                        `Hello ${selectedPackage.contactInfo?.fullName || selectedPackage.name || 'Explorer'}! This is Tours & Travellers Concierge regarding your Bespoke Trip Inquiry #${selectedPackage.inquiryReference} for ${(selectedPackage.toDestinations || [selectedPackage.destination]).join(', ')}. We have prepared your curated itinerary and quote. Let's discuss!`
+                        `Hello ${selectedPackage.contactInfo?.fullName || selectedPackage.name || 'Explorer'}! This is Tours & Travellers Concierge regarding your Custom Trip Booking #${selectedPackage.inquiryReference} for ${(selectedPackage.toDestinations || [selectedPackage.destination]).join(', ')}. Payment Status: ${selectedPackage.paymentStatus || 'Confirmed'}. We have your booking details ready!`
                       )}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="w-full py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/20 transition-all"
+                      className="w-full py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/20 transition-all cursor-pointer"
                     >
                       <MessageSquare className="w-4 h-4 fill-current" />
                       <span>Connect on WhatsApp with Client</span>
@@ -901,19 +965,59 @@ export const AdminPackages = () => {
                 )}
               </div>
 
-              {/* Route & Guests */}
-              <div className="p-4 bg-[#13151A] rounded-2xl border border-white/5 space-y-2">
+              {/* Individual Registered Travelers */}
+              {selectedPackage.travelersDetails && selectedPackage.travelersDetails.length > 0 && (
+                <div className="p-4 bg-[#13151A] rounded-2xl border border-white/5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-[#6FCF45] uppercase tracking-wider font-bold flex items-center gap-1.5">
+                      <Users className="w-3.5 h-3.5" />
+                      <span>All Registered Travelers ({selectedPackage.travelersDetails.length} Guests)</span>
+                    </span>
+                    <span className="text-[10px] text-white/50">Official ID Roster</span>
+                  </div>
+                  <div className="divide-y divide-white/5">
+                    {selectedPackage.travelersDetails.map((guest, idx) => (
+                      <div key={idx} className="py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="w-5 h-5 rounded-full bg-white/10 text-[10px] flex items-center justify-center font-mono font-bold text-[#6FCF45]">
+                            {idx + 1}
+                          </span>
+                          <span className="font-bold text-white">{guest.fullName || 'Guest'}</span>
+                          {idx === 0 && (
+                            <span className="text-[9px] font-bold text-[#6FCF45] bg-[#6FCF45]/15 border border-[#6FCF45]/30 px-1.5 py-0.2 rounded">
+                              Lead Traveler
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-4 text-[#A8B5AF] text-[11px] ml-7 sm:ml-0">
+                          {guest.age && <span>Age: <strong className="text-white">{guest.age} yrs</strong></span>}
+                          {guest.gender && <span>Gender: <strong className="text-white capitalize">{guest.gender}</strong></span>}
+                          {guest.preference && <span>Seat / Preference: <strong className="text-white">{guest.preference}</strong></span>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Route & Transit Mode */}
+              <div className="p-4 bg-[#13151A] rounded-2xl border border-white/5 space-y-2.5">
                 <div className="flex items-center gap-2 text-white font-semibold">
                   <MapPin className="w-4 h-4 text-[#6FCF45]" />
-                  <span>Destinations: {(selectedPackage.toDestinations || [selectedPackage.destination] || []).join(' → ')}</span>
+                  <span>Route: {selectedPackage.fromLocation || selectedPackage.departure || 'Origin'} → {(selectedPackage.toDestinations || [selectedPackage.destination] || []).join(', ')}</span>
                 </div>
-                <div className="flex items-center gap-2 text-[#A8B5AF]">
+                {selectedPackage.spot && (
+                  <div className="text-[#6FCF45] font-semibold text-xs ml-6">
+                    ✦ Highlight Spot: {selectedPackage.spot}
+                  </div>
+                )}
+                <div className="flex items-center gap-2 text-white/90">
                   <Plane className="w-4 h-4 text-blue-400" />
-                  <span>Departure Location: {selectedPackage.fromLocation || selectedPackage.departure || 'India'}</span>
+                  <span>Transit Mode: <strong>{selectedPackage.transit || selectedPackage.transport || selectedPackage.travelMode || 'Flight'}</strong></span>
                 </div>
                 <div className="flex items-center gap-2 text-[#A8B5AF]">
                   <Calendar className="w-4 h-4 text-amber-400" />
-                  <span>Duration: {selectedPackage.approxDurationDays || selectedPackage.duration || 7} Days • {selectedPackage.travelers || selectedPackage.travellers?.adults || 2} Guests ({selectedPackage.travelMode || selectedPackage.transport || 'Flight'})</span>
+                  <span>Duration: {selectedPackage.approxDurationDays || selectedPackage.duration || 7} Days • {selectedPackage.travelers || selectedPackage.travellers?.adults || 2} Guests</span>
                 </div>
               </div>
 

@@ -18,6 +18,9 @@ export const submitCustomTrip = async (req, res, next) => {
       notes: tripData.specialRequests || tripData.contactInfo?.notes || '',
     }
 
+    const isPaid = (tripData.paymentStatus || '').toLowerCase().includes('paid')
+    const finalStatus = isPaid ? 'Confirmed' : (tripData.status || 'Pending Concierge Review')
+
     const newTrip = await CustomTrip.create({
       inquiryReference,
       user: req.user ? req.user._id : null,
@@ -25,6 +28,7 @@ export const submitCustomTrip = async (req, res, next) => {
       fromLocation,
       destination,
       toDestinations,
+      spot: tripData.spot || '',
       duration: tripData.duration || '6–8 Days',
       approxDurationDays: tripData.approxDurationDays || 7,
       travelers: tripData.travelers || tripData.travellers?.adults || 2,
@@ -33,8 +37,9 @@ export const submitCustomTrip = async (req, res, next) => {
         children: tripData.travellers?.children || 0,
         infants: tripData.travellers?.infants || 0,
       },
-      travelMode: tripData.travelMode || 'Flight',
+      travelMode: tripData.travelMode || tripData.transport || 'Flight',
       transport: tripData.transport || tripData.travelMode || 'Flight',
+      transit: tripData.transit || tripData.transport || tripData.travelMode || 'Flight',
       travelDate: tripData.travelDate || tripData.startDate || 'Flexible / Next 30 Days',
       startDate: tripData.travelDate || tripData.startDate,
       specialRequests: tripData.specialRequests || '',
@@ -42,7 +47,13 @@ export const submitCustomTrip = async (req, res, next) => {
       email: contactInfo.email,
       phone: contactInfo.phone,
       contactInfo,
-      status: 'Pending Concierge Review',
+      travelersDetails: Array.isArray(tripData.travelersDetails) ? tripData.travelersDetails : [],
+      paymentMethod: tripData.paymentMethod || 'Zero-Deposit VIP Concierge Hold (Pay on Arrival)',
+      paymentStatus: tripData.paymentStatus || (isPaid ? 'Paid & Secured (Razorpay)' : 'Pending Arrival / Cash on Check-in'),
+      paymentId: tripData.paymentId || '',
+      totalAmount: Number(tripData.totalAmount) || 0,
+      quoteAmount: Number(tripData.totalAmount) || 0,
+      status: finalStatus,
     })
 
     res.status(201).json({

@@ -24,7 +24,12 @@ export const DEFAULT_BOOKING_SETTINGS = {
   autoConfirmBookings: true,
   emailAlertsOnBooking: true,
   smsAlertsOnEnquiry: true,
-  customTripQuoteExpiryDays: 7
+  customTripQuoteExpiryDays: 7,
+  // Razorpay Gateway Admin Keys
+  razorpayEnabled: true,
+  razorpayKeyId: 'rzp_test_YourKeyHere',
+  razorpayKeySecret: '',
+  currency: 'INR',
 }
 
 const SettingsContext = createContext()

@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useSettings } from '../context/SettingsContext'
+import api from '../services/api'
 
 const AdminSettings = () => {
   const { user } = useAuth()
@@ -54,15 +55,43 @@ const AdminSettings = () => {
     return localStorage.getItem('agy_admin_maintenance_mode') === 'true'
   })
 
+  // Load backend payment settings on mount
+  useEffect(() => {
+    api.get('/payment/admin-settings')
+      .then((res) => {
+        if (res.data?.settings) {
+          setBookingSettings((prev) => ({
+            ...prev,
+            razorpayEnabled: res.data.settings.razorpayEnabled !== false,
+            razorpayKeyId: res.data.settings.razorpayKeyId || prev.razorpayKeyId || '',
+            razorpayKeySecret: res.data.settings.razorpayKeySecret || prev.razorpayKeySecret || '',
+            razorpayWebhookSecret: res.data.settings.razorpayWebhookSecret || prev.razorpayWebhookSecret || '',
+          }))
+        }
+      })
+      .catch((err) => console.warn('Could not load backend payment settings:', err.message))
+  }, [])
+
   const handleSaveGeneral = (e) => {
     e.preventDefault()
     updateSettings(generalSettings)
     triggerSuccess()
   }
 
-  const handleSaveBooking = (e) => {
+  const handleSaveBooking = async (e) => {
     e.preventDefault()
     updateBookingSettings(bookingSettings)
+    try {
+      await api.put('/payment/admin-settings', {
+        razorpayEnabled: bookingSettings.razorpayEnabled,
+        razorpayKeyId: bookingSettings.razorpayKeyId,
+        razorpayKeySecret: bookingSettings.razorpayKeySecret,
+        razorpayWebhookSecret: bookingSettings.razorpayWebhookSecret,
+        currency: 'INR',
+      })
+    } catch (err) {
+      console.warn('Backend payment settings update notice:', err.message)
+    }
     triggerSuccess()
   }
 
@@ -525,6 +554,72 @@ const AdminSettings = () => {
                     />
                     <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#6FCF45]"></div>
                   </label>
+                </div>
+              </div>
+
+              {/* 💳 RAZORPAY PAYMENT GATEWAY ACCOUNT CONFIGURATION */}
+              <div className="pt-6 border-t border-white/10 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-base font-bold text-white flex items-center gap-2">
+                      <CreditCard className="w-5 h-5 text-[#6FCF45]" />
+                      <span>Razorpay Payment Gateway Account Setup</span>
+                    </h3>
+                    <p className="text-xs text-[#A8B5AF] mt-0.5">
+                      Configure your Razorpay API Key ID and Key Secret to collect payments directly into your bank account.
+                    </p>
+                  </div>
+                  <span className={`px-2.5 py-1 rounded-full text-xs font-bold border ${bookingSettings.razorpayEnabled ? 'bg-[#6FCF45]/15 text-[#6FCF45] border-[#6FCF45]/30' : 'bg-red-500/15 text-red-400 border-red-500/30'}`}>
+                    {bookingSettings.razorpayEnabled ? 'Active / Live' : 'Disabled'}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#A8B5AF] uppercase tracking-wider mb-2">
+                      Razorpay Key ID (Public) *
+                    </label>
+                    <input
+                      type="text"
+                      value={bookingSettings.razorpayKeyId || ''}
+                      onChange={(e) => setBookingSettings({ ...bookingSettings, razorpayKeyId: e.target.value })}
+                      placeholder="rzp_test_... or rzp_live_..."
+                      className="w-full bg-[#13151A] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#6FCF45] transition-colors"
+                      required
+                    />
+                    <span className="text-[11px] text-[#A8B5AF] mt-1 block">Found in Razorpay Dashboard &gt; Settings &gt; API Keys</span>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#A8B5AF] uppercase tracking-wider mb-2">
+                      Razorpay Key Secret (Private) *
+                    </label>
+                    <input
+                      type="password"
+                      value={bookingSettings.razorpayKeySecret || ''}
+                      onChange={(e) => setBookingSettings({ ...bookingSettings, razorpayKeySecret: e.target.value })}
+                      placeholder="Enter Razorpay Secret Key"
+                      className="w-full bg-[#13151A] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#6FCF45] transition-colors"
+                    />
+                    <span className="text-[11px] text-[#A8B5AF] mt-1 block">Used for 256-bit encrypted signature verification.</span>
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-semibold text-[#A8B5AF] uppercase tracking-wider mb-2 flex items-center justify-between">
+                      <span>Razorpay Webhook Secret (Optional)</span>
+                      <span className="text-[10px] text-[#6FCF45] font-normal lowercase tracking-normal">optional / background sync</span>
+                    </label>
+                    <input
+                      type="password"
+                      value={bookingSettings.razorpayWebhookSecret || ''}
+                      onChange={(e) => setBookingSettings({ ...bookingSettings, razorpayWebhookSecret: e.target.value })}
+                      placeholder="Enter Webhook Secret (if configured in Razorpay Webhooks)"
+                      className="w-full bg-[#13151A] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#6FCF45] transition-colors"
+                    />
+                    <span className="text-[11px] text-[#A8B5AF] mt-1 block">
+                      Zaroori sirf tab hota hai agar aapne Razorpay Dashboard &gt; Settings &gt; Webhooks me webhook URL configure ki ho. Standard payment checkout ke liye sirf Key ID aur Key Secret hi kaafi hain.
+                    </span>
+                  </div>
                 </div>
               </div>
 

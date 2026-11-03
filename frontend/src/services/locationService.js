@@ -131,3 +131,85 @@ export const extractCountry = (locationStr = '') => {
   }
   return locationStr.trim()
 }
+
+/**
+ * Reverse geocode latitude and longitude using free OpenStreetMap Nominatim API
+ */
+export const reverseGeocodeCoords = async (latitude, longitude) => {
+  try {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 4000)
+
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=10&addressdetails=1`,
+      {
+        headers: {
+          'Accept-Language': 'en',
+          'User-Agent': 'TourAndTravellersLuxuryApp/1.0',
+        },
+        signal: controller.signal,
+      }
+    )
+    clearTimeout(timeoutId)
+
+    if (res.ok) {
+      const data = await res.json()
+      const addr = data.address || {}
+      const city =
+        addr.city ||
+        addr.town ||
+        addr.municipality ||
+        addr.suburb ||
+        addr.county ||
+        addr.state_district ||
+        'My Location'
+      const state = addr.state || ''
+      const country = addr.country || 'India'
+      const countryCode = (addr.country_code || 'in').toUpperCase()
+
+      let display = city
+      if (state && state !== city) display += `, ${state}`
+      if (country) display += `, ${country}`
+
+      return {
+        city,
+        state,
+        country,
+        countryCode,
+        display,
+        lat: latitude,
+        lon: longitude,
+      }
+    }
+  } catch (err) {
+    console.warn('Reverse geocode fallback:', err.message)
+  }
+
+  return {
+    city: 'Current Location',
+    state: '',
+    country: 'India',
+    countryCode: 'IN',
+    display: `Current Location (${latitude.toFixed(2)}, ${longitude.toFixed(2)})`,
+    lat: latitude,
+    lon: longitude,
+  }
+}
+
+/**
+ * Haversine formula to calculate approximate distance in km between two lat/lng points
+ */
+export const calculateDistanceKm = (lat1, lon1, lat2, lon2) => {
+  if (!lat1 || !lon1 || !lat2 || !lon2) return null
+  const R = 6371 // Earth radius in km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180
+  const dLon = ((lon2 - lon1) * Math.PI) / 180
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2)
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+  return Math.round(R * c)
+}

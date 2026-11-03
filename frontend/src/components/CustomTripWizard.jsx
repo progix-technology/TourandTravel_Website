@@ -471,7 +471,7 @@ export const CustomTrip = () => {
                   <Compass className="w-3.5 h-3.5" />
                   Live Route Preview
                 </span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#12382E] text-[#6FCF45] border border-[#6FCF45]/30 font-semibold">
+                <span className="text-xs text-[#6FCF45] font-semibold">
                   {formData.tripTier}
                 </span>
               </div>
@@ -1151,7 +1151,7 @@ export const CustomTrip = () => {
                               Preferred Mode of Travel
                             </label>
                             {isInternationalRoute && (
-                              <span className="text-[10px] text-[#6FCF45] bg-[#6FCF45]/15 border border-[#6FCF45]/30 px-2 py-0.5 rounded-full flex items-center gap-1 font-semibold">
+                              <span className="text-[10px] text-[#6FCF45] bg-[#6FCF45]/15 border border-[#6FCF45]/30 px-2 py-0.5 rounded-md flex items-center gap-1 font-semibold">
                                 <Plane className="w-3 h-3" />
                                 <span>Flight Required (Overseas Journey)</span>
                               </span>

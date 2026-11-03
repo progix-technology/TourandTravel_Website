@@ -90,6 +90,39 @@ const CustomTripSchema = new mongoose.Schema(
     email: String,
     phone: String,
     specialRequests: String,
+    spot: {
+      type: String,
+      default: '',
+    },
+    transit: {
+      type: String,
+      default: '',
+    },
+    travelersDetails: [
+      {
+        fullName: String,
+        age: Number,
+        gender: String,
+        preference: String,
+      },
+    ],
+    // Payment & Billing Tracking
+    totalAmount: {
+      type: Number,
+      default: 0,
+    },
+    paymentMethod: {
+      type: String,
+      default: 'Zero-Deposit VIP Hold (Pay on Arrival)',
+    },
+    paymentStatus: {
+      type: String,
+      default: 'Pending Arrival / Cash on Check-in',
+    },
+    paymentId: {
+      type: String,
+      default: '',
+    },
     contactInfo: {
       fullName: String,
       email: String,

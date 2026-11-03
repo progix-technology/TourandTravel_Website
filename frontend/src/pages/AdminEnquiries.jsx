@@ -17,7 +17,8 @@ import {
   Eye, 
   RefreshCw,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  CreditCard,
 } from 'lucide-react'
 import api from '../services/api'
 
@@ -409,25 +410,74 @@ const AdminEnquiries = () => {
 
               {/* Custom Trip Details if available */}
               {selectedEnquiry.inquiryType === 'custom_trip' && (
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-xl bg-[#13151A] border border-white/5 text-xs">
-                  <div>
-                    <p className="text-[10px] text-[#A8B5AF] uppercase font-bold">Destination</p>
-                    <p className="font-semibold text-white mt-0.5">{selectedEnquiry.destination || 'Bespoke'}</p>
+                <div className="space-y-3">
+                  {/* Payment & Amount Card */}
+                  <div className="p-4 rounded-xl bg-[#13151A] border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                    <div>
+                      <p className="text-[10px] text-[#A8B5AF] uppercase font-bold">Booking Amount</p>
+                      <p className="text-lg font-mono font-black text-[#6FCF45] mt-0.5">
+                        ₹{(selectedEnquiry.totalAmount || 0).toLocaleString('en-IN')}
+                      </p>
+                      <p className="text-[11px] text-[#A8B5AF]">Method: {selectedEnquiry.paymentMethod || 'Zero-Deposit Hold'}</p>
+                    </div>
+                    <div className="sm:text-right">
+                      <p className="text-[10px] text-[#A8B5AF] uppercase font-bold">Payment Status</p>
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 mt-1 rounded-full text-xs font-bold uppercase tracking-wider border ${
+                        (selectedEnquiry.paymentStatus || '').toLowerCase().includes('paid')
+                          ? 'bg-[#6FCF45]/15 text-[#6FCF45] border-[#6FCF45]/30'
+                          : 'bg-amber-500/15 text-amber-400 border-amber-500/30'
+                      }`}>
+                        <CreditCard className="w-3 h-3" />
+                        <span>{selectedEnquiry.paymentStatus || 'Pending Arrival'}</span>
+                      </span>
+                      {selectedEnquiry.paymentId && (
+                        <p className="text-[10px] text-[#38bdf8] font-mono mt-1">ID: {selectedEnquiry.paymentId}</p>
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-[10px] text-[#A8B5AF] uppercase font-bold">Duration</p>
-                    <p className="font-semibold text-white mt-0.5">{selectedEnquiry.duration ? `${selectedEnquiry.duration} Days` : 'Custom'}</p>
+
+                  {/* Route & Transit */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-xl bg-[#13151A] border border-white/5 text-xs">
+                    <div>
+                      <p className="text-[10px] text-[#A8B5AF] uppercase font-bold">Destination</p>
+                      <p className="font-semibold text-white mt-0.5">{selectedEnquiry.destination || 'Bespoke'}</p>
+                      {selectedEnquiry.spot && <p className="text-[10px] text-[#6FCF45] mt-0.5 truncate">✦ {selectedEnquiry.spot}</p>}
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-[#A8B5AF] uppercase font-bold">Transit Mode</p>
+                      <p className="font-semibold text-white mt-0.5">{selectedEnquiry.transit || 'Flight'}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-[#A8B5AF] uppercase font-bold">Duration</p>
+                      <p className="font-semibold text-white mt-0.5">{selectedEnquiry.duration ? `${selectedEnquiry.duration} Days` : 'Custom'}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-[#A8B5AF] uppercase font-bold">Adults / Guests</p>
+                      <p className="font-semibold text-white mt-0.5">
+                        {selectedEnquiry.travellers ? `${selectedEnquiry.travellers.adults || 2} Guests` : '2 Guests'}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-[10px] text-[#A8B5AF] uppercase font-bold">Adults / Kids</p>
-                    <p className="font-semibold text-white mt-0.5">
-                      {selectedEnquiry.travellers ? `${selectedEnquiry.travellers.adults || 2} Adults` : '2 Adults'}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-[#A8B5AF] uppercase font-bold">Budget Tier</p>
-                    <p className="font-semibold text-[#6FCF45] mt-0.5">{selectedEnquiry.budget || 'Signature Luxury'}</p>
-                  </div>
+
+                  {/* Individual Registered Guests */}
+                  {selectedEnquiry.travelersDetails && selectedEnquiry.travelersDetails.length > 0 && (
+                    <div className="p-3.5 rounded-xl bg-[#13151A] border border-white/5 text-xs space-y-2">
+                      <p className="text-[10px] text-[#6FCF45] uppercase font-bold flex items-center gap-1.5">
+                        <Users className="w-3.5 h-3.5" />
+                        <span>All Registered Guests ({selectedEnquiry.travelersDetails.length})</span>
+                      </p>
+                      <div className="divide-y divide-white/5">
+                        {selectedEnquiry.travelersDetails.map((t, idx) => (
+                          <div key={idx} className="py-2 flex items-center justify-between text-xs">
+                            <span className="font-bold text-white">{idx + 1}. {t.fullName || 'Guest'}</span>
+                            <span className="text-[#A8B5AF] text-[11px]">
+                              {t.age ? `${t.age} yrs` : ''} {t.gender ? `• ${t.gender}` : ''} {t.preference ? `• ${t.preference}` : ''}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 

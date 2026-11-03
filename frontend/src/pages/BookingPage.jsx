@@ -34,6 +34,7 @@ import { useBooking } from '../context/BookingContext'
 import { useSettings } from '../context/SettingsContext'
 import { TOURS } from '../utils/mockData'
 import Button from '../components/Button'
+import { initiateRazorpayPayment } from '../services/razorpayService'
 
 // Helper function to get real-time dynamic date
 const getDynamicDate = (daysAhead = 10) => {
@@ -256,42 +257,72 @@ export const BookingPage = () => {
 
   const handleCompleteOrder = async (e) => {
     e.preventDefault()
-    setIsProcessing(true)
 
-    const result = await completeBooking({
-      tourId: currentTour.id || currentTour.slug,
-      tourTitle: currentTour.title || currentTour.tourTitle,
-      destination: currentTour.destination,
-      duration: currentTour.duration,
-      image: currentTour.image,
-      departureCity: effectiveDepartureCity,
-      pickupLocation: logistics.pickupLocation || 'Main Terminal / Central Hub',
-      travelMode: logistics.travelMode,
-      transitDetails: logistics.transitDetails || logistics.flightNumber || '',
-      travelDate: logistics.departureDate,
-      travelers: guestCount,
-      addons,
-      leadTraveler,
-      logistics: {
-        ...logistics,
+    const submitOrderBooking = async (paidMethodLabel, paidStatusLabel, rzpPaymentId = null) => {
+      setIsProcessing(true)
+      const result = await completeBooking({
+        tourId: currentTour.id || currentTour.slug,
+        tourTitle: currentTour.title || currentTour.tourTitle,
+        destination: currentTour.destination,
+        duration: currentTour.duration,
+        image: currentTour.image,
         departureCity: effectiveDepartureCity,
         pickupLocation: logistics.pickupLocation || 'Main Terminal / Central Hub',
         travelMode: logistics.travelMode,
         transitDetails: logistics.transitDetails || logistics.flightNumber || '',
-      },
-      preferences,
-      paymentMethod:
-        paymentType === 'card'
-          ? 'Credit / Debit Card (256-Bit SSL Encrypted)'
-          : paymentType === 'upi'
-          ? `Instant UPI (${paymentInfo.upiId})`
-          : 'Zero-Deposit VIP Concierge Desk Reservation',
-      totalPrice,
-    })
+        travelDate: logistics.departureDate,
+        travelers: guestCount,
+        addons,
+        leadTraveler,
+        logistics: {
+          ...logistics,
+          departureCity: effectiveDepartureCity,
+          pickupLocation: logistics.pickupLocation || 'Main Terminal / Central Hub',
+          travelMode: logistics.travelMode,
+          transitDetails: logistics.transitDetails || logistics.flightNumber || '',
+        },
+        preferences,
+        paymentMethod: paidMethodLabel,
+        paymentStatus: paidStatusLabel,
+        paymentId: rzpPaymentId,
+        totalPrice,
+      })
 
-    setIsProcessing(false)
-    setConfirmedBooking(result)
-    setStep(3)
+      setIsProcessing(false)
+      setConfirmedBooking(result)
+      setStep(3)
+    }
+
+    // Razorpay Online Flow
+    if (paymentType === 'card' || paymentType === 'upi') {
+      initiateRazorpayPayment({
+        amount: totalPrice,
+        customerName: `${leadTraveler.firstName} ${leadTraveler.lastName}`.trim() || user?.name || 'Explorer',
+        customerEmail: leadTraveler.email || user?.email || '',
+        customerPhone: leadTraveler.phone || user?.phone || '',
+        tourTitle: `${currentTour.title || 'Tour'} (${guestCount} Guests)`,
+        notes: {
+          departure: effectiveDepartureCity,
+          tourId: currentTour.id || currentTour.slug,
+        },
+        onSuccess: (verifyData) => {
+          submitOrderBooking(
+            `Razorpay Online (${verifyData.paymentId || 'Verified'})`,
+            'Paid & Secured (Razorpay)',
+            verifyData.paymentId
+          )
+        },
+        onError: (err) => {
+          console.warn('Booking payment cancelled/failed:', err)
+        },
+      })
+    } else {
+      // Zero-Deposit VIP Concierge Hold
+      submitOrderBooking(
+        'Zero-Deposit VIP Concierge Desk Reservation',
+        'Zero-Deposit Hold'
+      )
+    }
   }
 
   return (
