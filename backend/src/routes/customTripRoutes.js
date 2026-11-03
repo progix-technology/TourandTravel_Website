@@ -7,10 +7,11 @@ import {
   deleteCustomTrip,
 } from '../controllers/customTripController.js'
 import { protect, authorize } from '../middleware/authMiddleware.js'
+import { validateCustomTrip } from '../middleware/validatorMiddleware.js'
 
 const router = express.Router()
 
-router.post('/', submitCustomTrip)
+router.post('/', validateCustomTrip, submitCustomTrip)
 router.get('/', protect, getCustomTrips) // Handles both admin and user via controller logic
 
 // Admin routes

@@ -49,6 +49,7 @@ import { useAuth } from '../context/AuthContext'
 import { useBooking } from '../context/BookingContext'
 import { useWishlist } from '../context/WishlistContext'
 import { useSettings } from '../context/SettingsContext'
+import ImageWithSkeleton from '../components/ui/ImageWithSkeleton'
 import { TOURS } from '../utils/mockData'
 import bookingService from '../services/bookingService'
 import api from '../services/api'
@@ -504,6 +505,8 @@ export const Profile = () => {
                 src={logoImg}
                 alt="Logo"
                 className="w-9 h-9 object-contain drop-shadow-md group-hover:scale-105 transition-transform"
+                loading="lazy"
+                decoding="async"
               />
               <span className="font-extrabold text-sm tracking-[0.18em] text-white uppercase font-heading leading-tight">
                 TOURS <span className="text-[#6FCF45]">&amp;</span><br />TRAVELS
@@ -573,6 +576,8 @@ export const Profile = () => {
                 src={mountainShapeImg}
                 alt="Mountain"
                 className="w-14 h-8 sm:w-16 sm:h-9 object-contain object-left mb-3.5 drop-shadow-sm"
+                loading="lazy"
+                decoding="async"
               />
 
               <h4 className="text-sm font-bold text-white mb-1 tracking-tight font-heading">
@@ -736,6 +741,8 @@ export const Profile = () => {
                   src={bannerBg}
                   alt="Explore the World"
                   className="absolute inset-0 w-full h-full object-cover object-center scale-105 opacity-40"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-[#0E1117]/95 via-[#0E1117]/85 to-transparent z-0" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0E1117]/80 via-transparent to-transparent z-0" />
@@ -801,11 +808,15 @@ export const Profile = () => {
                     {/* Journey Item inside 3D Pod */}
                     <div className="bg-[#0E1117]/80 border border-white/5 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-inner">
                       <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-                        <img
-                          src={activeJourney.image}
-                          alt={activeJourney.title}
-                          className="w-full sm:w-28 h-24 sm:h-20 object-cover rounded-xl border border-white/15 shrink-0 shadow-md"
-                        />
+                        <div className="w-full sm:w-28 h-24 sm:h-20 rounded-xl overflow-hidden border border-white/15 shrink-0 shadow-md">
+                          <ImageWithSkeleton
+                            src={activeJourney.image}
+                            alt={activeJourney.title}
+                            className="w-full h-full"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </div>
                         <div className="text-center sm:text-left">
                           <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
                             <h3 className="text-sm sm:text-base font-bold text-white">
@@ -881,10 +892,13 @@ export const Profile = () => {
                           className="group bg-[#0E1117]/80 border border-white/10 rounded-xl overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.5)] hover:border-[#6FCF45]/50 transition-all cursor-pointer flex flex-col"
                         >
                           <div className="relative h-32 sm:h-36 w-full overflow-hidden">
-                            <img
+                            <ImageWithSkeleton
                               src={item.image}
                               alt={item.title}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              className="w-full h-full"
+                              imgClassName="group-hover:scale-105 transition-transform duration-500"
+                              loading="lazy"
+                              decoding="async"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-[#0E1117] via-transparent to-transparent opacity-80" />
                             <button
@@ -920,6 +934,8 @@ export const Profile = () => {
                       src={destinationBg1}
                       alt="Travel Deals"
                       className="absolute inset-0 w-full h-full object-cover object-center opacity-20"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-[#0E1117] via-[#0E1117]/90 to-transparent" />
                     
@@ -1099,6 +1115,8 @@ export const Profile = () => {
                       src={mountainShapeImg}
                       alt=""
                       className="w-36 h-24 sm:w-44 sm:h-28 object-contain opacity-10 absolute -bottom-3 -right-3 pointer-events-none select-none"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
 
@@ -1223,10 +1241,13 @@ export const Profile = () => {
                         className="bg-[#081C16] border border-white/10 hover:border-white/20 rounded-2xl overflow-hidden shadow-xl flex flex-col justify-between group transition-all text-left"
                       >
                         <div className="relative h-48 w-full overflow-hidden">
-                          <img
+                          <ImageWithSkeleton
                             src={tour.image || swissImg}
                             alt={tour.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            className="w-full h-full"
+                            imgClassName="group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
+                            decoding="async"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-[#081C16] via-black/25 to-transparent" />
                           <button

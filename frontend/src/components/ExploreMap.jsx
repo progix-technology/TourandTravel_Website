@@ -379,7 +379,7 @@ export const ExploreMap = ({
               
               <!-- Circular Thumbnail Photo -->
               <div class="w-6 h-6 sm:w-7 sm:h-7 rounded-full overflow-hidden shrink-0 border border-slate-100 bg-slate-100">
-                <img src="${loc.image}" alt="${loc.name}" class="w-full h-full object-cover" />
+                <img src="${loc.image}" alt="${loc.name}" loading="lazy" decoding="async" class="w-full h-full object-cover" />
               </div>
 
               <!-- Speech Bubble Title in Dark Emerald Typography -->

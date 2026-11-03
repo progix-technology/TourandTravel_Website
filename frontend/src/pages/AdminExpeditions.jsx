@@ -602,6 +602,8 @@ export const AdminExpeditions = () => {
                             src={tour.image}
                             alt={tour.title}
                             className="w-12 h-12 rounded-xl object-cover border border-white/10 shrink-0 shadow-md group-hover:scale-105 transition-transform"
+                            loading="lazy"
+                            decoding="async"
                           />
                           <div>
                             <div className="font-bold text-white text-sm group-hover:text-[#6FCF45] transition-colors flex items-center gap-2">
@@ -945,6 +947,8 @@ export const AdminExpeditions = () => {
                         src={formData.image}
                         alt="Preview"
                         className="w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
                         onError={(e) => {
                           e.currentTarget.src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=85'
                         }}

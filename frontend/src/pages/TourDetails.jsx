@@ -124,6 +124,8 @@ export const TourDetails = () => {
           src={tour.image}
           alt={tour.title}
           className="absolute inset-0 w-full h-full object-cover object-center"
+          loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#071A16] via-[#071A16]/50 to-transparent" />
         <div className="absolute inset-0 bg-[#071A16]/20" />

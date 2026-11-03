@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Calendar, Users, MapPin, CheckCircle2, XCircle, ArrowLeft, Download } from 'lucide-react'
 import { useBooking } from '../context/BookingContext'
 import Button from '../components/Button'
+import ImageWithSkeleton from '../components/ui/ImageWithSkeleton'
 
 export const MyBookings = () => {
   const { bookings, cancelBooking, loadBookings } = useBooking()
@@ -55,11 +56,15 @@ export const MyBookings = () => {
                 >
                   <div className="flex items-start sm:items-center gap-4">
                     {booking.image && (
-                      <img
-                        src={booking.image}
-                        alt={booking.tourTitle}
-                        className="w-24 h-24 rounded-[6px] object-cover shrink-0"
-                      />
+                      <div className="w-24 h-24 rounded-[6px] overflow-hidden shrink-0">
+                        <ImageWithSkeleton
+                          src={booking.image}
+                          alt={booking.tourTitle}
+                          className="w-full h-full"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </div>
                     )}
                     <div>
                       <div className="flex items-center gap-2">

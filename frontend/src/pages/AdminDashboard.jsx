@@ -435,6 +435,8 @@ export default function AdminDashboard() {
                       src={tourImg}
                       alt={bk.title}
                       className="w-10 h-10 rounded-xl object-cover border border-white/15 group-hover:border-[#6FCF45]/60 shadow-md shrink-0"
+                      loading="lazy"
+                      decoding="async"
                       onError={(e) => {
                         e.currentTarget.src = 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=400&q=80'
                       }}
@@ -589,7 +591,7 @@ export default function AdminDashboard() {
                   onClick={() => navigate('/admin/destinations')}
                   className="p-2.5 rounded-xl bg-[#0E1117]/80 hover:bg-[#1A1F29] border border-white/5 hover:border-[#6FCF45]/40 shadow-[0_4px_10px_rgba(0,0,0,0.4)] hover:-translate-y-0.5 transition-all cursor-pointer group flex items-center gap-3"
                 >
-                  <img src={dest.img} alt={dest.name} className="w-11 h-11 rounded-xl object-cover border border-white/15 group-hover:border-[#6FCF45]/60 shadow-md transition-all shrink-0" />
+                  <img src={dest.img} alt={dest.name} loading="lazy" decoding="async" className="w-11 h-11 rounded-xl object-cover border border-white/15 group-hover:border-[#6FCF45]/60 shadow-md transition-all shrink-0" />
                   <div className="flex-1 overflow-hidden">
                     <div className="flex justify-between items-center mb-1">
                       <h4 className="text-[11px] font-bold text-white group-hover:text-[#6FCF45] transition-colors truncate">{dest.name}</h4>

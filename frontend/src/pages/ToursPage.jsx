@@ -197,6 +197,8 @@ export const ToursPage = () => {
             src={signatureBannerBg}
             alt="Signature Expeditions Banner"
             className="w-full h-full object-cover object-center scale-105"
+            loading="lazy"
+            decoding="async"
           />
           {/* Transparent Layered Gradient Overlays for high-contrast left-aligned readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#071A16]/90 via-black/35 to-[#071A16]/40" />

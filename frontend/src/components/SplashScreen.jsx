@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import logoImg from '../assets/images/logo.png'
 
 export const SplashScreen = ({ minDisplayTime = 1800, onComplete }) => {
   const [isVisible, setIsVisible] = useState(true)
@@ -45,10 +46,10 @@ export const SplashScreen = ({ minDisplayTime = 1800, onComplete }) => {
                 />
               </defs>
               <text
-                fontSize="9.5"
+                fontSize="8"
                 fontWeight="700"
-                letterSpacing="2.5"
-                className="fill-[#6FCF45] tracking-[2.5px] uppercase"
+                letterSpacing="1.8"
+                className="fill-[#6FCF45] uppercase"
               >
                 <textPath href="#splashCirclePath" startOffset="0%">
                   TOURS &amp; TRAVELERS • LUXURY SANCTUARIES •
@@ -57,23 +58,13 @@ export const SplashScreen = ({ minDisplayTime = 1800, onComplete }) => {
             </svg>
           </div>
 
-          {/* Center Dynamic Compass / Arrow Icon */}
+          {/* Center Brand Logo */}
           <div className="badge-icon">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              width="32"
-              height="32"
-              className="text-[#6FCF45] group-hover:text-white transition-colors duration-300"
-            >
-              <path
-                d="M6 18L18 6M18 6H8M18 6V16"
-                strokeWidth="2.5"
-                strokeLinejoin="round"
-                strokeLinecap="round"
-              />
-            </svg>
+            <img
+              src={logoImg}
+              alt="Tours &amp; Travellers Logo"
+              className="w-12 h-12 sm:w-14 sm:h-14 object-contain drop-shadow-[0_0_16px_rgba(111,207,69,0.55)] transition-transform duration-500 group-hover:scale-110"
+            />
           </div>
         </div>
 
@@ -154,7 +145,7 @@ export const SplashScreen = ({ minDisplayTime = 1800, onComplete }) => {
         }
 
         .kinetic-badge:hover .badge-icon {
-          transform: rotate(45deg) scale(1.2);
+          transform: scale(1.15);
         }
 
         @keyframes spinSlow {

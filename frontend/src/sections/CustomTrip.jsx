@@ -684,8 +684,9 @@ export const CustomTrip = ({ isPage = false }) => {
                     <span className="text-[#A8B5AF] text-[10px] uppercase font-bold block">Destination &amp; Highlight:</span>
                     <span className="font-bold text-white text-xs">{destination.city}</span>
                     {destination.selectedSpot && (
-                      <span className="text-[10.5px] text-[#6FCF45] block font-medium">
-                        ✦ {destination.selectedSpot}
+                      <span className="text-[10.5px] text-[#6FCF45] flex items-center gap-1 font-medium mt-0.5">
+                        <Sparkles className="w-3 h-3 shrink-0" />
+                        <span>{destination.selectedSpot}</span>
                       </span>
                     )}
                   </div>
@@ -746,7 +747,7 @@ export const CustomTrip = ({ isPage = false }) => {
                               : 'bg-white/10 text-[#A8B5AF]'
                             }`}
                         >
-                          {currentStep > st.num ? '✓' : st.num}
+                          {currentStep > st.num ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : st.num}
                         </div>
                         <span
                           className={`text-xs font-bold hidden sm:inline ${currentStep === st.num ? 'text-white' : 'text-[#A8B5AF]'
@@ -804,7 +805,7 @@ export const CustomTrip = ({ isPage = false }) => {
                             ) : (
                               <>
                                 <MapPin className="w-3 h-3 text-[#6FCF45]" />
-                                <span>📍 Detect Current Location</span>
+                                <span>Detect Current Location</span>
                               </>
                             )}
                           </button>
@@ -895,7 +896,10 @@ export const CustomTrip = ({ isPage = false }) => {
                         {destination.selectedSpot && (
                           <div className="mt-1.5 flex items-center justify-between px-3 py-1 rounded-lg bg-[#6FCF45]/15 border border-[#6FCF45]/30 text-xs">
                             <span className="text-white/80">Selected Hotspot:</span>
-                            <span className="font-bold text-[#6FCF45]">✦ {destination.selectedSpot}</span>
+                            <span className="font-bold text-[#6FCF45] flex items-center gap-1">
+                              <Sparkles className="w-3 h-3" />
+                              <span>{destination.selectedSpot}</span>
+                            </span>
                           </div>
                         )}
 
@@ -927,7 +931,8 @@ export const CustomTrip = ({ isPage = false }) => {
                                       }}
                                       className="font-bold text-white text-xs sm:text-sm hover:text-[#6FCF45] flex items-center gap-1.5 cursor-pointer text-left"
                                     >
-                                      <span>📍 {item.city}</span>
+                                      <MapPin className="w-3.5 h-3.5 text-[#6FCF45] shrink-0" />
+                                      <span>{item.city}</span>
                                       <span className="text-[10px] text-[#A8B5AF] font-normal">({item.state || item.country})</span>
                                     </button>
                                     <span className="text-[10px] text-[#6FCF45] font-semibold">
@@ -954,9 +959,10 @@ export const CustomTrip = ({ isPage = false }) => {
                                           setDestSearchQuery(`${item.city} - ${spot}`)
                                           setDestDropdownOpen(false)
                                         }}
-                                        className="text-[10px] px-2 py-0.5 rounded-md bg-white/5 hover:bg-[#6FCF45] hover:text-[#071A16] text-[#A8B5AF] border border-white/10 transition-all font-medium cursor-pointer"
+                                        className="text-[10px] px-2 py-0.5 rounded-md bg-white/5 hover:bg-[#6FCF45] hover:text-[#071A16] text-[#A8B5AF] border border-white/10 transition-all font-medium cursor-pointer inline-flex items-center gap-1"
                                       >
-                                        ✦ {spot}
+                                        <Sparkles className="w-2.5 h-2.5 text-[#6FCF45]" />
+                                        <span>{spot}</span>
                                       </button>
                                     ))}
                                   </div>
@@ -1379,7 +1385,7 @@ export const CustomTrip = ({ isPage = false }) => {
                       {/* STEP 3: PAYMENT SELECTION & SECURE CHECKOUT                         */}
                       {/* =================================================================== */}
                       <div className="bg-[#0B241E]/95 border-2 border-white/10 rounded-2xl p-5 sm:p-6 shadow-2xl text-left space-y-4">
-                        
+
                         {/* Title Header */}
                         <div>
                           <h3 className="text-lg sm:text-xl font-bold text-white mb-1">
@@ -1419,11 +1425,10 @@ export const CustomTrip = ({ isPage = false }) => {
                               setPaymentMethod('upi')
                               setPaymentNotice('')
                             }}
-                            className={`p-3.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 ${
-                              paymentMethod === 'upi'
+                            className={`p-3.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 ${paymentMethod === 'upi'
                                 ? 'bg-[#0B241E] border-[#6FCF45] ring-2 ring-[#6FCF45]/30'
                                 : 'bg-[#071A16] border-white/10 hover:border-white/30 text-white/70'
-                            }`}
+                              }`}
                           >
                             <QrCode className={`w-5 h-5 ${paymentMethod === 'upi' ? 'text-[#6FCF45]' : 'text-white/60'}`} />
                             <div>
@@ -1439,11 +1444,10 @@ export const CustomTrip = ({ isPage = false }) => {
                               setPaymentMethod('card')
                               setPaymentNotice('')
                             }}
-                            className={`p-3.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 ${
-                              paymentMethod === 'card'
+                            className={`p-3.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 ${paymentMethod === 'card'
                                 ? 'bg-[#0B241E] border-[#6FCF45] ring-2 ring-[#6FCF45]/30'
                                 : 'bg-[#071A16] border-white/10 hover:border-white/30 text-white/70'
-                            }`}
+                              }`}
                           >
                             <CreditCard className={`w-5 h-5 ${paymentMethod === 'card' ? 'text-[#6FCF45]' : 'text-white/60'}`} />
                             <div>
@@ -1459,11 +1463,10 @@ export const CustomTrip = ({ isPage = false }) => {
                               setPaymentMethod('zero_deposit')
                               setPaymentNotice('')
                             }}
-                            className={`p-3.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 ${
-                              paymentMethod === 'zero_deposit'
+                            className={`p-3.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 ${paymentMethod === 'zero_deposit'
                                 ? 'bg-[#0B241E] border-[#6FCF45] ring-2 ring-[#6FCF45]/30'
                                 : 'bg-[#071A16] border-white/10 hover:border-white/30 text-white/70'
-                            }`}
+                              }`}
                           >
                             <Landmark className={`w-5 h-5 ${paymentMethod === 'zero_deposit' ? 'text-[#6FCF45]' : 'text-white/60'}`} />
                             <div>

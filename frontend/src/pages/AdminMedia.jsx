@@ -740,6 +740,8 @@ export const AdminMedia = () => {
                       src={formData.url} 
                       alt="Preview" 
                       className="w-full h-full object-cover transition-transform group-hover:scale-105" 
+                      loading="lazy"
+                      decoding="async"
                       onError={(e) => {
                         e.currentTarget.src = 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=600&q=80'
                       }}
@@ -909,6 +911,8 @@ export const AdminMedia = () => {
                       src={formData.url} 
                       alt="Preview" 
                       className="w-full h-full object-cover transition-transform group-hover:scale-105" 
+                      loading="lazy"
+                      decoding="async"
                       onError={(e) => {
                         e.currentTarget.src = 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=600&q=80'
                       }}
@@ -987,6 +991,8 @@ export const AdminMedia = () => {
                 src={previewMedia.url}
                 alt={previewMedia.title}
                 className="max-h-[60vh] w-auto max-w-full object-contain rounded-lg shadow-2xl"
+                loading="lazy"
+                decoding="async"
               />
             </div>
 

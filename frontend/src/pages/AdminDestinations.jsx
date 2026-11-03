@@ -236,6 +236,8 @@ const AdminDestinations = () => {
                           src={dest.image} 
                           alt={dest.title}
                           className="w-12 h-12 rounded object-cover border border-white/10"
+                          loading="lazy"
+                          decoding="async"
                         />
                         <div>
                           <p className="font-medium text-white max-w-[200px] truncate">{dest.title}</p>
@@ -357,7 +359,7 @@ const AdminDestinations = () => {
                   <label className="block text-xs font-bold text-[#A8B5AF] uppercase tracking-wider mb-1.5">Destination Image</label>
                   <div className="flex items-center gap-4">
                     {formData.image && (
-                      <img src={formData.image} alt="Preview" className="w-16 h-16 rounded object-cover border border-white/10" />
+                      <img src={formData.image} alt="Preview" loading="lazy" decoding="async" className="w-16 h-16 rounded object-cover border border-white/10" />
                     )}
                     <div className="flex-1">
                       <input type="file" accept="image/*" onChange={handleImageUpload} disabled={isUploading}

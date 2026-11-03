@@ -5,6 +5,7 @@ import { useWishlist } from '../context/WishlistContext'
 import { useBooking } from '../context/BookingContext'
 import { useAuth } from '../context/AuthContext'
 import tourService from '../services/tourService'
+import ImageWithSkeleton from '../components/ui/ImageWithSkeleton'
 
 // High-res curated images from tour_packages folder
 import kashmirImg from '../assets/images/tour_packages/kashmir.jpg'
@@ -156,12 +157,13 @@ export const TourPackages = () => {
                 key={tour._id || tour.id || tour.slug || `tour-${idx}`}
                 className="group bg-white rounded-[12px] xs:rounded-[14px] sm:rounded-[22px] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.1)] transition-all duration-300 flex flex-col justify-between border border-[#13251F]/5"
               >
-                {/* Top Image Container */}
+                {/* Top Image Container with Skeleton Shimmer */}
                 <div className="relative h-[125px] xs:h-[145px] sm:h-[220px] md:h-[250px] w-full overflow-hidden bg-[#071A16]">
-                  <img
+                  <ImageWithSkeleton
                     src={tour.image}
                     alt={tour.title}
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="w-full h-full"
+                    imgClassName="transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
                     decoding="async"
                   />

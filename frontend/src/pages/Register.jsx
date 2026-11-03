@@ -96,6 +96,8 @@ export const Register = () => {
             src={maldivesImg}
             alt="Maldives Overwater Sanctuary"
             className="w-full h-full object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-105"
+            loading="lazy"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#071A16] via-black/40 to-black/20" />
           
@@ -136,6 +138,8 @@ export const Register = () => {
                 src={logoImg}
                 alt="Tours &amp; Travels Logo"
                 className="h-7 w-auto object-contain drop-shadow-[0_2px_8px_rgba(111,207,69,0.4)] group-hover:scale-105 transition-transform"
+                loading="lazy"
+                decoding="async"
               />
               <div className="flex items-center gap-1 text-[11px] font-bold tracking-[0.18em] text-white uppercase font-heading">
                 <span>TOURS &amp;</span>

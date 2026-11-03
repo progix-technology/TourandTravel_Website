@@ -242,5 +242,41 @@
   animation: subtlePinPulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Luxury Emerald Shimmer Skeleton Loader for Images */
+@keyframes luxuryShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.luxury-skeleton {
+  background: linear-gradient(
+    90deg,
+    #071A16 0%,
+    #0C251F 30%,
+    #13382D 50%,
+    #0C251F 70%,
+    #071A16 100%
+  );
+  background-size: 200% 100%;
+  animation: luxuryShimmer 2s ease-in-out infinite;
+}
+
+.luxury-skeleton-light {
+  background: linear-gradient(
+    90deg,
+    #EDE8DC 0%,
+    #F5F2EA 35%,
+    #FAF8F2 50%,
+    #F5F2EA 65%,
+    #EDE8DC 100%
+  );
+  background-size: 200% 100%;
+  animation: luxuryShimmer 2s ease-in-out infinite;
+}
+
 
 

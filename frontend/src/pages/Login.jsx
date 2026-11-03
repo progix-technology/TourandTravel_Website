@@ -78,6 +78,8 @@ export const Login = () => {
             src={swissImg}
             alt="Swiss Alps Luxury Expedition"
             className="w-full h-full object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-105"
+            loading="lazy"
+            decoding="async"
           />
         </div>
 
@@ -93,6 +95,8 @@ export const Login = () => {
                 src={logoImg}
                 alt="Tours &amp; Travels Logo"
                 className="h-8 w-auto object-contain drop-shadow-[0_2px_8px_rgba(111,207,69,0.4)] group-hover:scale-105 transition-transform"
+                loading="lazy"
+                decoding="async"
               />
               <div className="flex items-center gap-1 text-[11px] font-bold tracking-[0.18em] text-white uppercase font-heading">
                 <span>TOURS &amp;</span>
@@ -117,8 +121,22 @@ export const Login = () => {
 
           {/* Error Message Alert */}
           {errorMsg && (
-            <div className="mb-3 p-2.5 rounded-[8px] bg-red-500/20 border border-red-500/40 text-red-300 text-xs flex items-center gap-2 animate-fadeIn">
-              <span>⚠️ {errorMsg}</span>
+            <div className="mb-3 p-2.5 rounded-[8px] bg-red-500/20 border border-red-500/40 text-red-300 text-xs space-y-1 animate-fadeIn">
+              <div className="flex items-start gap-1.5">
+                <span className="shrink-0 mt-0.5">⚠️</span>
+                <span>{errorMsg}</span>
+              </div>
+              {errorMsg.includes('/admin/login') && (
+                <div className="pt-1 pl-4">
+                  <Link
+                    to="/admin/login"
+                    className="inline-flex items-center gap-1 font-bold text-[#6FCF45] hover:underline"
+                  >
+                    <span>Click here for Administrator Portal</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
+              )}
             </div>
           )}
 

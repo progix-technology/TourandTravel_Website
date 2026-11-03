@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Compass, MapPin, Star, ArrowRight, Sparkles, Globe } from 'lucide-react'
 import Button from '../components/Button'
+import ImageWithSkeleton from '../components/ui/ImageWithSkeleton'
 
 // Top 8 Curated Global Hotspots for homepage interactive preview
 const FEATURED_HOTSPOTS = [
@@ -146,6 +147,8 @@ export const HomeExploreMap = () => {
               src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1600&q=80"
               alt="World Map Silhouette"
               className="w-full h-full object-cover opacity-20 filter saturate-0 contrast-125"
+              loading="lazy"
+              decoding="async"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#040F0D]/90 via-transparent to-[#040F0D]/90" />
             <div className="absolute inset-0 bg-gradient-to-b from-[#040F0D]/70 via-transparent to-[#040F0D]/95" />
@@ -210,10 +213,12 @@ export const HomeExploreMap = () => {
             {/* Active Destination Hover Card (Floating Bottom Left Overlay) */}
             <div className="absolute bottom-4 left-4 right-4 sm:right-auto sm:max-w-sm z-30 bg-[#071A16]/95 backdrop-blur-xl border border-[#6FCF45]/40 rounded-2xl p-3 sm:p-4 shadow-2xl flex items-center gap-3.5 animate-in fade-in slide-in-from-bottom-3 duration-200">
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden shrink-0 border border-white/10">
-                <img
+                <ImageWithSkeleton
                   src={activeHotspot.image}
                   alt={activeHotspot.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
               <div className="flex-1 min-w-0">

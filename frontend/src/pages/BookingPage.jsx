@@ -1249,6 +1249,8 @@ export const BookingPage = () => {
                     src={currentTour.image}
                     alt={currentTour.title || currentTour.tourTitle}
                     className="w-20 h-20 rounded-lg object-cover shadow-sm border border-white/10"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="flex-1 min-w-0">
                     <h4 className="font-bold text-white text-sm sm:text-base font-heading leading-snug truncate">

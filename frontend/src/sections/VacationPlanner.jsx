@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Compass, ShieldCheck, CheckCircle, ChevronLeft, ChevronRight, Star, Quote, MapPin, CheckCircle2, User } from 'lucide-react'
 import Button from '../components/Button'
+import ImageWithSkeleton from '../components/ui/ImageWithSkeleton'
 import { TESTIMONIALS } from '../utils/mockData'
 import worldImg from '../assets/images/world.jpg'
 
@@ -27,13 +28,14 @@ export const VacationPlanner = () => {
           {/* Left Column: Premium Travel Image Showcase Card (Span 5 cols) */}
           <div className="lg:col-span-5">
             <div className="relative rounded-[20px] overflow-hidden shadow-xl border border-[#E5E0D5] group h-[320px] sm:h-[360px] lg:h-[380px] bg-[#071A16]">
-              {/* Destination Image */}
-              <img
+              {/* Destination Image with Shimmer Skeleton */}
+              <ImageWithSkeleton
                 src={worldImg}
                 alt="Custom Vacation Curation"
                 loading="lazy"
                 decoding="async"
-                className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                className="w-full h-full"
+                imgClassName="object-center transition-transform duration-700 ease-out group-hover:scale-105"
               />
 
               {/* Gradient Overlays */}

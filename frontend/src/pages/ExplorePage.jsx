@@ -21,6 +21,7 @@ import {
 } from 'lucide-react'
 import ExploreMap from '../components/ExploreMap'
 import MyTripDrawer from '../components/MyTripDrawer'
+import ImageWithSkeleton from '../components/ui/ImageWithSkeleton'
 import { useWishlist } from '../context/WishlistContext'
 import {
   EXPLORE_LOCATIONS,
@@ -337,15 +338,16 @@ export const ExplorePage = () => {
                       : 'border-slate-100 hover:border-slate-300 hover:shadow-md'
                   }`}
                 >
-                  {/* Left: Square Thumbnail Image */}
+                  {/* Left: Square Thumbnail Image with Skeleton */}
                   <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shrink-0 bg-slate-100 relative">
-                    <img
+                    <ImageWithSkeleton
                       src={loc.image}
                       alt={loc.name}
-                      className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-500"
+                      className="w-full h-full"
+                      imgClassName="group-hover/card:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
-                    <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded-full bg-black/60 text-white text-[9px] font-bold backdrop-blur-sm flex items-center gap-0.5">
+                    <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded-full bg-black/60 text-white text-[9px] font-bold backdrop-blur-sm flex items-center gap-0.5 z-20">
                       <Star className="w-2.5 h-2.5 fill-[#6FCF45] text-[#6FCF45]" />
                       <span>{loc.rating || 4.9}</span>
                     </div>

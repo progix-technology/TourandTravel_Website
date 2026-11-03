@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowUpRight, MapPin } from 'lucide-react'
+import ImageWithSkeleton from './ui/ImageWithSkeleton'
 
 export const DestinationCard = ({ destination, aspect = 'medium', className = '' }) => {
   // Asymmetric height mapping
@@ -18,11 +19,12 @@ export const DestinationCard = ({ destination, aspect = 'medium', className = ''
       to={`/destinations/${destination.slug || destination.id}`}
       className={`group relative block w-full overflow-hidden rounded-[6px] ${selectedHeight} ${className} cursor-pointer shadow-md`}
     >
-      {/* Background Image with Hover Scale */}
-      <img
+      {/* Background Image with Skeleton Shimmer & Hover Scale */}
+      <ImageWithSkeleton
         src={destination.image}
         alt={destination.name}
-        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        className="w-full h-full"
+        imgClassName="transition-transform duration-700 ease-out group-hover:scale-105"
         loading="lazy"
         decoding="async"
       />

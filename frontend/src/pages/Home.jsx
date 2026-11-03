@@ -1,17 +1,29 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import Hero from '../sections/Hero'
 import Destinations from '../sections/Destinations'
-import PrivateAviation from '../sections/PrivateAviation'
-import DestinationShowcase from '../sections/DestinationShowcase'
-import Experiences from '../sections/Experiences'
-import TourPackages from '../sections/TourPackages'
-import VacationPlanner from '../sections/VacationPlanner'
-import CustomTrip from '../sections/CustomTrip'
-import TravelGallery from '../sections/TravelGallery'
-import FinalCTA from '../sections/FinalCTA'
+import lazyWithRetry from '../utils/lazyWithRetry'
 import { useSettings } from '../context/SettingsContext'
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
+
+// Lazy loaded below-the-fold heavy sections
+const PrivateAviation = lazyWithRetry(() => import('../sections/PrivateAviation'))
+const DestinationShowcase = lazyWithRetry(() => import('../sections/DestinationShowcase'))
+const TourPackages = lazyWithRetry(() => import('../sections/TourPackages'))
+const Experiences = lazyWithRetry(() => import('../sections/Experiences'))
+const VacationPlanner = lazyWithRetry(() => import('../sections/VacationPlanner'))
+const CustomTrip = lazyWithRetry(() => import('../sections/CustomTrip'))
+const TravelGallery = lazyWithRetry(() => import('../sections/TravelGallery'))
+const FinalCTA = lazyWithRetry(() => import('../sections/FinalCTA'))
+
+const SectionSkeleton = () => (
+  <div className="w-full min-h-[280px] flex items-center justify-center bg-[#071A16]/40 select-none py-16">
+    <div className="flex flex-col items-center gap-3">
+      <div className="w-6 h-6 rounded-full border-2 border-[#6FCF45]/30 border-t-[#6FCF45] animate-spin" />
+      <span className="text-[10px] tracking-[0.25em] text-[#A8B5AF]/60 uppercase font-medium">Loading Experience...</span>
+    </div>
+  </div>
+)
 
 export const Home = () => {
   const { settings } = useSettings()
@@ -68,32 +80,35 @@ export const Home = () => {
         </div>
       )}
 
-      {/* 2. Destinations Section */}
+      {/* 2. Destinations Section (Immediate) */}
       <Destinations />
 
-      {/* 3. Travel Map 3D Airplane Slide */}
-      <PrivateAviation />
+      {/* Below-The-Fold Sections (Lazy Loaded on Scroll) */}
+      <Suspense fallback={<SectionSkeleton />}>
+        {/* 3. Travel Map 3D Airplane Slide */}
+        <PrivateAviation />
 
-      {/* 4. Multi-Panel Destination Showcase (8 Vertical Travel Panels requested by User) */}
-      <DestinationShowcase />
+        {/* 4. Multi-Panel Destination Showcase */}
+        <DestinationShowcase />
 
-      {/* 5. Signature Tour Packages Section */}
-      <TourPackages />
+        {/* 5. Signature Tour Packages Section */}
+        <TourPackages />
 
-      {/* 6. Experiences Section (Travel Beyond The Ordinary) */}
-      <Experiences />
+        {/* 6. Experiences Section */}
+        <Experiences />
 
-      {/* 7. Vacation Planner & Voices from the Road (Combined Section) */}
-      <VacationPlanner />
+        {/* 7. Vacation Planner & Voices from the Road */}
+        <VacationPlanner />
 
-      {/* 8. Custom Trip Section */}
-      <CustomTrip />
+        {/* 8. Custom Trip Section */}
+        <CustomTrip />
 
-      {/* 10. Travel Gallery Section */}
-      <TravelGallery />
+        {/* 9. Travel Gallery Section */}
+        <TravelGallery />
 
-      {/* 11. Final CTA */}
-      <FinalCTA />
+        {/* 10. Final CTA */}
+        <FinalCTA />
+      </Suspense>
     </main>
   )
 }

@@ -1,7 +1,17 @@
 import React, { useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
+import {
+  ArrowRight,
+  Landmark,
+  Building2,
+  Mountain,
+  Waves,
+  Palmtree,
+  Sun,
+  Sparkles,
+  Compass,
+} from 'lucide-react'
 import userAirplaneImg from '../assets/images/user_airplane.png'
 import thirdSlideBg from '../assets/images/3rdslidebg.png'
 
@@ -37,7 +47,7 @@ export const PrivateAviation = () => {
     {
       name: 'NEW YORK',
       country: 'USA',
-      icon: '🗽',
+      Icon: Building2,
       top: '23%',
       left: '20%',
       showOnMobile: false,
@@ -45,7 +55,7 @@ export const PrivateAviation = () => {
     {
       name: 'MACHU PICCHU',
       country: 'PERU',
-      icon: '🛕',
+      Icon: Mountain,
       top: '60%',
       left: '24%',
       showOnMobile: false,
@@ -53,7 +63,7 @@ export const PrivateAviation = () => {
     {
       name: 'PARIS',
       country: 'FRANCE',
-      icon: '🗼',
+      Icon: Landmark,
       // Directly on Eiffel Tower 3D structure
       top: '20%',
       left: '44%',
@@ -64,7 +74,7 @@ export const PrivateAviation = () => {
     {
       name: 'SWITZERLAND',
       country: 'EUROPE',
-      icon: '🏔️',
+      Icon: Mountain,
       // Scenic Alpine & Mediterranean Haven
       top: '36%',
       left: '44%',
@@ -75,7 +85,7 @@ export const PrivateAviation = () => {
     {
       name: 'CAPE TOWN',
       country: 'SOUTH AFRICA',
-      icon: '🌊',
+      Icon: Waves,
       // Directly on the Southern African Mountains & Lake
       top: '72%',
       left: '48%',
@@ -86,7 +96,7 @@ export const PrivateAviation = () => {
     {
       name: 'DUBAI',
       country: 'UAE',
-      icon: '🏙️',
+      Icon: Building2,
       // Directly on Burj Khalifa & Futuristic Skyline Island
       top: '28%',
       left: '58%',
@@ -97,7 +107,7 @@ export const PrivateAviation = () => {
     {
       name: 'KASHMIR',
       country: 'INDIA',
-      icon: '🏔️',
+      Icon: Mountain,
       top: '14%',
       left: '69%',
       showOnMobile: false,
@@ -105,7 +115,7 @@ export const PrivateAviation = () => {
     {
       name: 'MALDIVES',
       country: 'INDIAN OCEAN',
-      icon: '🏝️',
+      Icon: Palmtree,
       // Directly on the Bottom-Right Turquoise Lagoon Overwater Villas
       top: '60%',
       left: '64%',
@@ -116,7 +126,7 @@ export const PrivateAviation = () => {
     {
       name: 'BALI',
       country: 'INDONESIA',
-      icon: '⛩️',
+      Icon: Sun,
       // Directly on Central Palm Oasis Island
       top: '50%',
       left: '74%',
@@ -127,7 +137,7 @@ export const PrivateAviation = () => {
     {
       name: 'TOKYO',
       country: 'JAPAN',
-      icon: '🌸',
+      Icon: Sparkles,
       top: '27%',
       left: '83%',
       showOnMobile: false,
@@ -135,7 +145,7 @@ export const PrivateAviation = () => {
     {
       name: 'SYDNEY',
       country: 'AUSTRALIA',
-      icon: '⛵',
+      Icon: Compass,
       top: '74%',
       left: '86%',
       showOnMobile: false,
@@ -156,6 +166,8 @@ export const PrivateAviation = () => {
             src={thirdSlideBg}
             alt="World Travel Map Relief"
             className="w-full h-full object-cover object-center opacity-95"
+            loading="lazy"
+            decoding="async"
           />
           {/* Subtle warm atmospheric vignette */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#FAF8F2]/85 via-transparent to-[#FAF8F2]/65 pointer-events-none" />
@@ -273,9 +285,8 @@ export const PrivateAviation = () => {
                 top: !isDesktop && dest.mobileTop ? dest.mobileTop : dest.top,
                 left: !isDesktop && dest.mobileLeft ? dest.mobileLeft : dest.left,
               }}
-              className={`absolute -translate-x-1/2 -translate-y-1/2 ${
-                dest.showOnMobile ? 'flex' : 'hidden md:flex'
-              } flex-col items-center group pointer-events-auto cursor-default transition-transform duration-300 hover:scale-110`}
+              className={`absolute -translate-x-1/2 -translate-y-1/2 ${dest.showOnMobile ? 'flex' : 'hidden md:flex'
+                } flex-col items-center group pointer-events-auto cursor-default transition-transform duration-300 hover:scale-110`}
             >
               {/* Minimal Cartography Annotation Badge */}
               <div className="flex flex-col items-center text-center bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-[3px] border border-[#C69242]/30 shadow-[0_3px_10px_rgba(0,0,0,0.08)]">
@@ -283,7 +294,7 @@ export const PrivateAviation = () => {
                   <span className="text-[9.5px] sm:text-[10.5px] font-bold uppercase tracking-[0.14em] text-[#13251F] font-heading whitespace-nowrap">
                     {dest.name}
                   </span>
-                  <span className="text-[10px] leading-none">{dest.icon}</span>
+                  <dest.Icon className="w-3 h-3 text-[#C69242] shrink-0" />
                 </div>
                 <span className="text-[7.5px] sm:text-[8px] font-semibold tracking-[0.2em] text-[#8B6B38] uppercase mt-0.5 font-sans leading-none whitespace-nowrap">
                   {dest.country}
@@ -319,6 +330,8 @@ export const PrivateAviation = () => {
               src={userAirplaneImg}
               alt="Luxury Private Jet Aircraft"
               className="w-full h-auto object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.12)] pointer-events-none scale-105 sm:scale-110"
+              loading="lazy"
+              decoding="async"
             />
           </motion.div>
         </div>

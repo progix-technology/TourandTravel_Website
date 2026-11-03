@@ -10,6 +10,15 @@ export const authService = {
     return response.data
   },
 
+  async adminLogin(credentials) {
+    const response = await api.post('/auth/admin-login', credentials)
+    if (response.data.token) {
+      localStorage.setItem('tt_auth_token', response.data.token)
+      localStorage.setItem('tt_user_data', JSON.stringify(response.data.user))
+    }
+    return response.data
+  },
+
   async register(userData) {
     const response = await api.post('/auth/register', userData)
     if (response.data.token) {

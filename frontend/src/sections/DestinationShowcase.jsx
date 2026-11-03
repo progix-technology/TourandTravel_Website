@@ -235,6 +235,8 @@ export const DestinationShowcase = () => {
                       src={svgplaneImg}
                       alt="Flight Trail"
                       className="w-12 xs:w-16 sm:w-22 md:w-26 lg:w-30 max-w-none h-auto object-contain pointer-events-none select-none drop-shadow-[0_0_15px_rgba(111,207,69,0.85)]"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </span>
                 </span>

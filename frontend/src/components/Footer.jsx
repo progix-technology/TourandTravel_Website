@@ -75,6 +75,8 @@ export const Footer = () => {
                   src={logoImg}
                   alt="Tours &amp; Travels Logo"
                   className="w-10 h-10 object-contain drop-shadow-[0_2px_10px_rgba(111,207,69,0.35)] transition-transform duration-300 group-hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="flex flex-col">
                   <span className="font-extrabold text-base tracking-[0.18em] text-white uppercase leading-none">

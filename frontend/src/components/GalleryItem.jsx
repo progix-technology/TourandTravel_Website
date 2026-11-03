@@ -1,5 +1,6 @@
 import React from 'react'
 import { MapPin, Maximize2 } from 'lucide-react'
+import ImageWithSkeleton from './ui/ImageWithSkeleton'
 
 export const GalleryItem = ({ item, onClick }) => {
   const height = item.heightClass || 'h-[220px] sm:h-[240px]'
@@ -9,16 +10,15 @@ export const GalleryItem = ({ item, onClick }) => {
       onClick={onClick}
       className={`group relative w-full ${height} mb-3.5 sm:mb-4 break-inside-avoid overflow-hidden rounded-[16px] cursor-pointer shadow-sm hover:shadow-2xl bg-[#0B241E] border border-white/10 hover:border-[#6FCF45] transition-all duration-300 select-none`}
     >
-      {/* Clean Static Image without any blinking effects */}
-      <img
+      {/* Responsive Gallery Image with Shimmer Skeleton */}
+      <ImageWithSkeleton
         src={item.image}
         alt={item.title}
         loading="lazy"
         decoding="async"
-        className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
-        onError={(e) => {
-          e.currentTarget.src = 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80'
-        }}
+        className="w-full h-full"
+        imgClassName="object-center transition-transform duration-500 ease-out group-hover:scale-105"
+        fallbackSrc="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80"
       />
 
       {/* Subtle Gradient for Readability */}

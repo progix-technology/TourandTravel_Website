@@ -5,8 +5,7 @@ import { useWishlist } from '../context/WishlistContext'
 import { useBooking } from '../context/BookingContext'
 import { useAuth } from '../context/AuthContext'
 import Button from './Button'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
-import 'react-lazy-load-image-component/src/effects/blur.css'
+import ImageWithSkeleton from './ui/ImageWithSkeleton'
 
 export const TourCard = ({ tour, className = '' }) => {
   const { isInWishlist, toggleWishlist } = useWishlist()
@@ -30,14 +29,15 @@ export const TourCard = ({ tour, className = '' }) => {
     <div
       className={`group bg-[#FAF8F2] border border-[#E5E0D5] rounded-[6px] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between h-full w-full ${className}`}
     >
-      {/* Top Image Container */}
+      {/* Top Image Container with Shimmer Skeleton */}
       <div className="relative h-[220px] w-full overflow-hidden bg-[#071A16] shrink-0">
-        <LazyLoadImage
+        <ImageWithSkeleton
           src={tour.image}
           alt={tour.title}
-          effect="blur"
-          wrapperClassName="w-full h-full"
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          className="w-full h-full"
+          imgClassName="transition-transform duration-700 ease-out group-hover:scale-105"
+          loading="lazy"
+          decoding="async"
         />
 
         {/* Category Tag */}

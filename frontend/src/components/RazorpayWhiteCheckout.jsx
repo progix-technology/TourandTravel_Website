@@ -862,6 +862,8 @@ export const RazorpayWhiteCheckout = ({
                       src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=razorpay@icici%26pn=ToursAndTravellers%26am=${amount}%26cu=INR`}
                       alt="Razorpay Dynamic UPI QR"
                       className="w-36 h-36 rounded-md mx-auto"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   <div className="text-xs font-bold text-slate-800">

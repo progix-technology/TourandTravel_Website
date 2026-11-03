@@ -471,6 +471,8 @@ export const PillarsPage = () => {
                 <img
                   src={pillar.imageUrl}
                   alt={pillar.title}
+                  loading="lazy"
+                  decoding="async"
                   className={`absolute -right-3 -bottom-3 w-28 h-28 object-contain pointer-events-none transition-transform duration-500 ${
                     isSelected ? 'scale-110 rotate-3 drop-shadow-lg' : 'opacity-85 group-hover:scale-105'
                   }`}
@@ -618,6 +620,8 @@ export const PillarsPage = () => {
                         src={activePillar.imageUrl}
                         alt={activePillar.title}
                         className="w-full h-full object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.18)]"
+                        loading="lazy"
+                        decoding="async"
                       />
                     </motion.div>
 

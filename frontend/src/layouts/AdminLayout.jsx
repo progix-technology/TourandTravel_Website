@@ -396,6 +396,8 @@ export default function AdminLayout() {
                 src={logoImg} 
                 alt="Logo" 
                 className="h-7 w-auto transition-all duration-200 group-hover:opacity-0 group-hover:scale-75 drop-shadow-[0_2px_8px_rgba(111,207,69,0.5)]" 
+                loading="lazy"
+                decoding="async"
               />
               {/* Hover: Sidebar Toggle Icon (ChatGPT Style) */}
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-200 text-white group-hover:text-[#6FCF45]">
@@ -405,7 +407,7 @@ export default function AdminLayout() {
           ) : (
             <>
               <Link to="/" className="flex items-center gap-3 overflow-hidden group" title="Tours & Travels">
-                <img src={logoImg} alt="Logo" className="h-8 w-auto shrink-0 drop-shadow-[0_2px_8px_rgba(111,207,69,0.5)] transition-transform group-hover:scale-105" />
+                <img src={logoImg} alt="Logo" loading="lazy" decoding="async" className="h-8 w-auto shrink-0 drop-shadow-[0_2px_8px_rgba(111,207,69,0.5)] transition-transform group-hover:scale-105" />
                 <div className="flex flex-col leading-none truncate">
                   <span className="font-bold text-[13px] tracking-widest text-white uppercase">Tours &amp;</span>
                   <span className="font-bold text-[13px] tracking-widest text-[#6FCF45] uppercase">Travels</span>

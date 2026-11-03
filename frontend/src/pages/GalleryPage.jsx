@@ -310,16 +310,14 @@ export const GalleryPage = () => {
                 onClick={() => setActiveItemIndex(index)}
                 className={`group relative break-inside-avoid rounded-[16px] overflow-hidden bg-[#071A16] border border-[#13251F]/10 shadow-xl cursor-pointer transition-all duration-300 hover:border-[#6FCF45]/50 hover:shadow-2xl hover:shadow-[#6FCF45]/15 hover:-translate-y-1 w-full ${aspectClass}`}
               >
-                {/* Clean, Fast-Loading Responsive Image */}
-                <img
+                {/* Clean, Fast-Loading Responsive Image with Shimmer Skeleton */}
+                <ImageLoader
                   src={photo.image || photo.url}
                   alt={photo.title}
                   loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  onError={(e) => {
-                    e.currentTarget.src =
-                      'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80'
-                  }}
+                  className="w-full h-full"
+                  imgClassName="transition-transform duration-700 group-hover:scale-105"
+                  fallbackSrc="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80"
                 />
 
                 {/* Dark Vignette Overlay on Hover */}

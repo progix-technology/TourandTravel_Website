@@ -7,11 +7,16 @@ import Admin from '../models/Admin.js'
 export const protect = async (req, res, next) => {
   let token
 
+  // 1. Check Bearer Authorization Header
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1]
+  }
+  // 2. Fallback to Secure httpOnly Cookie (prevents XSS token theft)
+  else if (req.cookies && req.cookies.token) {
+    token = req.cookies.token
   }
 
   // Make sure token exists

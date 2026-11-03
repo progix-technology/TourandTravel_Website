@@ -298,6 +298,8 @@ export const Experiences = () => {
           alt="Lighthouse Beacon"
           onLoad={updateBeaconPos}
           className="w-full h-auto object-contain object-bottom drop-shadow-[0_20px_60px_rgba(0,0,0,0.95)]"
+          loading="lazy"
+          decoding="async"
         />
 
         {/* ========================================================================= */}

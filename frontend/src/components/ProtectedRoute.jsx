@@ -15,13 +15,14 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
   }
 
   if (!isAuthenticated) {
-    // Redirect to login page, but save the current location they were trying to go to
-    return <Navigate to="/login" state={{ from: location }} replace />
+    // If route requires admin, redirect to dedicated /admin/login; else customer /login
+    const redirectTarget = requireAdmin ? '/admin/login' : '/login'
+    return <Navigate to={redirectTarget} state={{ from: location }} replace />
   }
 
   if (requireAdmin && user?.role !== 'admin') {
-    // If the route requires admin and the user is not an admin, redirect them
-    return <Navigate to="/account" replace />
+    // If the route requires admin and the user is not an admin, redirect them to admin login
+    return <Navigate to="/admin/login" replace />
   }
 
   return children
