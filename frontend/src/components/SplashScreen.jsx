@@ -7,19 +7,31 @@ import maldivesPkg from '../assets/images/tour_packages/maldives.jpg'
 import dubaiPkg from '../assets/images/tour_packages/dubai.jpg'
 import rajasthanPkg from '../assets/images/tour_packages/rajsthan.jpg'
 
+// Curated 8 Travel Showcase Images
+import kashmirTravel from '../assets/images/travel_image/kashmir.jpg'
+import maldivesTravel from '../assets/images/travel_image/maldives.jpg'
+import dubaiTravel from '../assets/images/travel_image/dubai.jpg'
+import parisTravel from '../assets/images/travel_image/paris.jpg'
+import baliTravel from '../assets/images/travel_image/bali.jpg'
+import swissTravel from '../assets/images/travel_image/Switzerland.jpg'
+import tokyoTravel from '../assets/images/travel_image/tokyo.jpg'
+import rajasthanTravel from '../assets/images/travel_image/rajsthan.jpg'
+
 // Critical homepage imagery that MUST be decoded before splash fades out
 const CRITICAL_HOMEPAGE_IMAGES = [
   // 1. Primary Hero Background (2000px Unsplash Alpine Landscape)
   'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2000&q=90',
   // 2. Brand Identity
   logoImg,
-  // 3. Immediate Destinations Grid (Above & Near Fold)
-  'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?auto=format&fit=crop&w=1200&q=85', // Kashmir
-  'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=1400&q=85', // Maldives
-  'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1200&q=85', // Bali
-  'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=1400&q=85', // Rajasthan
-  'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1200&q=85', // Dubai
-  'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1200&q=85', // Paris
+  // 3. Curated 8 Travel Showcase Images (Explore The World)
+  kashmirTravel,
+  maldivesTravel,
+  dubaiTravel,
+  parisTravel,
+  baliTravel,
+  swissTravel,
+  tokyoTravel,
+  rajasthanTravel,
   // 4. Secondary Aviation / Map Canvas Assets
   userAirplaneImg,
   thirdSlideBg,
@@ -142,9 +154,8 @@ export const SplashScreen = ({ minDisplayTime = 1600, maxSafetyTimeout = 4000, o
 
   return (
     <div
-      className={`fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#071A16] select-none transition-all duration-700 ease-out ${
-        isFadingOut ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100'
-      }`}
+      className={`fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#071A16] select-none transition-all duration-700 ease-out ${isFadingOut ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100'
+        }`}
       aria-label="Loading Tours & Travellers Experience"
     >
       {/* Ambient luxury radial glow */}

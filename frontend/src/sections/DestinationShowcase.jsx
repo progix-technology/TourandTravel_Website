@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowDown, ArrowUpRight, Globe2, Map, Compass, Plane } from 'lucide-react'
-import destinationService from '../services/destinationService'
 
 // Import user's 8 curated travel images
 import kashmirImg from '../assets/images/travel_image/kashmir.jpg'
@@ -190,39 +189,7 @@ const DEFAULT_DESTINATIONS = [
 
 export const DestinationShowcase = () => {
   const [activePanel, setActivePanel] = useState(null)
-  const [destinations, setDestinations] = useState(DEFAULT_DESTINATIONS)
-
-  useEffect(() => {
-    const fetchLiveDestinations = async () => {
-      try {
-        const live = await destinationService.getAll({ isPopular: true })
-        if (live && live.length >= 4) {
-          const mapped = live.slice(0, 8).map((d, idx) => {
-            const fallback =
-              DEFAULT_DESTINATIONS.find((def) => def.id === (d.slug || d.id)) ||
-              DEFAULT_DESTINATIONS[idx % DEFAULT_DESTINATIONS.length]
-            return {
-              id: d.slug || d._id || d.id,
-              name: d.title || d.name,
-              country: d.country,
-              image: d.image || fallback.image,
-              Icon: fallback?.Icon || Compass,
-              tagline: d.description || fallback.tagline,
-              duration: d.duration || fallback.duration,
-              price: d.startingPrice
-                ? `₹${Number(d.startingPrice).toLocaleString('en-IN')}`
-                : fallback.price,
-              link: `/destinations/${d.slug || d._id || d.id}`,
-            }
-          })
-          setDestinations(mapped)
-        }
-      } catch (err) {
-        // Keeps DEFAULT_DESTINATIONS on network fallback
-      }
-    }
-    fetchLiveDestinations()
-  }, [])
+  const destinations = DEFAULT_DESTINATIONS
 
   return (
     <section
