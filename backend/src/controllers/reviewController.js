@@ -70,3 +70,24 @@ export const deleteReview = async (req, res, next) => {
     next(error)
   }
 }
+
+// @desc    Get approved public reviews for website
+// @route   GET /api/v1/reviews/public
+// @access  Public
+export const getPublicReviews = async (req, res, next) => {
+  try {
+    const reviews = await Review.find({ status: 'Approved' })
+      .populate('user', 'name avatar')
+      .populate('tour', 'title slug image')
+      .sort('-createdAt')
+      .limit(10)
+
+    res.status(200).json({
+      success: true,
+      count: reviews.length,
+      data: reviews
+    })
+  } catch (error) {
+    next(error)
+  }
+}

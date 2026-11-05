@@ -1,19 +1,43 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import SectionHeading from '../components/SectionHeading'
 import TestimonialCard from '../components/TestimonialCard'
 import { TESTIMONIALS } from '../utils/mockData'
+import reviewService from '../services/reviewService'
 
 export const Testimonials = () => {
+  const [testimonials, setTestimonials] = useState(TESTIMONIALS)
   const [currentIndex, setCurrentIndex] = useState(0)
 
+  useEffect(() => {
+    let isMounted = true
+    const fetchReviews = async () => {
+      try {
+        const liveReviews = await reviewService.getPublic()
+        if (isMounted && liveReviews && liveReviews.length > 0) {
+          setTestimonials(liveReviews)
+        }
+      } catch (err) {
+        console.warn('Using default testimonials fallback:', err)
+      }
+    }
+    fetchReviews()
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  const count = testimonials.length || 1
+
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev === 0 ? TESTIMONIALS.length - 1 : prev - 1))
+    setCurrentIndex((prev) => (prev === 0 ? count - 1 : prev - 1))
   }
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev === TESTIMONIALS.length - 1 ? 0 : prev + 1))
+    setCurrentIndex((prev) => (prev === count - 1 ? 0 : prev + 1))
   }
+
+  const activeTestimonial = testimonials[currentIndex] || testimonials[0]
 
   return (
     <section id="testimonials" className="bg-[#FAF8F2] text-[#13251F] py-20 sm:py-24 border-t border-[#E5E0D5]">
@@ -48,11 +72,11 @@ export const Testimonials = () => {
 
         {/* Focused Single Testimonial Card */}
         <div className="max-w-4xl mx-auto">
-          <TestimonialCard testimonial={TESTIMONIALS[currentIndex]} />
+          {activeTestimonial && <TestimonialCard testimonial={activeTestimonial} />}
           
           {/* Indicator dots */}
           <div className="flex items-center justify-center gap-2 mt-6">
-            {TESTIMONIALS.map((_, idx) => (
+            {testimonials.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}

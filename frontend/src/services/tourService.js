@@ -193,9 +193,38 @@ export const tourService = {
   },
 
   async create(tourData) {
-    let savedTour = { ...tourData, id: tourData.slug || `tour-${Date.now()}` }
+    const slug =
+      tourData.slug ||
+      (tourData.title || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '') ||
+      `tour-${Date.now()}`
+
+    const destinationSlug =
+      tourData.destinationSlug ||
+      (tourData.destination || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '') ||
+      'india'
+
+    const normalizedData = {
+      ...tourData,
+      slug,
+      id: slug,
+      destinationSlug,
+      startingPrice: Number(tourData.startingPrice || tourData.price) || 24999,
+      price: Number(tourData.price || tourData.startingPrice) || 24999,
+      days: Number(tourData.days) || 7,
+      rating: Number(tourData.rating) || 4.9,
+      reviewsCount: Number(tourData.reviewsCount) || 120,
+      isFeatured: tourData.isFeatured !== false,
+    }
+
+    let savedTour = normalizedData
     try {
-      const response = await api.post('/tours', tourData)
+      const response = await api.post('/tours', normalizedData)
       if (response.data?.data) {
         savedTour = response.data.data
       }
@@ -204,7 +233,11 @@ export const tourService = {
     }
 
     const currentOverrides = getLocalOverrides()
-    saveLocalOverrides([savedTour, ...currentOverrides])
+    // Prepend to overrides so newly added tours always appear first
+    const filtered = currentOverrides.filter(
+      (o) => (savedTour._id && o._id !== savedTour._id) && (savedTour.slug && o.slug !== savedTour.slug)
+    )
+    saveLocalOverrides([savedTour, ...filtered])
     return { success: true, data: savedTour }
   },
 

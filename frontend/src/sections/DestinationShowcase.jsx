@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowDown, ArrowUpRight, Globe2, Map, Compass, Plane } from 'lucide-react'
+import destinationService from '../services/destinationService'
 
 // Import user's 8 curated travel images
 import kashmirImg from '../assets/images/travel_image/kashmir.jpg'
@@ -96,99 +97,132 @@ const RajasthanIcon = () => (
   </svg>
 )
 
+const DEFAULT_DESTINATIONS = [
+  {
+    id: 'kashmir',
+    name: 'Kashmir',
+    country: 'India',
+    image: kashmirImg,
+    Icon: KashmirIcon,
+    tagline: 'Snow-crowned Himalayan peaks & Dal Lake houseboats',
+    duration: '7 Days • 6 Nights',
+    price: '₹24,999',
+    link: '/tours/kashmir-escape',
+  },
+  {
+    id: 'maldives',
+    name: 'Maldives',
+    country: 'Maldives',
+    image: maldivesImg,
+    Icon: MaldivesIcon,
+    tagline: 'Crystal turquoise lagoons & secluded overwater villas',
+    duration: '6 Days • 5 Nights',
+    price: '₹84,999',
+    link: '/tours/maldives-retreat',
+  },
+  {
+    id: 'dubai',
+    name: 'Dubai',
+    country: 'UAE',
+    image: dubaiImg,
+    Icon: DubaiIcon,
+    tagline: 'Futuristic skylines, golden dunes & luxury lifestyle',
+    duration: '6 Days • 5 Nights',
+    price: '₹48,999',
+    link: '/tours/dubai-explorer',
+  },
+  {
+    id: 'paris',
+    name: 'Paris',
+    country: 'France',
+    image: parisImg,
+    Icon: ParisIcon,
+    tagline: 'Iconic Eiffel sunsets, timeless art & haute couture',
+    duration: '6 Days • 5 Nights',
+    price: '₹1,24,999',
+    link: '/tours/paris',
+  },
+  {
+    id: 'bali',
+    name: 'Bali',
+    country: 'Indonesia',
+    image: baliImg,
+    Icon: BaliIcon,
+    tagline: 'Sacred water temples, tropical jungles & sunset beaches',
+    duration: '7 Days • 6 Nights',
+    price: '₹38,999',
+    link: '/tours/bali',
+  },
+  {
+    id: 'switzerland',
+    name: 'Switzerland',
+    country: 'Switzerland',
+    image: switzerlandImg,
+    Icon: SwitzerlandIcon,
+    tagline: 'Matterhorn alpine peaks & scenic red mountain trains',
+    duration: '8 Days • 7 Nights',
+    price: '₹1,49,999',
+    link: '/tours/switzerland',
+  },
+  {
+    id: 'tokyo',
+    name: 'Tokyo',
+    country: 'Japan',
+    image: tokyoImg,
+    Icon: TokyoIcon,
+    tagline: 'Illuminated Tokyo Tower, ancient shrines & cherry blossoms',
+    duration: '9 Days • 8 Nights',
+    price: '₹1,34,999',
+    link: '/tours/tokyo',
+  },
+  {
+    id: 'rajasthan',
+    name: 'Rajasthan',
+    country: 'India',
+    image: rajasthanImg,
+    Icon: RajasthanIcon,
+    tagline: 'Royal golden forts, palatial heritage & desert safaris',
+    duration: '8 Days • 7 Nights',
+    price: '₹18,999',
+    link: '/tours/rajasthan-heritage',
+  },
+]
+
 export const DestinationShowcase = () => {
   const [activePanel, setActivePanel] = useState(null)
+  const [destinations, setDestinations] = useState(DEFAULT_DESTINATIONS)
 
-  const destinations = [
-    {
-      id: 'kashmir',
-      name: 'Kashmir',
-      country: 'India',
-      image: kashmirImg,
-      Icon: KashmirIcon,
-      tagline: 'Snow-crowned Himalayan peaks & Dal Lake houseboats',
-      duration: '7 Days • 6 Nights',
-      price: '₹24,999',
-      link: '/tours/kashmir-escape',
-    },
-    {
-      id: 'maldives',
-      name: 'Maldives',
-      country: 'Maldives',
-      image: maldivesImg,
-      Icon: MaldivesIcon,
-      tagline: 'Crystal turquoise lagoons & secluded overwater villas',
-      duration: '6 Days • 5 Nights',
-      price: '₹84,999',
-      link: '/tours/maldives-retreat',
-    },
-    {
-      id: 'dubai',
-      name: 'Dubai',
-      country: 'UAE',
-      image: dubaiImg,
-      Icon: DubaiIcon,
-      tagline: 'Futuristic skylines, golden dunes & luxury lifestyle',
-      duration: '6 Days • 5 Nights',
-      price: '₹48,999',
-      link: '/tours/dubai-explorer',
-    },
-    {
-      id: 'paris',
-      name: 'Paris',
-      country: 'France',
-      image: parisImg,
-      Icon: ParisIcon,
-      tagline: 'Iconic Eiffel sunsets, timeless art & haute couture',
-      duration: '6 Days • 5 Nights',
-      price: '₹1,24,999',
-      link: '/tours/paris',
-    },
-    {
-      id: 'bali',
-      name: 'Bali',
-      country: 'Indonesia',
-      image: baliImg,
-      Icon: BaliIcon,
-      tagline: 'Sacred water temples, tropical jungles & sunset beaches',
-      duration: '7 Days • 6 Nights',
-      price: '₹38,999',
-      link: '/tours/bali',
-    },
-    {
-      id: 'switzerland',
-      name: 'Switzerland',
-      country: 'Switzerland',
-      image: switzerlandImg,
-      Icon: SwitzerlandIcon,
-      tagline: 'Matterhorn alpine peaks & scenic red mountain trains',
-      duration: '8 Days • 7 Nights',
-      price: '₹1,49,999',
-      link: '/tours/switzerland',
-    },
-    {
-      id: 'tokyo',
-      name: 'Tokyo',
-      country: 'Japan',
-      image: tokyoImg,
-      Icon: TokyoIcon,
-      tagline: 'Illuminated Tokyo Tower, ancient shrines & cherry blossoms',
-      duration: '9 Days • 8 Nights',
-      price: '₹1,34,999',
-      link: '/tours/tokyo',
-    },
-    {
-      id: 'rajasthan',
-      name: 'Rajasthan',
-      country: 'India',
-      image: rajasthanImg,
-      Icon: RajasthanIcon,
-      tagline: 'Royal golden forts, palatial heritage & desert safaris',
-      duration: '8 Days • 7 Nights',
-      price: '₹18,999',
-      link: '/tours/rajasthan-heritage',
-    },
-  ]
+  useEffect(() => {
+    const fetchLiveDestinations = async () => {
+      try {
+        const live = await destinationService.getAll({ isPopular: true })
+        if (live && live.length >= 4) {
+          const mapped = live.slice(0, 8).map((d, idx) => {
+            const fallback =
+              DEFAULT_DESTINATIONS.find((def) => def.id === (d.slug || d.id)) ||
+              DEFAULT_DESTINATIONS[idx % DEFAULT_DESTINATIONS.length]
+            return {
+              id: d.slug || d._id || d.id,
+              name: d.title || d.name,
+              country: d.country,
+              image: d.image || fallback.image,
+              Icon: fallback?.Icon || Compass,
+              tagline: d.description || fallback.tagline,
+              duration: d.duration || fallback.duration,
+              price: d.startingPrice
+                ? `₹${Number(d.startingPrice).toLocaleString('en-IN')}`
+                : fallback.price,
+              link: `/destinations/${d.slug || d._id || d.id}`,
+            }
+          })
+          setDestinations(mapped)
+        }
+      } catch (err) {
+        // Keeps DEFAULT_DESTINATIONS on network fallback
+      }
+    }
+    fetchLiveDestinations()
+  }, [])
 
   return (
     <section

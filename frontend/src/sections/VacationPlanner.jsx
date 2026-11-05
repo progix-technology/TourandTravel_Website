@@ -1,23 +1,52 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Compass, ShieldCheck, CheckCircle, ChevronLeft, ChevronRight, Star, Quote, MapPin, CheckCircle2, User } from 'lucide-react'
 import Button from '../components/Button'
 import ImageWithSkeleton from '../components/ui/ImageWithSkeleton'
 import { TESTIMONIALS } from '../utils/mockData'
 import worldImg from '../assets/images/world.jpg'
+import api from '../services/api'
 
 export const VacationPlanner = () => {
+  const [reviewsList, setReviewsList] = useState(TESTIMONIALS)
   const [currentIndex, setCurrentIndex] = useState(0)
 
+  useEffect(() => {
+    const fetchLiveReviews = async () => {
+      try {
+        const { data } = await api.get('/reviews/public')
+        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+          const mapped = data.data.map((r, i) => ({
+            id: r._id || i,
+            name: r.user?.name || 'Verified Explorer',
+            role: 'VIP Traveler',
+            location: 'Verified Guest',
+            destination: r.tour?.title || 'Bespoke Sanctuary',
+            rating: r.rating || 5,
+            avatar:
+              r.user?.avatar ||
+              TESTIMONIALS[i % TESTIMONIALS.length]?.avatar ||
+              'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+            review: r.comment,
+          }))
+          setReviewsList(mapped)
+        }
+      } catch (e) {
+        // Fallback to TESTIMONIALS
+      }
+    }
+    fetchLiveReviews()
+  }, [])
+
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev === 0 ? TESTIMONIALS.length - 1 : prev - 1))
+    setCurrentIndex((prev) => (prev === 0 ? reviewsList.length - 1 : prev - 1))
   }
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev === TESTIMONIALS.length - 1 ? 0 : prev + 1))
+    setCurrentIndex((prev) => (prev === reviewsList.length - 1 ? 0 : prev + 1))
   }
 
-  const activeTestimonial = TESTIMONIALS[currentIndex]
+  const activeTestimonial = reviewsList[currentIndex] || reviewsList[0] || TESTIMONIALS[0]
 
   return (
     <section id="planner" className="bg-[#FAF8F2] text-[#13251F] py-12 sm:py-14 lg:py-16 border-t border-[#E5E0D5] relative overflow-hidden select-none">

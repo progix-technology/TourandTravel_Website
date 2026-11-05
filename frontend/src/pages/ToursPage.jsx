@@ -134,52 +134,88 @@ export const ToursPage = () => {
         }
 
         let matchesCat = true
+        const catLower = (t.category || '').toLowerCase()
+        const destSlugLower = (t.destinationSlug || '').toLowerCase()
+        const destLower = (t.destination || '').toLowerCase()
+        const countryLower = (t.country || '').toLowerCase()
+        const titleLower = (t.title || '').toLowerCase()
+
         if (selectedCategory === 'india') {
           matchesCat =
-            ['kashmir', 'rajasthan', 'kerala', 'goa', 'ladakh', 'nepal', 'agra'].includes(
-              t.destinationSlug
-            ) ||
-            t.destination?.toLowerCase().includes('india') ||
-            t.destination?.toLowerCase().includes('kerala') ||
-            t.destination?.toLowerCase().includes('nepal')
+            countryLower.includes('india') ||
+            destLower.includes('india') ||
+            destSlugLower.includes('india') ||
+            destSlugLower.includes('kashmir') ||
+            destSlugLower.includes('rajasthan') ||
+            destSlugLower.includes('kerala') ||
+            destSlugLower.includes('goa') ||
+            destSlugLower.includes('ladakh') ||
+            destSlugLower.includes('nepal') ||
+            destSlugLower.includes('agra') ||
+            destSlugLower.includes('od') ||
+            destSlugLower.includes('manali') ||
+            destSlugLower.includes('himachal')
         } else if (selectedCategory === 'global') {
-          matchesCat = [
-            'switzerland',
-            'paris',
-            'tokyo',
-            'iceland',
-            'amalfi-coast',
-            'dubai',
-            'rome',
-            'london',
-          ].includes(t.destinationSlug)
+          matchesCat =
+            countryLower !== 'india' ||
+            destSlugLower.includes('switzerland') ||
+            destSlugLower.includes('paris') ||
+            destSlugLower.includes('tokyo') ||
+            destSlugLower.includes('iceland') ||
+            destSlugLower.includes('amalfi') ||
+            destSlugLower.includes('dubai') ||
+            destSlugLower.includes('rome') ||
+            destSlugLower.includes('london')
         } else if (selectedCategory === 'beach') {
-          matchesCat = ['maldives', 'goa', 'bali', 'santorini', 'amalfi-coast', 'andaman'].includes(
-            t.destinationSlug
-          )
+          matchesCat =
+            catLower.includes('beach') ||
+            titleLower.includes('beach') ||
+            destSlugLower.includes('maldives') ||
+            destSlugLower.includes('goa') ||
+            destSlugLower.includes('bali') ||
+            destSlugLower.includes('santorini') ||
+            destSlugLower.includes('amalfi') ||
+            destSlugLower.includes('andaman') ||
+            destSlugLower.includes('od')
         } else if (selectedCategory === 'culture') {
-          matchesCat = ['rajasthan', 'paris', 'tokyo', 'nepal', 'varanasi', 'rome'].includes(
-            t.destinationSlug
-          )
+          matchesCat =
+            catLower.includes('culture') ||
+            catLower.includes('heritage') ||
+            catLower.includes('temple') ||
+            titleLower.includes('temple') ||
+            destSlugLower.includes('rajasthan') ||
+            destSlugLower.includes('paris') ||
+            destSlugLower.includes('tokyo') ||
+            destSlugLower.includes('nepal') ||
+            destSlugLower.includes('varanasi') ||
+            destSlugLower.includes('rome') ||
+            destSlugLower.includes('od')
         } else if (selectedCategory === 'nature') {
-          matchesCat = [
-            'kashmir',
-            'switzerland',
-            'bali',
-            'ladakh',
-            'iceland',
-            'meghalaya',
-            'himachal',
-          ].includes(t.destinationSlug)
+          matchesCat =
+            catLower.includes('nature') ||
+            catLower.includes('alpine') ||
+            catLower.includes('mountain') ||
+            destSlugLower.includes('kashmir') ||
+            destSlugLower.includes('switzerland') ||
+            destSlugLower.includes('bali') ||
+            destSlugLower.includes('ladakh') ||
+            destSlugLower.includes('iceland') ||
+            destSlugLower.includes('meghalaya') ||
+            destSlugLower.includes('himachal')
         }
 
         return matchesSearch && matchesCat
       })
       .sort((a, b) => {
-        if (sortBy === 'price-low') return a.startingPrice - b.startingPrice
-        if (sortBy === 'price-high') return b.startingPrice - a.startingPrice
-        if (sortBy === 'duration') return b.days - a.days
-        return b.rating - a.rating // default popular / top rated
+        if (sortBy === 'price-low') return (a.startingPrice || a.price || 0) - (b.startingPrice || b.price || 0)
+        if (sortBy === 'price-high') return (b.startingPrice || b.price || 0) - (a.startingPrice || a.price || 0)
+        if (sortBy === 'duration') return (b.days || 0) - (a.days || 0)
+        if (sortBy === 'newest') return new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+        // Default: Featured / newest first, breaking ties gracefully
+        const aCreated = new Date(a.createdAt || 0).getTime()
+        const bCreated = new Date(b.createdAt || 0).getTime()
+        if (bCreated !== aCreated) return bCreated - aCreated
+        return (b.rating || 0) - (a.rating || 0)
       })
   }, [toursList, selectedCategory, searchQuery, sortBy])
 
@@ -259,7 +295,8 @@ export const ToursPage = () => {
                   onChange={(e) => handleSortChange(e.target.value)}
                   className="appearance-none bg-[#0B241E]/95 hover:bg-[#12382E] border border-white/20 hover:border-[#6FCF45]/60 rounded-full pl-8 sm:pl-9 pr-8 sm:pr-9 py-1.5 sm:py-2.5 text-[11px] sm:text-xs font-semibold text-white tracking-wide cursor-pointer focus:outline-none focus:border-[#6FCF45] focus:ring-1 focus:ring-[#6FCF45] transition-all duration-200 shadow-md backdrop-blur-md"
                 >
-                  <option value="popular" className="bg-[#071A16] text-white">Top Rated &amp; Featured</option>
+                  <option value="popular" className="bg-[#071A16] text-white">Featured &amp; Top Rated</option>
+                  <option value="newest" className="bg-[#071A16] text-white">Newest Expeditions</option>
                   <option value="price-low" className="bg-[#071A16] text-white">Price: Low to High</option>
                   <option value="price-high" className="bg-[#071A16] text-white">Price: High to Low</option>
                   <option value="duration" className="bg-[#071A16] text-white">Longest Duration</option>

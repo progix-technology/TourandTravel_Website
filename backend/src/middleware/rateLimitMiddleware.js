@@ -125,12 +125,13 @@ export const authLimiter = createRateLimiter({
   message: 'Too many authentication attempts from this IP. To protect account security, please wait 15 minutes before trying again.',
 })
 
-// 3. Bookings & Inquiries Limiter: 30 requests per 15 mins (Prevents spam bookings & lead flooding)
+// 3. Bookings & Inquiries Limiter: 300 requests per 15 mins (Allows dashboard polling, protects POST endpoints)
 export const bookingLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000,
-  max: 30,
+  max: 300,
   tierName: 'BookingSystem',
-  message: 'Too many booking inquiries submitted in a short time. Please wait 15 minutes before submitting another itinerary request.',
+  message: 'Too many booking inquiries submitted in a short time. Please wait a few minutes before submitting another itinerary request.',
+  skip: (req) => req.method === 'GET' || req.headers.authorization,
 })
 
 // 4. Payment Gateway Limiter: 25 requests per 15 mins (Protects Razorpay order creation from bot spam)

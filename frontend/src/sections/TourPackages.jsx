@@ -74,15 +74,18 @@ export const TourPackages = () => {
     },
   ]
 
-  const [toursList, setToursList] = useState(defaultFeatured.slice(0, 4))
+  const [toursList, setToursList] = useState(defaultFeatured)
 
   useEffect(() => {
     const loadFeatured = async () => {
       try {
         const allTours = await tourService.getAll()
         if (allTours && allTours.length > 0) {
-          const featured = allTours.filter((t) => t.isFeatured)
-          setToursList(featured.length > 0 ? featured.slice(0, 4) : allTours.slice(0, 4))
+          // Sort newly created / featured tours first
+          const featured = allTours.filter((t) => t.isFeatured !== false)
+          const remaining = allTours.filter((t) => t.isFeatured === false)
+          const merged = [...featured, ...remaining]
+          setToursList(merged)
         }
       } catch (err) {
         console.warn('Using default featured tours fallback:', err)
@@ -99,7 +102,7 @@ export const TourPackages = () => {
     }
   }, [])
 
-  const featuredTours = toursList.slice(0, 4)
+  const featuredTours = (toursList && toursList.length > 0 ? toursList : defaultFeatured).slice(0, 8)
 
   const handleInstantBook = (tour, e) => {
     e.preventDefault()
@@ -194,9 +197,9 @@ export const TourPackages = () => {
                   {/* Bottom-Left Rating Pill */}
                   <div className="absolute bottom-1.5 left-1.5 xs:bottom-2 xs:left-2 sm:bottom-3 sm:left-3.5 flex items-center gap-0.5 sm:gap-1 px-1 xs:px-1.5 sm:px-2.5 py-0.5 rounded-full bg-white text-[#13251F] text-[8px] xs:text-[9px] sm:text-[11px] font-bold shadow-md">
                     <Star className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 fill-[#EAB308] text-[#EAB308]" />
-                    <span>{tour.rating.toFixed(1)}</span>
+                    <span>{Number(tour.rating || 4.9).toFixed(1)}</span>
                     <span className="text-[7.5px] xs:text-[8px] sm:text-[10px] text-[#5C6E67] font-normal">
-                      ({tour.reviewsCount})
+                      ({tour.reviewsCount || 120})
                     </span>
                   </div>
                 </div>
@@ -233,7 +236,7 @@ export const TourPackages = () => {
                         STARTING FROM
                       </span>
                       <div className="text-xs sm:text-base lg:text-lg font-bold text-[#13251F] font-heading leading-tight mt-0.5">
-                        ₹{tour.startingPrice.toLocaleString('en-IN')}
+                        ₹{Number(tour.startingPrice || tour.price || 24999).toLocaleString('en-IN')}
                       </div>
                       <span className="text-[7.5px] xs:text-[8px] sm:text-[10.5px] font-normal text-[#7A8B84] leading-tight block whitespace-nowrap">
                         / person

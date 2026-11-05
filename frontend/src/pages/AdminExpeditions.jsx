@@ -23,7 +23,9 @@ import {
   ChevronDown,
   AlertCircle,
   FolderOpen,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Cloud,
+  Loader2
 } from 'lucide-react'
 import tourService from '../services/tourService'
 import api from '../services/api'
@@ -189,6 +191,7 @@ export const AdminExpeditions = () => {
   const [mediaLibraryItems, setMediaLibraryItems] = useState([])
   const [uploadingImage, setUploadingImage] = useState(false)
   const fileInputRef = useRef(null)
+  const galleryFileInputRef = useRef(null)
 
   // Highlights / Inclusions raw text helpers
   const [highlightsText, setHighlightsText] = useState('')
@@ -293,7 +296,7 @@ export const AdminExpeditions = () => {
     setTimeout(() => setFeedbackMsg(''), 4000)
   }
 
-  // Image Upload handler from Device
+  // Image Upload handler from Device via Multer -> Cloudinary
   const handleDeviceFileUpload = async (e) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -310,13 +313,25 @@ export const AdminExpeditions = () => {
       if (response.data?.secure_url) {
         const uploadedUrl = response.data.secure_url
         setFormData((prev) => ({ ...prev, image: uploadedUrl }))
-        showSuccess('Image uploaded and set as cover photo!')
+        // Also add to gallery presets / media library items so it's instantly available
+        setMediaLibraryItems((prev) => [
+          {
+            title: file.name.replace(/\.[^/.]+$/, ''),
+            category: 'Cloudinary Upload',
+            url: uploadedUrl,
+          },
+          ...prev,
+        ])
+        showSuccess('Image successfully saved to Cloudinary via Multer!')
+        if (galleryPickerOpen) {
+          setGalleryPickerOpen(false)
+        }
       } else {
         // Fallback: Read as Data URL
         const reader = new FileReader()
         reader.onload = () => {
           setFormData((prev) => ({ ...prev, image: reader.result }))
-          showSuccess('Image loaded from device!')
+          showSuccess('Image loaded from device preview!')
         }
         reader.readAsDataURL(file)
       }
@@ -325,11 +340,12 @@ export const AdminExpeditions = () => {
       const reader = new FileReader()
       reader.onload = () => {
         setFormData((prev) => ({ ...prev, image: reader.result }))
-        showSuccess('Image loaded from device!')
+        showSuccess('Image loaded from device (offline preview)!')
       }
       reader.readAsDataURL(file)
     } finally {
       setUploadingImage(false)
+      if (e.target) e.target.value = ''
     }
   }
 
@@ -389,11 +405,25 @@ export const AdminExpeditions = () => {
     setSubmitting(true)
 
     try {
+      const titleSlug = (formData.title || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+      const destSlug = (formData.destination || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+
       const payload = {
         ...formData,
+        slug: formData.slug || titleSlug || `tour-${Date.now()}`,
+        destinationSlug: formData.destinationSlug || destSlug || 'india',
         startingPrice: Number(formData.startingPrice) || 24999,
         price: Number(formData.startingPrice) || 24999,
         days: Number(formData.days) || 7,
+        rating: Number(formData.rating) || 4.9,
+        reviewsCount: Number(formData.reviewsCount) || 120,
+        isFeatured: formData.isFeatured !== false,
         highlights: highlightsText.split('\n').map((s) => s.trim()).filter(Boolean),
         inclusions: inclusionsText.split('\n').map((s) => s.trim()).filter(Boolean),
         exclusions: exclusionsText.split('\n').map((s) => s.trim()).filter(Boolean),
@@ -887,36 +917,63 @@ export const AdminExpeditions = () => {
                 </div>
               )}
 
-              {/* TAB 2: MEDIA & OVERVIEW (WITH GALLERY & FILE PICKER) */}
+              {/* TAB 2: MEDIA & OVERVIEW (WITH MULTER CLOUDINARY UPLOAD & GALLERY) */}
               {modalTab === 'media' && (
                 <div className="space-y-4 animate-fadeIn">
-                  <div>
-                    <label className="block text-xs font-semibold text-[#A8B5AF] uppercase tracking-wider mb-2">
-                      Cover Photo *
-                    </label>
+                  {/* Photo Management Box */}
+                  <div className="p-4 rounded-2xl bg-[#13151A] border border-white/10 space-y-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div>
+                        <label className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                          <ImageIcon className="w-4 h-4 text-[#6FCF45]" />
+                          <span>Tour Package Cover Photo *</span>
+                        </label>
+                        <p className="text-[11px] text-[#A8B5AF]">
+                          Upload a photo from your computer (saved directly to Cloudinary via Multer) or select from our gallery.
+                        </p>
+                      </div>
 
-                    {/* Image Action Buttons: Gallery Picker & File Upload */}
-                    <div className="flex flex-wrap items-center gap-2 mb-3">
-                      {/* Button 1: Open Gallery Modal */}
-                      <button
-                        type="button"
-                        onClick={() => setGalleryPickerOpen(true)}
-                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#6FCF45]/15 hover:bg-[#6FCF45] text-[#6FCF45] hover:text-[#071A16] border border-[#6FCF45]/40 hover:border-[#6FCF45] text-xs font-bold transition-all shadow-sm cursor-pointer"
-                      >
-                        <FolderOpen className="w-4 h-4" />
-                        <span>Choose From Gallery</span>
-                      </button>
+                      {/* Cloudinary Status Badge */}
+                      {formData.image && formData.image.includes('cloudinary.com') && (
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#6FCF45]/15 border border-[#6FCF45]/30 text-[#6FCF45] text-[10px] font-bold">
+                          <Cloud className="w-3 h-3" />
+                          <span>Cloudinary Stored</span>
+                        </div>
+                      )}
+                    </div>
 
-                      {/* Button 2: Upload Device File */}
+                    {/* Image Action Buttons: Upload Device File & Gallery Picker */}
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      {/* Button 1: Upload via Multer to Cloudinary */}
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
                         disabled={uploadingImage}
-                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-blue-500/15 hover:bg-blue-500 text-blue-400 hover:text-white border border-blue-500/40 hover:border-blue-500 text-xs font-bold transition-all shadow-sm cursor-pointer disabled:opacity-50"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#6FCF45] hover:bg-[#5eb83a] text-[#071A16] text-xs font-black uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(111,207,69,0.3)] cursor-pointer disabled:opacity-50"
                       >
-                        <Upload className="w-4 h-4" />
-                        <span>{uploadingImage ? 'Loading...' : 'Upload From Device'}</span>
+                        {uploadingImage ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin text-[#071A16]" />
+                            <span>Uploading to Cloudinary...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="w-4 h-4" />
+                            <span>Upload Photo (Multer → Cloudinary)</span>
+                          </>
+                        )}
                       </button>
+
+                      {/* Button 2: Open Gallery Modal */}
+                      <button
+                        type="button"
+                        onClick={() => setGalleryPickerOpen(true)}
+                        className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white border border-white/15 hover:border-white/30 text-xs font-bold transition-all shadow-sm cursor-pointer"
+                      >
+                        <FolderOpen className="w-4 h-4 text-[#6FCF45]" />
+                        <span>Choose From Gallery</span>
+                      </button>
+
                       <input
                         ref={fileInputRef}
                         type="file"
@@ -932,45 +989,90 @@ export const AdminExpeditions = () => {
                       <input
                         type="url"
                         required
-                        placeholder="Or paste direct image URL (https://...)"
+                        placeholder="Direct Image URL (https://res.cloudinary.com/... or paste image URL)"
                         value={formData.image}
                         onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                        className="w-full bg-[#13151A] border border-white/10 rounded-xl pl-10 pr-4 py-2 text-xs text-white focus:outline-none focus:border-[#6FCF45]"
+                        className="w-full bg-[#1A1D24] border border-white/10 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white focus:outline-none focus:border-[#6FCF45] transition-colors"
                       />
                     </div>
+
+                    {/* Real-time Image Preview Card with on-banner Upload & Change options */}
+                    {formData.image ? (
+                      <div className="relative h-56 rounded-2xl overflow-hidden border border-white/15 bg-black/50 shadow-xl group">
+                        <img
+                          src={formData.image}
+                          alt="Cover Preview"
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          loading="lazy"
+                          decoding="async"
+                          onError={(e) => {
+                            e.currentTarget.src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=85'
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/40 pointer-events-none" />
+                        
+                        {/* Top Left Badges */}
+                        <div className="absolute top-3 left-3 flex items-center gap-2">
+                          <span className="px-3 py-1 bg-black/70 backdrop-blur-md rounded-lg text-[10px] font-bold text-white uppercase tracking-wider flex items-center gap-1.5 border border-white/10">
+                            <Check className="w-3 h-3 text-[#6FCF45]" />
+                            <span>Current Cover Photo</span>
+                          </span>
+                          {formData.image.includes('cloudinary.com') && (
+                            <span className="px-2.5 py-1 bg-[#6FCF45]/20 backdrop-blur-md rounded-lg text-[10px] font-bold text-[#6FCF45] border border-[#6FCF45]/40 flex items-center gap-1">
+                              <Cloud className="w-3 h-3" />
+                              <span>Cloudinary</span>
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Uploading Spinner Overlay */}
+                        {uploadingImage && (
+                          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center gap-2 z-20">
+                            <Loader2 className="w-8 h-8 animate-spin text-[#6FCF45]" />
+                            <p className="text-xs font-bold text-white">Uploading file via Multer to Cloudinary...</p>
+                            <p className="text-[10px] text-[#A8B5AF]">Please wait a moment while the image is securely processed</p>
+                          </div>
+                        )}
+
+                        {/* Bottom Action Bar directly on Photo Banner */}
+                        <div className="absolute bottom-3 right-3 flex items-center gap-2 z-10">
+                          <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={uploadingImage}
+                            className="px-3 py-1.5 rounded-lg bg-[#6FCF45] hover:bg-[#5eb83a] text-[#071A16] text-[10px] font-black uppercase tracking-wider transition-all shadow-lg flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                          >
+                            <Upload className="w-3.5 h-3.5" />
+                            <span>Upload New Photo</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setGalleryPickerOpen(true)}
+                            className="px-3 py-1.5 rounded-lg bg-black/75 hover:bg-white/20 text-white border border-white/20 text-[10px] font-bold uppercase transition-all backdrop-blur-md cursor-pointer flex items-center gap-1.5"
+                          >
+                            <FolderOpen className="w-3.5 h-3.5 text-[#6FCF45]" />
+                            <span>Change Photo</span>
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      /* Drag & Drop / Click Upload Dropzone when no image is set */
+                      <div
+                        onClick={() => fileInputRef.current?.click()}
+                        className="h-44 rounded-2xl border-2 border-dashed border-white/20 hover:border-[#6FCF45] bg-[#1A1D24]/50 hover:bg-[#1A1D24] flex flex-col items-center justify-center gap-2 cursor-pointer transition-all p-6 text-center group"
+                      >
+                        <div className="w-12 h-12 rounded-2xl bg-[#6FCF45]/15 text-[#6FCF45] flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <Upload className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-white">
+                            Click to upload photo from device (Multer → Cloudinary)
+                          </p>
+                          <p className="text-[10px] text-[#A8B5AF] mt-0.5">Supports JPG, PNG, WEBP, AVIF (Max 5MB)</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
-
-                  {/* Real-time Image Preview Card */}
-                  {formData.image && (
-                    <div className="relative h-48 rounded-2xl overflow-hidden border border-white/10 bg-black/40 shadow-inner group">
-                      <img
-                        src={formData.image}
-                        alt="Preview"
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                        decoding="async"
-                        onError={(e) => {
-                          e.currentTarget.src = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=85'
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none" />
-                      
-                      <div className="absolute top-3 left-3 px-2.5 py-1 bg-black/70 backdrop-blur-md rounded-lg text-[10px] font-bold text-white uppercase tracking-wider flex items-center gap-1.5 border border-white/10">
-                        <Check className="w-3 h-3 text-[#6FCF45]" />
-                        <span>Current Cover Photo</span>
-                      </div>
-
-                      <div className="absolute bottom-3 right-3 flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setGalleryPickerOpen(true)}
-                          className="px-3 py-1 rounded-lg bg-black/70 hover:bg-[#6FCF45] text-white hover:text-[#071A16] border border-white/20 text-[10px] font-bold uppercase transition-all backdrop-blur-md cursor-pointer"
-                        >
-                          Change Photo
-                        </button>
-                      </div>
-                    </div>
-                  )}
 
                   <div>
                     <label className="block text-xs font-semibold text-[#A8B5AF] uppercase tracking-wider mb-1.5">
@@ -1168,9 +1270,9 @@ export const AdminExpeditions = () => {
               </button>
             </div>
 
-            {/* Gallery Search Filter */}
-            <div className="p-4 border-b border-white/5 bg-[#13151A]/60 flex items-center gap-3 shrink-0">
-              <div className="relative flex-1">
+            {/* Gallery Search Filter & Direct Multer Device Upload */}
+            <div className="p-4 border-b border-white/5 bg-[#13151A]/60 flex flex-wrap items-center gap-3 shrink-0">
+              <div className="relative flex-1 min-w-[200px]">
                 <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#A8B5AF]" />
                 <input
                   type="text"
@@ -1180,6 +1282,33 @@ export const AdminExpeditions = () => {
                   className="w-full bg-[#1A1D24] border border-white/10 rounded-xl pl-10 pr-4 py-2 text-xs text-white focus:outline-none focus:border-[#6FCF45]"
                 />
               </div>
+
+              {/* Upload to Cloudinary inside Gallery Picker */}
+              <button
+                type="button"
+                onClick={() => galleryFileInputRef.current?.click()}
+                disabled={uploadingImage}
+                className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#6FCF45] hover:bg-[#5eb83a] text-[#071A16] text-xs font-black uppercase tracking-wider transition-all shadow-md cursor-pointer disabled:opacity-50"
+              >
+                {uploadingImage ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Uploading...</span>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>Upload To Cloudinary</span>
+                  </>
+                )}
+              </button>
+              <input
+                ref={galleryFileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleDeviceFileUpload}
+              />
             </div>
 
             {/* Gallery Grid */}

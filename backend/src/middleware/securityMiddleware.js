@@ -41,53 +41,57 @@ export const securityHeaders = (req, res, next) => {
 
 /**
  * 2. NoSQL Injection Prevention Middleware
- * Recursively scans and strips keys starting with '$' or containing '.' from req.body, req.query, and req.params.
- * Protects against payloads like: {"email": {"$gt": ""}} or {"$where": "..."}
+ * Recursively scans and strips keys starting with '$' or containing '.' in-place
+ * from req.body, req.query, and req.params without reassigning getter-only properties.
  */
 const hasMongoOperator = (str) => {
   return typeof str === 'string' && (str.startsWith('$') || str.includes('.'))
 }
 
-const sanitizeObject = (obj, depth = 0) => {
-  if (!obj || typeof obj !== 'object' || depth > 10) return obj
+const sanitizeInPlace = (obj, depth = 0) => {
+  if (!obj || typeof obj !== 'object' || depth > 10) return
 
   if (Array.isArray(obj)) {
-    return obj.map((item) => sanitizeObject(item, depth + 1))
+    for (let i = 0; i < obj.length; i++) {
+      if (typeof obj[i] === 'object' && obj[i] !== null) {
+        sanitizeInPlace(obj[i], depth + 1)
+      }
+    }
+    return
   }
 
-  const cleaned = {}
-  for (const [key, val] of Object.entries(obj)) {
-    // If key contains MongoDB operator, drop it or block it
+  for (const key of Object.keys(obj)) {
     if (hasMongoOperator(key)) {
       console.warn(`🚨 [Security Alert] Blocked suspicious NoSQL operator key: "${key}"`)
-      continue // Strip dangerous operator
+      delete obj[key]
+      continue
     }
-
-    if (val && typeof val === 'object') {
-      cleaned[key] = sanitizeObject(val, depth + 1)
-    } else {
-      cleaned[key] = val
+    if (obj[key] && typeof obj[key] === 'object') {
+      sanitizeInPlace(obj[key], depth + 1)
     }
   }
-  return cleaned
 }
 
 export const mongoSanitize = (req, res, next) => {
-  if (req.body) {
-    req.body = sanitizeObject(req.body)
-  }
-  if (req.query) {
-    req.query = sanitizeObject(req.query)
-  }
-  if (req.params) {
-    req.params = sanitizeObject(req.params)
+  try {
+    if (req.body && typeof req.body === 'object') {
+      sanitizeInPlace(req.body)
+    }
+    if (req.query && typeof req.query === 'object') {
+      sanitizeInPlace(req.query)
+    }
+    if (req.params && typeof req.params === 'object') {
+      sanitizeInPlace(req.params)
+    }
+  } catch (err) {
+    console.warn('mongoSanitize warning:', err)
   }
   next()
 }
 
 /**
  * 3. Cross-Site Scripting (XSS) Input Sanitization
- * Strips script tags, javascript: protocols, and malicious event handlers from user text inputs.
+ * Strips script tags, javascript: protocols, and malicious event handlers from user text inputs in-place.
  */
 const cleanXssString = (val) => {
   if (typeof val !== 'string') return val
@@ -99,29 +103,39 @@ const cleanXssString = (val) => {
     .replace(/onclick\s*=/gi, '')
 }
 
-const sanitizeXss = (obj, depth = 0) => {
-  if (!obj || typeof obj !== 'object' || depth > 10) return obj
+const sanitizeXssInPlace = (obj, depth = 0) => {
+  if (!obj || typeof obj !== 'object' || depth > 10) return
 
   if (Array.isArray(obj)) {
-    return obj.map((item) => sanitizeXss(item, depth + 1))
+    for (let i = 0; i < obj.length; i++) {
+      if (typeof obj[i] === 'string') {
+        obj[i] = cleanXssString(obj[i])
+      } else if (typeof obj[i] === 'object' && obj[i] !== null) {
+        sanitizeXssInPlace(obj[i], depth + 1)
+      }
+    }
+    return
   }
 
-  const cleaned = {}
-  for (const [key, val] of Object.entries(obj)) {
-    if (typeof val === 'string') {
-      cleaned[key] = cleanXssString(val)
-    } else if (val && typeof val === 'object') {
-      cleaned[key] = sanitizeXss(val, depth + 1)
-    } else {
-      cleaned[key] = val
+  for (const key of Object.keys(obj)) {
+    if (typeof obj[key] === 'string') {
+      obj[key] = cleanXssString(obj[key])
+    } else if (obj[key] && typeof obj[key] === 'object') {
+      sanitizeXssInPlace(obj[key], depth + 1)
     }
   }
-  return cleaned
 }
 
 export const xssSanitize = (req, res, next) => {
-  if (req.body) {
-    req.body = sanitizeXss(req.body)
+  try {
+    if (req.body && typeof req.body === 'object') {
+      sanitizeXssInPlace(req.body)
+    }
+    if (req.params && typeof req.params === 'object') {
+      sanitizeXssInPlace(req.params)
+    }
+  } catch (err) {
+    console.warn('xssSanitize warning:', err)
   }
   next()
 }

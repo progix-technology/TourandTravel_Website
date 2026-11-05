@@ -33,6 +33,7 @@ import { useAuth } from '../context/AuthContext'
 import { useBooking } from '../context/BookingContext'
 import { useSettings } from '../context/SettingsContext'
 import { TOURS } from '../utils/mockData'
+import { tourService } from '../services/tourService'
 import Button from '../components/Button'
 import { initiateRazorpayPayment } from '../services/razorpayService'
 
@@ -147,10 +148,25 @@ export const BookingPage = () => {
   const { activeBooking, completeBooking } = useBooking()
 
   // Find tour if activeBooking not set
-  const currentTour =
+  const [currentTour, setCurrentTour] = useState(() => (
     activeBooking ||
     TOURS.find((t) => t.id === tourId || t.slug === tourId) ||
     TOURS[0]
+  ))
+
+  useEffect(() => {
+    if (activeBooking) {
+      setCurrentTour(activeBooking)
+      return
+    }
+    if (tourId) {
+      tourService.getBySlug(tourId)
+        .then((data) => {
+          if (data) setCurrentTour(data)
+        })
+        .catch((err) => console.warn('Booking tour fetch fallback:', err))
+    }
+  }, [tourId, activeBooking])
 
   const todayStr = useMemo(() => new Date().toISOString().split('T')[0], [])
   const defaultDeparture = useMemo(() => currentTour.travelDate || getDynamicDate(10), [currentTour.travelDate])

@@ -107,7 +107,7 @@ export const TourCard = ({ tour, className = '' }) => {
               Starting from
             </span>
             <div className="text-lg font-extrabold text-[#13251F] leading-tight mt-0.5">
-              ₹{tour.startingPrice?.toLocaleString('en-IN')}
+              ₹{Number(tour.startingPrice || tour.price || 24999).toLocaleString('en-IN')}
             </div>
             <span className="text-[10.5px] font-normal text-[#5C6E67] leading-tight block whitespace-nowrap">
               / person
